@@ -1,0 +1,10 @@
+{
+  "name": "listed_35L",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Neel Redkar <neel.redkar@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
