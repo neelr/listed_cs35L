@@ -13,6 +13,7 @@ import {
   InknutAntiqua_800ExtraBold,
   InknutAntiqua_900Black,
 } from '@expo-google-fonts/inknut-antiqua';
+import HomeButton from "../components/HomeButton";
 
 
 export default function HomeScreen() {
@@ -30,9 +31,18 @@ export default function HomeScreen() {
     return <AppLoading />;
   } else {
     return (
-      <View style={styles.mainScreen}>
-        <Text>Hello World!</Text>
-      </View>
+      <SafeAreaView style={styles.mainScreen}>
+        <View style={styles.titleContainer} >
+          <Text style={styles.title}>Listed</Text>
+          <Image style={styles.image} source={require("../assets/notebook.png")}></Image>
+        </View>
+
+        <HomeButton title="Log in" onPress={() => { console.log("Hello, world") }}></HomeButton>
+        <HomeButton title="Sign up" onPress={() => { }}></HomeButton>
+
+
+        <StatusBar hidden={true} />
+      </SafeAreaView>
     );
   }
 }
@@ -40,9 +50,30 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   mainScreen: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#A2D2FF',
     alignItems: 'center',
     justifyContent: 'center'
   },
+ 
+ 
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: 'center',
+    justifyContent: "space-between",
+  },
+ 
+ 
+  title: {
+    flex: 0.5,
+    fontFamily: "InknutAntiqua_400Regular",
+    fontSize: 42,
+    color: "#3B4552",
+  },
+ 
+ 
+  image: {
+    height: 100,
+    width: 100,
+  }, 
 });
 
