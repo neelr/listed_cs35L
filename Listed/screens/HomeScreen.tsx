@@ -14,11 +14,14 @@ import {
   InknutAntiqua_900Black,
 } from '@expo-google-fonts/inknut-antiqua';
 import HomeButton from "../components/HomeButton";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from "../App";
 
+type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const { width } = Dimensions.get('window');
 
-export default function HomeScreen() {
+const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) =>{
   let [fontsLoaded] = useFonts({
     InknutAntiqua_300Light,
     InknutAntiqua_400Regular,
@@ -39,7 +42,7 @@ export default function HomeScreen() {
           <Image style={styles.image} source={require("../assets/notebook.png")}></Image>
         </View>
 
-        <HomeButton title="Log in" onPress={() => { console.log("Hello, world") }}></HomeButton>
+        <HomeButton title="Log in" onPress={() => { navigation.navigate("Next") }}></HomeButton>
         <HomeButton title="Sign up" onPress={() => { }}></HomeButton>
 
 
@@ -79,3 +82,4 @@ const styles = StyleSheet.create({
   },
 });
 
+export default HomeScreen;
