@@ -5,9 +5,9 @@
   "author": "Neel Redkar <neel.redkar@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/main.js",
+    "start": "node dist/server.js",
     "build": "tsc",
-    "dev": "nodemon src/main.ts"
+    "dev": "nodemon src/server.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "^3.2.1",
