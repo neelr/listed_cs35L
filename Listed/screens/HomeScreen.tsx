@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, StyleSheet, Text, View, Image, TouchableOpacity, GestureResponderEvent } from 'react-native';
+import { Button, StyleSheet, Text, View, Image, TouchableOpacity, GestureResponderEvent, Dimensions } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppLoading from 'expo-app-loading';
@@ -15,6 +15,8 @@ import {
 } from '@expo-google-fonts/inknut-antiqua';
 import HomeButton from "../components/HomeButton";
 
+
+const { width } = Dimensions.get('window');
 
 export default function HomeScreen() {
   let [fontsLoaded] = useFonts({
@@ -54,26 +56,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
- 
- 
+
+
   titleContainer: {
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: "space-between",
   },
- 
- 
+
+
   title: {
     flex: 0.5,
     fontFamily: "InknutAntiqua_400Regular",
-    fontSize: 42,
+    fontSize: width/10.0,
     color: "#3B4552",
   },
- 
- 
+
+
   image: {
     height: 100,
     width: 100,
-  }, 
+  },
 });
 
