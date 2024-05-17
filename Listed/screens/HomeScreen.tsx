@@ -41,9 +41,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) =>{
           <Text style={styles.title}>Listed</Text>
           <Image style={styles.image} source={require("../assets/notebook.png")}></Image>
         </View>
-
         <HomeButton title="Log in" onPress={() => { navigation.navigate("Next") }}></HomeButton>
         <HomeButton title="Sign up" onPress={() => { }}></HomeButton>
+        <HomeButton title="Profile" onPress={() => { navigation.navigate("Profile") }}></HomeButton>
 
 
         <StatusBar hidden={true} />
