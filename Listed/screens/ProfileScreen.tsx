@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     goBackButton: {
-        backgroundColor: "#6200ea",
+        backgroundColor: "#ccc",
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 5,
