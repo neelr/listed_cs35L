@@ -44,6 +44,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                     
                 </TextInput>
                 <MaterialCommunityIcons 
+                //Might want to reverse name depending on common convention
                     name={showPassword ? 'eye' : 'eye-off'} 
                     size={24} 
                     color="#aaa"
