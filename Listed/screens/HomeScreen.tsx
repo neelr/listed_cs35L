@@ -9,6 +9,7 @@ import { RootStackParamList } from "../App";
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const { width, height } = Dimensions.get('window');
+//Huh
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   return (
