@@ -10,6 +10,10 @@ import dynamoDBGetUserById from "./routes/dynamoDBGetUserById";
 import dynamoDBCreateUser from "./routes/dynamoDBCreateUser";
 import dynamoDBGetUsersByName from "./routes/dynamoDBGetUsersByName";
 import dynamoDBCreateTask from "./routes/dynamoDBCreateTask";
+import dynamoDBGetTasksByCreatorId from "./routes/dynamoDBGetTasksByCreatorId";
+import dynamoDBGetTaskById from "./routes/dynamoDBGetTaskById";
+import dynamoDBDeleteTask from "./routes/dynamoDBDeleteTask";
+import dynamoDBDeleteUser from "./routes/dynamoDBDeleteUser";
 
 dotenv.config();
 
@@ -30,8 +34,12 @@ app.get("/", (req: Request, res: Response) => {
 
 app.get(`${dynamoDBPreface}/user`, dynamoDBGetUserById);
 app.post(`${dynamoDBPreface}/user`, dynamoDBCreateUser);
+app.delete(`${dynamoDBPreface}/user`, dynamoDBDeleteUser);
 app.get(`${dynamoDBPreface}/get-users`, dynamoDBGetUsersByName);
 app.post(`${dynamoDBPreface}/task`, dynamoDBCreateTask);
+app.get(`${dynamoDBPreface}/task`, dynamoDBGetTaskById);
+app.get(`${dynamoDBPreface}/get-tasks`, dynamoDBGetTasksByCreatorId);
+app.delete(`${dynamoDBPreface}/task`, dynamoDBDeleteTask);
 
 app.get("/get-tasks", getTasks);
 

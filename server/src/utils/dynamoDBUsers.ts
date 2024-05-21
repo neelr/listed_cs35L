@@ -1,5 +1,5 @@
 import {
-  DynamoDBClient,
+  DeleteItemCommand,
   ScanCommand,
   ScanCommandInput,
 } from "@aws-sdk/client-dynamodb";
@@ -54,7 +54,7 @@ export const getUsersByName = async ({ username }: GetUsersByNameRequest) => {
     // Return the matching items
     return response.Items;
   } catch (error) {
-    console.error("Error scanning table:", error);
+    console.error("Error scanning table: ", error);
     throw new Error("Error scanning table");
   }
 };
@@ -68,4 +68,15 @@ export const getUserById = async ({ userId }: GetUserByIdRequest) => {
   });
   const response = await docClient.send(command);
   return response.Item;
+};
+
+export const deleteUser = async ({ userId }: GetUserByIdRequest) => {
+  const command = new DeleteItemCommand({
+    TableName: usersTableName,
+    Key: {
+      userId: { S: userId },
+    },
+  });
+  const response = await docClient.send(command);
+  return { ...response, userId: userId };
 };

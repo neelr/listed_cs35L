@@ -26,9 +26,24 @@ export interface CreateUserRequest {
   email: string;
 }
 
+export interface DeleteUserRequest {
+  userId: string;
+}
 export interface CreateTaskRequest {
   name: string;
   creatorId: string;
   description?: string;
   completeBy?: string;
+}
+
+export interface GetTasksByCreatorIdRequest {
+  creatorId: string;
+}
+
+export interface GetTaskByIdRequest {
+  taskId: string;
+}
+
+export interface DeleteTaskRequest {
+  taskId: string;
 }
