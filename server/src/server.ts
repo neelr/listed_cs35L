@@ -6,12 +6,18 @@ import addTask from "./routes/addTask";
 import getTasks from "./routes/getTasks";
 import addUser from "./routes/addUser";
 import dotenv from "dotenv";
-import { createUser, getUser } from "./dynamodbtest";
+import dynamoDBGetUserById from "./routes/dynamoDBGetUserById";
+import dynamoDBCreateUser from "./routes/dynamoDBCreateUser";
+import dynamoDBGetUsersByName from "./routes/dynamoDBGetUsersByName";
+import dynamoDBCreateTask from "./routes/dynamoDBCreateTask";
+
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
+
+const dynamoDBPreface = "/dynamodb";
 
 app.use(bodyParser.json());
 
@@ -22,27 +28,10 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Listed Server is running!");
 });
 
-app.get("/asdas", (req: Request, res: Response) => {
-  res.send("Hello World!");
-});
-
-app.post("/dynamodb", async (req: Request, res: Response) => {
-  console.log(req.body);
-  const response = await createUser({
-    name: req.body.name,
-    userID: req.body.userID,
-  });
-  console.log(response);
-  res.send(response);
-});
-
-app.get("/dynamodb", async (req: Request, res: Response) => {
-  const response = await getUser({
-    userID: req.body.userID,
-  });
-  console.log(response);
-  res.send(response);
-});
+app.get(`${dynamoDBPreface}/user`, dynamoDBGetUserById);
+app.post(`${dynamoDBPreface}/user`, dynamoDBCreateUser);
+app.get(`${dynamoDBPreface}/get-users`, dynamoDBGetUsersByName);
+app.post(`${dynamoDBPreface}/task`, dynamoDBCreateTask);
 
 app.get("/get-tasks", getTasks);
 

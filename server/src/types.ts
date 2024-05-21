@@ -12,3 +12,23 @@ export interface Task {
   description: string;
   completed: boolean;
 }
+
+export interface GetUsersByNameRequest {
+  username: string;
+}
+
+export interface GetUserByIdRequest {
+  userId: string;
+}
+
+export interface CreateUserRequest {
+  username: string;
+  email: string;
+}
+
+export interface CreateTaskRequest {
+  name: string;
+  creatorId: string;
+  description?: string;
+  completeBy?: string;
+}
