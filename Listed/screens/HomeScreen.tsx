@@ -9,19 +9,21 @@ import { RootStackParamList } from "../App";
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const { width, height } = Dimensions.get('window');
+//Huh
 
-const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
-    return (
-      <SafeAreaView style={styles.mainScreen}>
-        <View style={styles.titleContainer} >
-          <Text style={styles.title}>Listed</Text>
-          <Image style={styles.image} source={require("../assets/notebook.png")}></Image>
-        </View>
-        <HomeButton title="Log in" onPress={() => { navigation.navigate("Login") }} margin={height/11.0}></HomeButton>
-        <HomeButton title="Sign up" onPress={() => { console.log("Hello world2")}}></HomeButton>
-        <StatusBar hidden={true} />
-      </SafeAreaView>
-    );
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+  return (
+    <SafeAreaView style={styles.mainScreen}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Listed</Text>
+        <Image style={styles.image} source={require("../assets/notebook.png")}></Image>
+      </View>
+      <HomeButton title="Log in" onPress={() => { navigation.navigate("Login") }} margin={height / 25.0}></HomeButton>
+      <HomeButton title="Sign up" onPress={() => { navigation.navigate("Signup") }}></HomeButton>
+      <HomeButton title="Profile" onPress={() => { navigation.navigate("Profile") }} margin={height / 25.0}></HomeButton>
+      <StatusBar hidden={true} />
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -42,9 +44,9 @@ const styles = StyleSheet.create({
 
   title: {
     flex: 0.5,
-    fontWeight : "bold",
+    fontWeight: "bold",
     fontFamily: "InknutAntiqua_400Regular",
-    fontSize: width/10.0,
+    fontSize: width / 10.0,
     color: "#3B4552",
   },
 

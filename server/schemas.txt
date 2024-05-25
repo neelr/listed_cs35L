@@ -1,0 +1,40 @@
+
+
+User:
+{
+  userId: string
+  username: string
+  email: string
+  createdOn: string
+  taskIds: string[]
+  friends: string[] # should be userIds
+}
+
+Task: (v1, without support for tags or others completing)
+{
+  taskId: string
+  name: string
+  description: string # optional
+  creatorId: string # userId
+  userIds: string[]
+  createdOn: string 
+  completeBy: string
+  completed: boolean
+}
+
+Task: (v2, with support for others completing)
+{
+  taskId: string
+  name: string
+  description: string # optional
+  creatorId: string # userId
+  userIds: string[]
+  createdOn: string 
+  completeBy: string
+  completed: boolean
+  completedDetails: {
+    userId: string
+    completedOn: string
+  } # only include if completed is true
+}
+
