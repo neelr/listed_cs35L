@@ -3,6 +3,7 @@ import HomeScreen from './screens/HomeScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import LoginScreen from './screens/LoginScreen';
+import SignupScreen from './screens/SignupScreen';
 import { useFonts,
   InknutAntiqua_300Light,
   InknutAntiqua_400Regular,
@@ -18,6 +19,7 @@ import ProfileScreen from './screens/ProfileScreen';
 export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
+  Signup: undefined;
   Profile: undefined;
 }; 
 
@@ -43,6 +45,7 @@ const App: React.FC = () => {
         <Stack.Screen name='Home' component={HomeScreen} options={{ headerShown: false }}></Stack.Screen>
         <Stack.Screen name='Profile' component={ProfileScreen} options={{ headerShown: false }}></Stack.Screen>
         <Stack.Screen name='Login' component={LoginScreen} options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name='Signup' component={SignupScreen} options={{ headerShown: false }}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -14,13 +14,13 @@ const { width, height } = Dimensions.get('window');
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.mainScreen}>
-      <View style={styles.titleContainer} >
+      <View style={styles.titleContainer}>
         <Text style={styles.title}>Listed</Text>
         <Image style={styles.image} source={require("../assets/notebook.png")}></Image>
       </View>
-      <HomeButton title="Log in" onPress={() => { navigation.navigate("Login") }} margin={height / 15.0}></HomeButton>
-      <HomeButton title="Sign up" onPress={() => { console.log("Hello world2") }}></HomeButton>
-      <HomeButton title="Profile" onPress={() => { navigation.navigate("Profile") }} margin={height / 15.0}></HomeButton>
+      <HomeButton title="Log in" onPress={() => { navigation.navigate("Login") }} margin={height / 25.0}></HomeButton>
+      <HomeButton title="Sign up" onPress={() => { navigation.navigate("Signup") }}></HomeButton>
+      <HomeButton title="Profile" onPress={() => { navigation.navigate("Profile") }} margin={height / 25.0}></HomeButton>
       <StatusBar hidden={true} />
     </SafeAreaView>
   );
