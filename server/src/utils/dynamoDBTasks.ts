@@ -6,6 +6,7 @@ import {
 } from "../types";
 import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { getHashFromCurrentDate, client, tasksTableName } from "./utils";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 import {
   DeleteItemCommand,
   ScanCommand,
@@ -46,11 +47,13 @@ export const getTasksByCreatorId = async (
       ":creatorId": { S: creator.creatorId },
     },
   };
-
   try {
     const command = new ScanCommand(params);
     const response = await client.send(command);
-    return response.Items;
+    if (!response.Items) {
+      return [];
+    }
+    return response.Items.map((item) => unmarshall(item));
   } catch (error) {
     console.error("Error scanning table: ", error);
     throw new Error("Error scanning table");

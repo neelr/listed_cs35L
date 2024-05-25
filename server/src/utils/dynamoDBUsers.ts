@@ -8,6 +8,7 @@ import {
   GetCommand,
   PutCommand,
 } from "@aws-sdk/lib-dynamodb";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 import {
   CreateUserRequest,
   GetUserByIdRequest,
@@ -51,8 +52,11 @@ export const getUsersByName = async ({ username }: GetUsersByNameRequest) => {
     const command = new ScanCommand(params);
     const response = await client.send(command);
 
+    if (!response.Items) {
+      return [];
+    }
     // Return the matching items
-    return response.Items;
+    return response.Items.map((item) => unmarshall(item));
   } catch (error) {
     console.error("Error scanning table: ", error);
     throw new Error("Error scanning table");
