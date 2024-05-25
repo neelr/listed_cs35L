@@ -5,7 +5,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../App";
 import HomeButton from "../components/Button";
-import Spacer from "../components/Spacer";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
@@ -17,6 +16,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     const [username, onChangeUsername] = React.useState('');
     const [password, onChangePassword] = React.useState('');
     const [showPassword, setShowPassword] = React.useState(false);
+    const [ tempPassword, setTempPassword] = React.useState('')
 
     return (
         <SafeAreaView style={styles.container}>
@@ -54,9 +54,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             </View>
 
             <HomeButton title="Log in" onPress={() => { navigation.navigate("Home") }} margin={height * 0.04}></HomeButton>
-            
-            <Spacer height={height * 0.1} />
-            
             <Image source={require("../assets/circles lol.png")} style={styles.image}></Image>
         </SafeAreaView >
     )
@@ -72,9 +69,7 @@ const styles = StyleSheet.create({
 
 
     image: {
-        position: 'absolute',
         bottom: -0.1 * height,
-        zIndex: -1
     },
 
     title: {

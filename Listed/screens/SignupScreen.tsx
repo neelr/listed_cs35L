@@ -5,7 +5,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../App";
 import HomeButton from "../components/Button";
-import Spacer from "../components/Spacer";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 type SignupScreenProps = NativeStackScreenProps<RootStackParamList, 'Signup'>;
@@ -88,9 +87,6 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
             </View>
 
             <HomeButton title="Sign up" onPress={() => { navigation.navigate("Home") }} margin = {height * 0.04}></HomeButton>
-            
-            <Spacer height={height * 0.2} />
-
             <Image source={require("../assets/circles lol.png")} style={styles.image}></Image>
         </SafeAreaView >
     )
