@@ -14,7 +14,7 @@ const { width, height } = Dimensions.get('window');
 const image1 = require("../assets/circles lol.png");
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
-    const [username, onChangeUsername] = React.useState('');
+    const [email, onChangeEmail] = React.useState('');
     const [password, onChangePassword] = React.useState('');
     const [showPassword, setShowPassword] = React.useState(false);
 
@@ -24,10 +24,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
             <TextInput
                 editable
-                value={username}
-                onChangeText={username => onChangeUsername(username)}
+                value={email}
+                onChangeText={email => onChangeEmail(email)}
                 style={[styles.input, {marginTop: height* 0.06}]}
-                placeholder="Username"
+                placeholder="Email address"
             >
             </TextInput>
 

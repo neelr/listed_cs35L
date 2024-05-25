@@ -6,6 +6,9 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../App";
 import HomeButton from "../components/Button";
 import Spacer from "../components/Spacer";
+import WarningText from "../components/WarningText";
+import { isValidEmail } from "../utils/emailCheck";
+import { isValidPassword } from "../utils/passwordCheck";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 type SignupScreenProps = NativeStackScreenProps<RootStackParamList, 'Signup'>;
@@ -42,6 +45,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 placeholder="Email"
             >
             </TextInput>
+            <WarningText message="Invalid email" visible={!isValidEmail(email) && email != ""} />
 
             <View style={styles.passwordContainer}>
                 <TextInput
@@ -64,6 +68,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 /> 
                 
             </View>
+            <WarningText message="Password must be at least 8 characters without spaces" visible={!isValidPassword(password) && password != ""} />
 
             <View style={styles.passwordContainer}>
                 <TextInput
@@ -86,6 +91,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 /> 
                 
             </View>
+            <WarningText message="Passwords do not match" visible={password !== confPassword && confPassword != ""} />
 
             <HomeButton title="Sign up" onPress={() => { navigation.navigate("Home") }} margin = {height * 0.04}></HomeButton>
             
