@@ -15,6 +15,9 @@ import ddDeleteUser from "./routes/ddDeleteUser";
 import { authenticateJWT } from "./utils/utils";
 import ddSignIn from "./routes/ddSignIn";
 import ddSignUp from "./routes/ddSignUp";
+import ddGetUserById from "./routes/ddGetUserById";
+import ddGetTasksByUserIds from "./routes/ddGetTasksByUserIds";
+import ddAddFriend from "./routes/ddAddFriend";
 
 dotenv.config();
 
@@ -35,13 +38,23 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Listed Server is running!");
 });
 
-app.get(`${dynamoDBPreface}/user`, ddSignIn);
-app.post(`${dynamoDBPreface}/user`, ddSignUp);
+app.get(`${dynamoDBPreface}/auth`, ddSignIn);
+app.post(`${dynamoDBPreface}/auth`, ddSignUp);
+
+// authenticated routes
+app.get(`${dynamoDBPreface}/user`, authenticateJWT, ddGetUserById);
 app.delete(`${dynamoDBPreface}/user`, authenticateJWT, ddDeleteUser);
-app.get(`${dynamoDBPreface}/users`, ddGetUsersByName);
+app.get(`${dynamoDBPreface}/tasks`, authenticateJWT, ddGetTasksByUserIds);
+app.get(`${dynamoDBPreface}/users`, authenticateJWT, ddGetUsersByName);
 app.post(`${dynamoDBPreface}/task`, authenticateJWT, ddCreateTask);
 app.get(`${dynamoDBPreface}/task`, authenticateJWT, ddGetTaskById);
 app.get(`${dynamoDBPreface}/tasks`, authenticateJWT, ddGetTasksByCreatorId);
+app.get(
+  `${dynamoDBPreface}/friends/tasks`,
+  authenticateJWT,
+  ddGetTasksByUserIds
+);
+app.post(`${dynamoDBPreface}/friends`, authenticateJWT, ddAddFriend);
 app.delete(`${dynamoDBPreface}/task`, authenticateJWT, ddDeleteTask);
 
 app.get("/get-tasks", getTasks);

@@ -6,6 +6,7 @@ import {
   ScanCommand,
   QueryCommand,
   PutCommand,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import {
   CreateUserRequest,
@@ -17,6 +18,8 @@ import {
 import { encryptPassword, getHashFromCurrentDate } from "./utils";
 import { documentClient, USERS_TABLE_NAME } from "./constants";
 import { SECRET_KEY } from "../server";
+import { AddFriendRequest } from "../types";
+import { ReturnValue } from "@aws-sdk/client-dynamodb";
 
 export const signIn = async ({ email, password }: SignInRequest) => {
   console.log("secret key", SECRET_KEY);
@@ -36,12 +39,12 @@ export const signIn = async ({ email, password }: SignInRequest) => {
       const token = jwt.sign({ userId: user.userId }, SECRET_KEY, {
         expiresIn: "1h",
       });
-      return { token: token, userId: user.userId };
+      return { token: token, ...user };
     }
     return { error: SignInErrors.INCORRECT_PASSWORD };
   } catch (error) {
     console.error("Error getting user by email: ", error);
-    throw new Error("Error getting user by email");
+    throw "Error getting user by email";
   }
 };
 
@@ -63,7 +66,7 @@ export const getUserIdByEmail = async ({ email }: GetUserIdByEmailRequest) => {
     return data.Items || [];
   } catch (error) {
     console.error("Error getting user by email: ", error);
-    throw new Error("Error getting user by email");
+    throw "Error getting user by email";
   }
 };
 
@@ -73,11 +76,11 @@ export const createUser = async (user: CreateUserRequest) => {
   try {
     const users = await getUserIdByEmail({ email: user.email });
     if (users.length > 0) {
-      throw new Error("User already exists");
+      throw "User already exists";
     }
   } catch (error) {
     console.error("Error checking if email exists: ", error);
-    throw new Error("Error checking if email exists");
+    throw "Error checking if email exists";
   }
 
   const item = {
@@ -86,6 +89,7 @@ export const createUser = async (user: CreateUserRequest) => {
     email: user.email,
     password: encryptedPassword,
     createdOn: new Date().toISOString(),
+    friends: [],
   };
 
   const command = new PutCommand({
@@ -98,7 +102,7 @@ export const createUser = async (user: CreateUserRequest) => {
     return item;
   } catch (error) {
     console.error("Error creating user: ", error);
-    throw new Error("Error creating user");
+    throw "Error creating user";
   }
 };
 
@@ -112,7 +116,7 @@ export const signUp = async (user: CreateUserRequest) => {
     return signedInUser;
   } catch (error) {
     console.error("Error signing up: ", error);
-    throw new Error("Error signing up");
+    throw "Error signing up";
   }
 };
 
@@ -133,7 +137,7 @@ export const getUsersByName = async ({ email }: GetUserIdByEmailRequest) => {
     return data.Items || [];
   } catch (error) {
     console.error("Error scanning table: ", error);
-    throw new Error("Error scanning table");
+    throw "Error scanning table";
   }
 };
 
@@ -147,10 +151,13 @@ export const getUserById = async ({ userId }: GetUserByIdRequest) => {
 
   try {
     const data = await documentClient.send(new GetCommand(params));
-    return data.Item || null;
+    if (!data.Item) {
+      throw "User not found";
+    }
+    return data.Item;
   } catch (error) {
     console.error("Error getting user by ID: ", error);
-    throw new Error("Error getting user by ID");
+    throw "Error getting user by ID";
   }
 };
 
@@ -169,6 +176,39 @@ export const deleteUser = async ({ userId }: GetUserByIdRequest) => {
     return { message: "User deleted successfully", userId: userId };
   } catch (error) {
     console.error("Error deleting user: ", error);
-    throw new Error("Error deleting user");
+    throw "Error deleting user";
+  }
+};
+
+export const addFriend = async ({ userId, friendId }: AddFriendRequest) => {
+  const user = await getUserById({ userId });
+  if (!user) {
+    throw "User not found";
+  }
+
+  if (user.friends.includes(friendId)) {
+    throw "Friend already added";
+  }
+
+  const params = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      userId: userId,
+    },
+    UpdateExpression: "SET friends = list_append(friends, :friendId)",
+    ExpressionAttributeValues: {
+      ":friendId": [friendId],
+    },
+    ReturnValues: ReturnValue.ALL_NEW,
+  };
+
+  const command = new UpdateCommand(params);
+
+  try {
+    const data = await documentClient.send(command);
+    return data.Attributes;
+  } catch (error) {
+    console.error("Error adding friend: ", error);
+    throw "Error adding friend";
   }
 };

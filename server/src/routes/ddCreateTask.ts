@@ -4,7 +4,10 @@ import { createTask } from "../utils/dynamoDBTasks";
 
 export default async (req: Request, res: Response) => {
   try {
-    const taskInfo: CreateTaskRequest = req.body;
+    const taskInfo: CreateTaskRequest = {
+      ...req.body,
+      creatorId: req.body.userId,
+    };
     const newTask = await createTask(taskInfo);
     res.send(newTask);
   } catch (error) {

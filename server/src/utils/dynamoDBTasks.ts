@@ -3,12 +3,14 @@ import {
   GetCommand,
   DeleteCommand,
   ScanCommand,
+  ScanCommandInput,
 } from "@aws-sdk/lib-dynamodb";
 import {
   CreateTaskRequest,
   DeleteTaskRequest,
   GetTaskByIdRequest,
   GetTasksByCreatorIdRequest,
+  GetTasksByUserIdsRequest,
 } from "../types";
 import { getHashFromCurrentDate } from "./utils";
 import { documentClient, TASKS_TABLE_NAME } from "./constants";
@@ -35,7 +37,7 @@ export const createTask = async (task: CreateTaskRequest) => {
     return item;
   } catch (error) {
     console.error("Error creating task: ", error);
-    throw new Error("Error creating task");
+    throw "Error creating task";
   }
 };
 
@@ -58,7 +60,35 @@ export const getTasksByCreatorId = async (
     return Items || [];
   } catch (error) {
     console.error("Error scanning table: ", error);
-    throw new Error("Error scanning table");
+    throw "Error scanning table";
+  }
+};
+
+export const getTasksByUserIds = async ({
+  userIds,
+}: GetTasksByUserIdsRequest) => {
+  let filterExpressions: string[] = [];
+  let expressionAttributeValues: { [key: string]: string } = {};
+
+  userIds.forEach((userId, index) => {
+    const placeholder = `:userId${index}`;
+    filterExpressions.push(`contains(userIds, ${placeholder})`);
+    expressionAttributeValues[placeholder] = userId;
+  });
+
+  const params: ScanCommandInput = {
+    TableName: TASKS_TABLE_NAME,
+    FilterExpression: filterExpressions.join(" OR "),
+    ExpressionAttributeValues: expressionAttributeValues,
+  };
+
+  try {
+    const command = new ScanCommand(params);
+    const response = await documentClient.send(command);
+    return response.Items || [];
+  } catch (error) {
+    console.error("Error scanning table: ", error);
+    throw "Error scanning table";
   }
 };
 
@@ -75,7 +105,7 @@ export const getTaskById = async ({ taskId }: GetTaskByIdRequest) => {
     return Item || null;
   } catch (error) {
     console.error("Error getting task by ID: ", error);
-    throw new Error("Error getting task by ID");
+    throw "Error getting task by ID";
   }
 };
 
@@ -94,6 +124,6 @@ export const deleteTask = async ({ taskId }: DeleteTaskRequest) => {
     return { taskId: taskId };
   } catch (error) {
     console.error("Error deleting task: ", error);
-    throw new Error("Error deleting task");
+    throw "Error deleting task";
   }
 };

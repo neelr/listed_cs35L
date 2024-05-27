@@ -17,16 +17,16 @@ export const authenticateJWT = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("req.headers.authorization", req.headers.authorization);
   const token = req.headers.authorization?.split(" ")[1];
   if (token) {
     jwt.verify(token, SECRET_KEY, (err, userId) => {
-      console.log("SECRET_KEY", SECRET_KEY);
       if (err) {
-        console.log(err);
         return res.status(401).send({ error: "Invalid token" });
       }
-      req.body = { ...req.body, userId };
+      if (typeof userId === "string") {
+        userId = { userId };
+      }
+      req.body = { ...req.body, ...userId };
       next();
     });
   } else {

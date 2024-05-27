@@ -55,6 +55,14 @@ export interface GetTasksByCreatorIdRequest {
   creatorId: string;
 }
 
+export interface GetTasksByUserIdsRequest {
+  userIds: string[];
+}
+
+export interface AddFriendRequest {
+  userId: string;
+  friendId: string;
+}
 export interface GetTaskByIdRequest {
   taskId: string;
 }
