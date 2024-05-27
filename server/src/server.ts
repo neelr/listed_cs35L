@@ -6,7 +6,6 @@ import addTask from "./routes/addTask";
 import getTasks from "./routes/getTasks";
 import addUser from "./routes/addUser";
 import dotenv from "dotenv";
-import ddGetUsersByName from "./routes/ddGetUsersByName";
 import ddCreateTask from "./routes/ddCreateTask";
 import ddGetTasksByCreatorId from "./routes/ddGetTasksByCreatorId";
 import ddGetTaskById from "./routes/ddGetTaskById";
@@ -18,6 +17,7 @@ import ddSignUp from "./routes/ddSignUp";
 import ddGetUserById from "./routes/ddGetUserById";
 import ddGetTasksByUserIds from "./routes/ddGetTasksByUserIds";
 import ddAddFriend from "./routes/ddAddFriend";
+import ddSearchUsersByName from "./routes/ddSearchUsersByName";
 
 dotenv.config();
 
@@ -45,7 +45,7 @@ app.post(`${dynamoDBPreface}/auth`, ddSignUp);
 app.get(`${dynamoDBPreface}/user`, authenticateJWT, ddGetUserById);
 app.delete(`${dynamoDBPreface}/user`, authenticateJWT, ddDeleteUser);
 app.get(`${dynamoDBPreface}/tasks`, authenticateJWT, ddGetTasksByUserIds);
-app.get(`${dynamoDBPreface}/users`, authenticateJWT, ddGetUsersByName);
+app.get(`${dynamoDBPreface}/users`, authenticateJWT, ddSearchUsersByName);
 app.post(`${dynamoDBPreface}/task`, authenticateJWT, ddCreateTask);
 app.get(`${dynamoDBPreface}/task`, authenticateJWT, ddGetTaskById);
 app.get(`${dynamoDBPreface}/tasks`, authenticateJWT, ddGetTasksByCreatorId);

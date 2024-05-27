@@ -12,6 +12,7 @@ import {
   CreateUserRequest,
   GetUserByIdRequest,
   GetUserIdByEmailRequest,
+  SearchUsersByNameRequest,
   SignInErrors,
   SignInRequest,
 } from "../types";
@@ -22,7 +23,6 @@ import { AddFriendRequest } from "../types";
 import { ReturnValue } from "@aws-sdk/client-dynamodb";
 
 export const signIn = async ({ email, password }: SignInRequest) => {
-  console.log("secret key", SECRET_KEY);
   try {
     const userResponse = await getUserIdByEmail({ email });
     if (userResponse.length === 0) {
@@ -120,15 +120,17 @@ export const signUp = async (user: CreateUserRequest) => {
   }
 };
 
-export const getUsersByName = async ({ email }: GetUserIdByEmailRequest) => {
+export const searchUsersByName = async ({
+  username,
+}: SearchUsersByNameRequest) => {
   const params = {
     TableName: USERS_TABLE_NAME,
-    FilterExpression: "#email = :email",
+    FilterExpression: "contains(#username, :searchTerm)",
     ExpressionAttributeNames: {
-      "#email": "email",
+      "#username": "username",
     },
     ExpressionAttributeValues: {
-      ":email": email,
+      ":searchTerm": username,
     },
   };
 

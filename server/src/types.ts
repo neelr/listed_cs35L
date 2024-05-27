@@ -17,6 +17,10 @@ export interface GetUserIdByEmailRequest {
   email: string;
 }
 
+export interface SearchUsersByNameRequest {
+  username: string;
+}
+
 export interface GetUserByIdRequest {
   userId: string;
 }
@@ -69,4 +73,10 @@ export interface GetTaskByIdRequest {
 
 export interface DeleteTaskRequest {
   taskId: string;
+}
+
+export interface PublicUser {
+  userId: string;
+  username: string;
+  friends: string[];
 }
