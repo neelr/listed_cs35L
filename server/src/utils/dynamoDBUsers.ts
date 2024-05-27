@@ -76,11 +76,11 @@ export const createUser = async (user: CreateUserRequest) => {
   try {
     const users = await getUserIdByEmail({ email: user.email });
     if (users.length > 0) {
-      throw "User already exists";
+      throw "Email is taken";
     }
   } catch (error) {
     console.error("Error checking if email exists: ", error);
-    throw "Error checking if email exists";
+    throw error;
   }
 
   const item = {
@@ -116,7 +116,7 @@ export const signUp = async (user: CreateUserRequest) => {
     return signedInUser;
   } catch (error) {
     console.error("Error signing up: ", error);
-    throw "Error signing up";
+    throw error;
   }
 };
 
