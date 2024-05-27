@@ -6,16 +6,19 @@ import addTask from "./routes/addTask";
 import getTasks from "./routes/getTasks";
 import addUser from "./routes/addUser";
 import dotenv from "dotenv";
-import dynamoDBGetUserById from "./routes/dynamoDBGetUserById";
-import dynamoDBCreateUser from "./routes/dynamoDBCreateUser";
-import dynamoDBGetUsersByName from "./routes/dynamoDBGetUsersByName";
-import dynamoDBCreateTask from "./routes/dynamoDBCreateTask";
-import dynamoDBGetTasksByCreatorId from "./routes/dynamoDBGetTasksByCreatorId";
-import dynamoDBGetTaskById from "./routes/dynamoDBGetTaskById";
-import dynamoDBDeleteTask from "./routes/dynamoDBDeleteTask";
-import dynamoDBDeleteUser from "./routes/dynamoDBDeleteUser";
+import ddGetUsersByName from "./routes/ddGetUsersByName";
+import ddCreateTask from "./routes/ddCreateTask";
+import ddGetTasksByCreatorId from "./routes/ddGetTasksByCreatorId";
+import ddGetTaskById from "./routes/ddGetTaskById";
+import ddDeleteTask from "./routes/ddDeleteTask";
+import ddDeleteUser from "./routes/ddDeleteUser";
+import { authenticateJWT } from "./utils/utils";
+import ddSignIn from "./routes/ddSignIn";
+import ddSignUp from "./routes/ddSignUp";
 
 dotenv.config();
+
+export const SECRET_KEY = process.env.AUTH_SECRET || "test-secret";
 
 const PORT = process.env.PORT || 3000;
 
@@ -32,14 +35,14 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Listed Server is running!");
 });
 
-app.get(`${dynamoDBPreface}/user`, dynamoDBGetUserById);
-app.post(`${dynamoDBPreface}/user`, dynamoDBCreateUser);
-app.delete(`${dynamoDBPreface}/user`, dynamoDBDeleteUser);
-app.get(`${dynamoDBPreface}/get-users`, dynamoDBGetUsersByName);
-app.post(`${dynamoDBPreface}/task`, dynamoDBCreateTask);
-app.get(`${dynamoDBPreface}/task`, dynamoDBGetTaskById);
-app.get(`${dynamoDBPreface}/get-tasks`, dynamoDBGetTasksByCreatorId);
-app.delete(`${dynamoDBPreface}/task`, dynamoDBDeleteTask);
+app.get(`${dynamoDBPreface}/user`, ddSignIn);
+app.post(`${dynamoDBPreface}/user`, ddSignUp);
+app.delete(`${dynamoDBPreface}/user`, authenticateJWT, ddDeleteUser);
+app.get(`${dynamoDBPreface}/users`, ddGetUsersByName);
+app.post(`${dynamoDBPreface}/task`, authenticateJWT, ddCreateTask);
+app.get(`${dynamoDBPreface}/task`, authenticateJWT, ddGetTaskById);
+app.get(`${dynamoDBPreface}/tasks`, authenticateJWT, ddGetTasksByCreatorId);
+app.delete(`${dynamoDBPreface}/task`, authenticateJWT, ddDeleteTask);
 
 app.get("/get-tasks", getTasks);
 

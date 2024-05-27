@@ -13,16 +13,31 @@ export interface Task {
   completed: boolean;
 }
 
-export interface GetUsersByNameRequest {
-  username: string;
+export interface GetUserIdByEmailRequest {
+  email: string;
 }
 
 export interface GetUserByIdRequest {
   userId: string;
 }
 
+export interface SignInRequest {
+  email: string;
+  password: string;
+}
+
+export interface JwtPayload {
+  userId: string;
+}
+
+export enum SignInErrors {
+  USER_NOT_FOUND = "User not found",
+  INCORRECT_PASSWORD = "Incorrect password",
+}
+
 export interface CreateUserRequest {
   username: string;
+  password: string;
   email: string;
 }
 
