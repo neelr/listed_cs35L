@@ -17,6 +17,7 @@ import LoginScreen from './screens/LoginScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import TaskManagerScreen from './screens/TaskManagerScreen';
 import ListItemScreen from './screens/ListItemScreen'; 
+import AddTaskModal from './modals/AddTaskModal';
 
 export type RootStackParamList = {
   Signin: undefined;
@@ -25,6 +26,7 @@ export type RootStackParamList = {
   Profile: undefined;
   ListItem: undefined;
   Signup: undefined;
+  AddTaskModal: undefined;
 };
 
 export type TabParamList = {
@@ -58,7 +60,7 @@ const TabNavigator: React.FC = () => (
     })}
   >
     <Tab.Screen name="ListItem" component={ListItemScreen} />
-    <Tab.Screen name="Tasks" component={TaskManagerScreen} />
+    {/* <Tab.Screen name="Task" component={TaskManagerScreen} /> */}
     <Tab.Screen name="Profile" component={ProfileScreen} />
   </Tab.Navigator>
 );
@@ -86,6 +88,8 @@ const App: React.FC = () => {
         <Stack.Screen name='Profile' component={ProfileScreen} options={{ headerShown: false }} />
         <Stack.Screen name='TaskManager' component={TabNavigator} options={{ headerShown: false }} />
         <Stack.Screen name='ListItem' component={ListItemScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='AddTaskModal' component={AddTaskModal} options={{ headerShown: false, presentation: "modal"}} />
+        {/* <Stack.Screen name='Task' component={TaskManagerScreen} options={{ headerShown: false }} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
