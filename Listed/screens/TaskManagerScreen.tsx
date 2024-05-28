@@ -2,9 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const TaskManagerScreen: React.FC = () => {
-  const navigation = useNavigation();
+type TaskManagerProps = NativeStackScreenProps<RootStackParamList, "Signup">
+
+const TaskManagerScreen: React.FC<TaskManagerProps> = ({ navigation }) => {
+  //const navigation = useNavigation();
 
   return (
     <View style={styles.container}>

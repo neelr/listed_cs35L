@@ -53,7 +53,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
       <HomeButton
         title="Log in"
-        onPress={() => navigation.navigate("ListItem")}
+        onPress={() => navigation.navigate("TaskManager")}
         margin={height * 0.04}
       />
       <Image

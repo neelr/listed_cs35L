@@ -1,5 +1,6 @@
 import React from "react";
-import { StyleSheet, GestureResponderEvent, TextStyle, TouchableOpacity, ViewStyle, Text, Dimensions, StyleProp } from "react-native";
+import { StyleSheet, GestureResponderEvent, TextStyle, TouchableOpacity, ViewStyle, 
+    Text, Dimensions, StyleProp } from "react-native";
 
 type ButtonProps = {
     title: string;
