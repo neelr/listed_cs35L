@@ -14,6 +14,7 @@ import { useFonts,
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SigninScreen from './screens/SigninScreen';
 import LoginScreen from './screens/LoginScreen';
+import SignupScreen from './screens/SignupScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import TaskManagerScreen from './screens/TaskManagerScreen';
 import ListItemScreen from './screens/ListItemScreen'; 
@@ -84,6 +85,7 @@ const App: React.FC = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Signin'>
         <Stack.Screen name='Signin' component={SigninScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='Signup' component={SignupScreen} options={{ headerShown: false }} />
         <Stack.Screen name='Login' component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name='Profile' component={ProfileScreen} options={{ headerShown: false }} />
         <Stack.Screen name='TaskManager' component={TabNavigator} options={{ headerShown: false }} />
