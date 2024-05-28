@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 
-type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
+const TaskManagerScreen: React.FC = () => {
+  const navigation = useNavigation();
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Elio's Part Goes here</Text>
+      <Text style={styles.title}>Task Manager Goes Here</Text>
       <Button
         title="Go Back"
         onPress={() => navigation.navigate('Signin')}
@@ -31,4 +31,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+
+export default TaskManagerScreen;

@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Calendar } from 'react-native-calendars';
+// import { Calendar } from 'react-native-calendars';
 import { RootStackParamList } from "../App";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import * as Notifications from 'expo-notifications';
 
 type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
@@ -29,15 +28,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
     setIsFollowing(!isFollowing);
   };
 
-  const handlePokePress = async () => {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Poke",
-        body: "You have poked Carey Natchenberg!",
-      },
-      trigger: null,
-    });
-  };
 
   const renderTask = ({ item }: { item: Task }) => (
     <View style={styles.taskCard}>
@@ -67,9 +57,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             style={styles.taskList}
           />
         );
-      case 'Calendar':
+      /*case 'Calendar':
         return (
-          <Calendar
+         <Calendar
             onDayPress={(day) => {
               // console.log('selected day', day);
             }}
@@ -101,7 +91,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               textDayHeaderFontSize: 16
             }}
           />
-        );
+        );*/
     }
   };
 
@@ -109,9 +99,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.goBackButton} onPress={() => navigation.navigate("Home")}>
-            <Text style={styles.goBackButtonText}>←</Text>
-          </TouchableOpacity>
           <Text style={styles.username}>@DoubleBBinks</Text>
         </View>
         <View style={styles.profileHeader}>
@@ -146,7 +133,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               {isFollowing ? "Unfollow" : "Follow"}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.PokeButton} onPress={handlePokePress}>
+          <TouchableOpacity style={styles.PokeButton}>
             <Text style={styles.PokeButtonText}>Poke</Text>
           </TouchableOpacity>
         </View>
@@ -161,11 +148,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         <TouchableOpacity style={[styles.tabButton, activeTab === 'Completed' && styles.activeTabButton]} onPress={() => setActiveTab('Completed')}>
           <Text style={styles.tabButtonText}>✅</Text>
           {activeTab === 'Completed' && <View style={styles.activeTabIndicator} />}
-        </TouchableOpacity>
-        <View style={styles.tabSeparator} />
-        <TouchableOpacity style={[styles.tabButton, activeTab === 'Calendar' && styles.activeTabButton]} onPress={() => setActiveTab('Calendar')}>
-          <Text style={styles.tabButtonText}>🗓️</Text>
-          {activeTab === 'Calendar' && <View style={styles.activeTabIndicator} />}
         </TouchableOpacity>
       </View>
       <View style={styles.contentContainer}>
@@ -216,12 +198,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   username: {
-    fontSize: 15,
+    fontSize: 16,
     fontStyle: "italic",
     fontWeight: "bold",
     marginStart: 1,
-    marginTop: 8,
-    marginBottom: 10,
+    marginTop: 10,
+    marginBottom: 0,
     color: "#000",
   },
   name: {
