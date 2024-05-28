@@ -52,7 +52,6 @@ app.post(`/auth`, ddSignUp);
 // authenticated routes
 app.get(`/user`, authenticateJWT, ddGetUserById);
 app.delete(`/user`, authenticateJWT, ddDeleteUser);
-app.get(`/tasks`, authenticateJWT, ddGetTasksByUserIds);
 app.get(`/users`, authenticateJWT, ddSearchUsersByName);
 app.post(`/task`, authenticateJWT, ddCreateTask);
 app.get(`/task`, authenticateJWT, ddGetTaskById);
