@@ -18,6 +18,7 @@ import ddGetUserById from "./routes/ddGetUserById";
 import ddGetTasksByUserIds from "./routes/ddGetTasksByUserIds";
 import ddAddFriend from "./routes/ddAddFriend";
 import ddSearchUsersByName from "./routes/ddSearchUsersByName";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
@@ -25,39 +26,40 @@ export const SECRET_KEY = process.env.AUTH_SECRET || "test-secret";
 
 const PORT = process.env.PORT || 3000;
 
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20, // limit each IP to 20 requests per windowMs
+});
+
 const app = express();
 
-const dynamoDBPreface = "/dynamodb";
+const oldRoutesPreface = "/old";
 
 app.use(bodyParser.json());
+app.use(limiter);
 
-app.post("/add-task", addTask);
-app.post("/add-user", addUser);
+app.post(`${oldRoutesPreface}/add-task`, addTask);
+app.post(`${oldRoutesPreface}/add-user`, addUser);
+app.get(`${oldRoutesPreface}/get-tasks`, getTasks);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Listed Server is running!");
 });
 
-app.get(`${dynamoDBPreface}/auth`, ddSignIn);
-app.post(`${dynamoDBPreface}/auth`, ddSignUp);
+app.get(`/auth`, ddSignIn);
+app.post(`/auth`, ddSignUp);
 
 // authenticated routes
-app.get(`${dynamoDBPreface}/user`, authenticateJWT, ddGetUserById);
-app.delete(`${dynamoDBPreface}/user`, authenticateJWT, ddDeleteUser);
-app.get(`${dynamoDBPreface}/tasks`, authenticateJWT, ddGetTasksByUserIds);
-app.get(`${dynamoDBPreface}/users`, authenticateJWT, ddSearchUsersByName);
-app.post(`${dynamoDBPreface}/task`, authenticateJWT, ddCreateTask);
-app.get(`${dynamoDBPreface}/task`, authenticateJWT, ddGetTaskById);
-app.get(`${dynamoDBPreface}/tasks`, authenticateJWT, ddGetTasksByCreatorId);
-app.get(
-  `${dynamoDBPreface}/friends/tasks`,
-  authenticateJWT,
-  ddGetTasksByUserIds
-);
-app.post(`${dynamoDBPreface}/friends`, authenticateJWT, ddAddFriend);
-app.delete(`${dynamoDBPreface}/task`, authenticateJWT, ddDeleteTask);
-
-app.get("/get-tasks", getTasks);
+app.get(`/user`, authenticateJWT, ddGetUserById);
+app.delete(`/user`, authenticateJWT, ddDeleteUser);
+app.get(`/tasks`, authenticateJWT, ddGetTasksByUserIds);
+app.get(`/users`, authenticateJWT, ddSearchUsersByName);
+app.post(`/task`, authenticateJWT, ddCreateTask);
+app.get(`/task`, authenticateJWT, ddGetTaskById);
+app.get(`/tasks`, authenticateJWT, ddGetTasksByCreatorId);
+app.get(`/friends/tasks`, authenticateJWT, ddGetTasksByUserIds);
+app.post(`/friends`, authenticateJWT, ddAddFriend);
+app.delete(`/task`, authenticateJWT, ddDeleteTask);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

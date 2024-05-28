@@ -19,6 +19,7 @@
     "dotenv": "^16.4.5",
     "expo": "^51.0.2",
     "express": "^4.19.2",
+    "express-rate-limit": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "react-dom": "18.2.0",
     "react-native-web": "~0.19.10",
