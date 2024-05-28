@@ -1,8 +1,15 @@
 import React from "react";
+import HomeScreen from "./screens/HomeScreen";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import LoginScreen from "./screens/LoginScreen";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import SignupScreen from "./screens/SignupScreen";
+import ListItemScreen from "./screens/ListItemScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import TestModalScreen from "./screens/TestModalScreen";
+import AddTaskModal from "./modals/AddTaskModal";
+import SigninScreen from "./screens/SigninScreen";
+import TaskManagerScreen from "./screens/TaskManagerScreen";
 import {
   useFonts,
   InknutAntiqua_300Light,
@@ -14,12 +21,7 @@ import {
   InknutAntiqua_900Black,
 } from "@expo-google-fonts/inknut-antiqua";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
-import SigninScreen from "./screens/SigninScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import HomeScreen from "./screens/HomeScreen";
-import TaskManagerScreen from "./screens/TaskManagerScreen";
-import SignupScreen from "./screens/SignupScreen";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 export type RootStackParamList = {
   Signin: undefined;
@@ -28,6 +30,9 @@ export type RootStackParamList = {
   Profile: undefined;
   Home: undefined;
   TaskManager: undefined;
+  ListItem: undefined;
+  TestModalScreen: undefined;
+  AddTaskModal: undefined;
 };
 
 export type TabParamList = {
@@ -113,6 +118,36 @@ const App: React.FC = () => {
           name="TaskManager"
           component={TaskManagerScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ListItem"
+          component={ListItemScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={SignupScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="TestModalScreen"
+          component={TestModalScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AddTaskModal"
+          component={AddTaskModal}
+          options={{ presentation: "modal", headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

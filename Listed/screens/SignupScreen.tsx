@@ -8,6 +8,7 @@ import HomeButton from "../components/Button";
 import WarningText from "../components/WarningText";
 import { isValidEmail } from "../utils/emailCheck";
 import { isValidPassword } from "../utils/passwordCheck";
+import Spacer from "../components/Spacer";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 type SignupScreenProps = NativeStackScreenProps<RootStackParamList, "Signup">;
@@ -106,6 +107,9 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
         }}
         margin={height * 0.04}
       ></HomeButton>
+
+      <Spacer height={height * 0.2} />
+
       <Image
         source={require("../assets/circles lol.png")}
         style={styles.image}
