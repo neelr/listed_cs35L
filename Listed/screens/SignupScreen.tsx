@@ -103,7 +103,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
       <HomeButton
         title="Sign up"
         onPress={() => {
-          navigation.navigate("Home");
+          navigation.navigate("ListItem");
         }}
         margin={height * 0.04}
       ></HomeButton>
