@@ -1,4 +1,3 @@
-// LoginScreen.tsx
 import React from "react";
 import { Dimensions, StyleSheet, View, Image, Text } from "react-native";
 import { TextInput } from "react-native";
@@ -7,55 +6,88 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../App";
 import HomeButton from "../components/Button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import WarningMessage from "../components/WarningText";
+import { PASSWORD_SCHEMA } from "../constants";
+import WarningText from "../components/WarningText";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const { width, height } = Dimensions.get("window");
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
-  const [email, onChangeEmail] = React.useState("");
-  const [password, onChangePassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: PASSWORD_SCHEMA,
+  });
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Log In</Text>
 
-      <TextInput
-        editable
-        value={email}
-        onChangeText={onChangeEmail}
-        style={[styles.input, { marginTop: height * 0.06 }]}
-        placeholder="Username"
-      />
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        validationSchema={validationSchema}
+        onSubmit={(values) => {
+          navigation.navigate("TaskManager");
+        }}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
+          <View>
+            <TextInput
+              editable
+              value={values.email}
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              style={[styles.input, { marginTop: height * 0.06 }]}
+              placeholder="Email"
+              placeholderTextColor="#aaa"
+            />
+            <WarningText message={errors.email} visible={touched.email} />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                editable
+                value={values.password}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                style={[
+                  styles.input,
+                  { paddingRight: width * 0.07, marginTop: height * 0.04 },
+                ]}
+                secureTextEntry={!showPassword}
+                placeholder="Password"
+                placeholderTextColor="#aaa"
+              />
+              <MaterialCommunityIcons
+                name={showPassword ? "eye" : "eye-off"}
+                size={24}
+                color="#aaa"
+                style={[styles.icon, { marginTop: height * 0.04 }]}
+                onPress={() => setShowPassword(!showPassword)}
+              />
+            </View>
+            <WarningText message={errors.password} visible={touched.password} />
+            <HomeButton
+              title="Log in"
+              onPress={() => {
+                handleSubmit();
+              }}
+              customStyles={{ marginTop: height * 0.04 }}
+            />
+          </View>
+        )}
+      </Formik>
 
-      <View style={styles.passwordContainer}>
-        <TextInput
-          editable
-          value={password}
-          onChangeText={onChangePassword}
-          style={[
-            styles.input,
-            { paddingRight: width * 0.07, marginTop: height * 0.04 },
-          ]}
-          secureTextEntry={!showPassword}
-          placeholder="Password"
-          placeholderTextColor="#aaa"
-        />
-        <MaterialCommunityIcons
-          name={showPassword ? "eye" : "eye-off"}
-          size={24}
-          color="#aaa"
-          style={[styles.icon, { marginTop: height * 0.04 }]}
-          onPress={() => setShowPassword(!showPassword)}
-        />
-      </View>
-
-      <HomeButton
-        title="Log in"
-        onPress={() => navigation.navigate("ListItem")}
-        margin={height * 0.04}
-      />
       <Image
         source={require("../assets/circles lol.png")}
         style={styles.image}

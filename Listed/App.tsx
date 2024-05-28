@@ -1,8 +1,9 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useFonts,
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  useFonts,
   InknutAntiqua_300Light,
   InknutAntiqua_400Regular,
   InknutAntiqua_500Medium,
@@ -10,13 +11,16 @@ import { useFonts,
   InknutAntiqua_700Bold,
   InknutAntiqua_800ExtraBold,
   InknutAntiqua_900Black,
-} from '@expo-google-fonts/inknut-antiqua';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import SigninScreen from './screens/SigninScreen';
-import LoginScreen from './screens/LoginScreen';
-import ProfileScreen from './screens/ProfileScreen';
-import TaskManagerScreen from './screens/TaskManagerScreen';
-import ListItemScreen from './screens/ListItemScreen'; 
+} from "@expo-google-fonts/inknut-antiqua";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import SigninScreen from "./screens/SigninScreen";
+import LoginScreen from "./screens/LoginScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import TaskManagerScreen from "./screens/TaskManagerScreen";
+import ListItemScreen from "./screens/ListItemScreen";
+import SignupScreen from "./screens/SignupScreen";
+import TestModalScreen from "./screens/TestModalScreen";
+import AddTaskModal from "./modals/AddTaskModal";
 
 export type RootStackParamList = {
   Signin: undefined;
@@ -25,6 +29,8 @@ export type RootStackParamList = {
   Profile: undefined;
   ListItem: undefined;
   Signup: undefined;
+  TestModalScreen: undefined;
+  AddTaskModal: undefined;
 };
 
 export type TabParamList = {
@@ -40,21 +46,21 @@ const TabNavigator: React.FC = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon: ({ color, size }) => {
-        let iconName: string = '';
-        
-        if (route.name === 'ListItem') {
-          iconName = 'home-outline';
-        } else if (route.name === 'Profile') {
-          iconName = 'person-outline';
-        } else if (route.name === 'Tasks') {
-          iconName = 'list-outline';
+        let iconName: string = "";
+
+        if (route.name === "ListItem") {
+          iconName = "home-outline";
+        } else if (route.name === "Profile") {
+          iconName = "person-outline";
+        } else if (route.name === "Tasks") {
+          iconName = "list-outline";
         }
-        
+
         return <Ionicons name={iconName} size={size} color={color} />;
       },
-      tabBarActiveTintColor: 'tomato',
-      tabBarInactiveTintColor: 'gray',
-      headerShown: false, 
+      tabBarActiveTintColor: "tomato",
+      tabBarInactiveTintColor: "gray",
+      headerShown: false,
     })}
   >
     <Tab.Screen name="ListItem" component={ListItemScreen} />
@@ -80,12 +86,47 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Signin'>
-        <Stack.Screen name='Signin' component={SigninScreen} options={{ headerShown: false }} />
-        <Stack.Screen name='Login' component={LoginScreen} options={{ headerShown: false }} />
-        <Stack.Screen name='Profile' component={ProfileScreen} options={{ headerShown: false }} />
-        <Stack.Screen name='TaskManager' component={TabNavigator} options={{ headerShown: false }} />
-        <Stack.Screen name='ListItem' component={ListItemScreen} options={{ headerShown: false }} />
+      <Stack.Navigator initialRouteName="Signin">
+        <Stack.Screen
+          name="Signin"
+          component={SigninScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={SignupScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="TaskManager"
+          component={TabNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ListItem"
+          component={ListItemScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="TestModalScreen"
+          component={TestModalScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AddTaskModal"
+          component={AddTaskModal}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
