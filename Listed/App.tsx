@@ -19,6 +19,7 @@ import SigninScreen from "./screens/SigninScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import HomeScreen from "./screens/HomeScreen";
 import TaskManagerScreen from "./screens/TaskManagerScreen";
+import SignupScreen from "./screens/SignupScreen";
 
 export type RootStackParamList = {
   Signin: undefined;
@@ -91,6 +92,11 @@ const App: React.FC = () => {
         <Stack.Screen
           name="Login"
           component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={SignupScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

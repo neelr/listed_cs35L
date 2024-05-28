@@ -23,8 +23,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
       <TextInput
         editable
-        value={username}
-        onChangeText={onChangeUsername}
+        value={email}
+        onChangeText={onChangeEmail}
         style={[styles.input, { marginTop: height * 0.06 }]}
         placeholder="Username"
       />
