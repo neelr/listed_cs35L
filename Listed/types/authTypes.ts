@@ -1,10 +1,4 @@
-export interface User {
-  username: string;
-  email: string;
-  friends: string[];
-  createdOn: string;
-  userId: string;
-}
+import { User } from "./userTypes";
 
 export interface LoginPayload {
   email: string;

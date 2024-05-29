@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Dimensions, StyleSheet, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../App";
-import { Task } from "../components/Task";
+import { RootStackParamList } from "../routes/StackNavigator";
+import { TaskView } from "../components/TaskView";
 import CircleAddButton from "../components/CircleAddButton";
+import { useUserTasks } from "../hooks/useUserTasks";
 
 type ListItemScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -13,79 +14,85 @@ type ListItemScreenProps = NativeStackScreenProps<
 
 const { width, height } = Dimensions.get("window");
 
-// Sample task data
-const sampleTasks: Task[] = [
-  {
-    completed: false,
-    completeBy: "2024-05-31",
-    description: "I have to do XYS",
-    taskId: "1",
-    userIds: ["u1", "u2"],
-  },
-  {
-    completed: true,
-    completeBy: "2024-06-01",
-    description: "I have to do ABC",
-    taskId: "2",
-    userIds: ["u3"],
-  },
-  {
-    completed: false,
-    completeBy: "2024-06-02",
-    description: "I have to do LKJ",
-    taskId: "3",
-    userIds: ["u4", "u5", "u6"],
-  },
-  {
-    completed: false,
-    completeBy: "2024-06-02",
-    description: "I have to do LJ",
-    taskId: "4",
-    userIds: ["u4", "u5", "u6"],
-  },
-  {
-    completed: false,
-    completeBy: "2024-06-02",
-    description: "I have to do KJ",
-    taskId: "5",
-    userIds: ["u4", "u5", "u6"],
-  },
-  {
-    completed: false,
-    completeBy: "2024-06-02",
-    description: "I have to do J",
-    taskId: "6",
-    userIds: ["u4", "u5", "u6"],
-  },
-  {
-    completed: false,
-    completeBy: "2024-06-02",
-    description: "I have to do K",
-    taskId: "7",
-    userIds: ["u4", "u5", "u6"],
-  },
-];
+// // Sample task data
+// const sampleTasks: Task[] = [
+//   {
+//     completed: false,
+//     completeBy: "2024-05-31",
+//     createdOn: "wkemf",
+//     description: "I have to do XYS",
+//     taskId: "1",
+//     userIds: ["u1", "u2"],
+//   },
+//   {
+//     completed: true,
+//     completeBy: "2024-06-01",
+//     description: "I have to do ABC",
+//     taskId: "2",
+//     userIds: ["u3"],
+//   },
+//   {
+//     completed: false,
+//     completeBy: "2024-06-02",
+//     description: "I have to do LKJ",
+//     taskId: "3",
+//     userIds: ["u4", "u5", "u6"],
+//   },
+//   {
+//     completed: false,
+//     completeBy: "2024-06-02",
+//     description: "I have to do LJ",
+//     taskId: "4",
+//     userIds: ["u4", "u5", "u6"],
+//   },
+//   {
+//     completed: false,
+//     completeBy: "2024-06-02",
+//     description: "I have to do KJ",
+//     taskId: "5",
+//     userIds: ["u4", "u5", "u6"],
+//   },
+//   {
+//     completed: false,
+//     completeBy: "2024-06-02",
+//     description: "I have to do J",
+//     taskId: "6",
+//     userIds: ["u4", "u5", "u6"],
+//   },
+//   {
+//     completed: false,
+//     completeBy: "2024-06-02",
+//     description: "I have to do K",
+//     taskId: "7",
+//     userIds: ["u4", "u5", "u6"],
+//   },
+// ];
 
 const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
-  const [tasks, setTasks] = useState(sampleTasks); // Added state for tasks
-
+  const { data: tasks, isLoading } = useUserTasks();
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Task List</Text>
-      {/* Added title */}
-      <FlatList
-        data={tasks} // Passed tasks state to FlatList
-        keyExtractor={(item) => item.taskId} // Set key extractor
-        renderItem={(item) => <Task task={item.item} />} // Render each task using Task component
-      />
+      {isLoading ? (
+        <Text>Loading...</Text>
+      ) : (
+        <>
+          {tasks?.length === 0 && <Text>No tasks yet!</Text>}
+          <FlatList
+            data={tasks} // Passed tasks state to FlatList
+            keyExtractor={(item) => item.taskId} // Set key extractor
+            renderItem={(item) => <TaskView task={item.item} />} // Render each task using Task component
+          />
 
-      <CircleAddButton
-        title="+"
-        onPress={() => {
-          navigation.navigate("AddTaskModal");
-        }}
-        style={styles.button}
-      ></CircleAddButton>
+          <CircleAddButton
+            title="+"
+            onPress={() => {
+              navigation.navigate("AddTaskModal");
+            }}
+            style={styles.button}
+          ></CircleAddButton>
+        </>
+      )}
     </SafeAreaView>
   );
 };

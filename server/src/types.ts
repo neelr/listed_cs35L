@@ -50,13 +50,13 @@ export interface DeleteUserRequest {
 }
 export interface CreateTaskRequest {
   name: string;
-  creatorId: string;
+  userId: string;
   description?: string;
   completeBy?: string;
 }
 
-export interface GetTasksByCreatorIdRequest {
-  creatorId: string;
+export interface GetTasksByUserIdRequest {
+  userId: string;
 }
 
 export interface GetTasksByUserIdsRequest {

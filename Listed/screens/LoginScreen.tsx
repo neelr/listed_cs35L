@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, View, Image, Text } from "react-native";
 import { TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../App";
+import { RootStackParamList } from "../routes/StackNavigator";
 import HomeButton from "../components/Button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
@@ -11,7 +11,7 @@ import * as Yup from "yup";
 import { PASSWORD_SCHEMA } from "../constants";
 import WarningText from "../components/WarningText";
 import { useLogin } from "../hooks/useLogin";
-import { ApiError, LoginResponse } from "../types/types";
+import { ApiError, LoginResponse } from "../types/authTypes";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
@@ -22,7 +22,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
   const onSuccessfulLogin = (data: LoginResponse) => {
     console.log(data);
-    navigation.navigate("TaskManager");
+    navigation.navigate("LandingPage");
   };
 
   const onError = (error: ApiError) => {

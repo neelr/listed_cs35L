@@ -9,7 +9,7 @@ import {
   CreateTaskRequest,
   DeleteTaskRequest,
   GetTaskByIdRequest,
-  GetTasksByCreatorIdRequest,
+  GetTasksByUserIdRequest,
   GetTasksByUserIdsRequest,
 } from "../types";
 import { getHashFromCurrentDate } from "./utils";
@@ -18,13 +18,13 @@ import { documentClient, TASKS_TABLE_NAME } from "./constants";
 export const createTask = async (task: CreateTaskRequest) => {
   const item = {
     taskId: getHashFromCurrentDate(),
-    creatorId: task.creatorId,
+    userId: task.userId,
     name: task.name,
     description: task.description || null,
     completeBy: task.completeBy || null,
     created: new Date().toISOString(),
     completed: false,
-    userIds: [task.creatorId],
+    userIds: [task.userId],
   };
 
   const command = new PutCommand({
@@ -41,17 +41,15 @@ export const createTask = async (task: CreateTaskRequest) => {
   }
 };
 
-export const getTasksByCreatorId = async (
-  creator: GetTasksByCreatorIdRequest
-) => {
+export const getTasksByUserId = async (creator: GetTasksByUserIdRequest) => {
   const params = {
     TableName: TASKS_TABLE_NAME,
-    FilterExpression: "#creatorId = :creatorId",
+    FilterExpression: "#userId = :userId",
     ExpressionAttributeNames: {
-      "#creatorId": "creatorId",
+      "#userId": "userId",
     },
     ExpressionAttributeValues: {
-      ":creatorId": creator.creatorId,
+      ":userId": creator.userId,
     },
   };
 

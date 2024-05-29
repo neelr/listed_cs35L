@@ -8,7 +8,7 @@ export const storeToken = async (token: string) => {
   }
 };
 
-const getToken = async () => {
+export const getToken = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
     return token;

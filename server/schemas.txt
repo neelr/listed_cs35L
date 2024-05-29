@@ -15,7 +15,7 @@ Task: (v1, without support for tags or others completing)
   taskId: string
   name: string
   description: string # optional
-  creatorId: string # userId
+  userId: string # userId
   userIds: string[]
   createdOn: string 
   completeBy: string
@@ -27,7 +27,7 @@ Task: (v2, with support for others completing)
   taskId: string
   name: string
   description: string # optional
-  creatorId: string # userId
+  userId: string # userId
   userIds: string[]
   createdOn: string 
   completeBy: string

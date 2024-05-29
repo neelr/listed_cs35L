@@ -1,14 +1,11 @@
 import { Request, Response } from "express";
-import { GetTasksByCreatorIdRequest } from "../types";
-import { getTasksByCreatorId } from "../utils/dynamoDBTasks";
+import { GetTasksByUserIdRequest } from "../types";
+import { getTasksByUserId } from "../utils/dynamoDBTasks";
 
 export default async (req: Request, res: Response) => {
   try {
-    const request: GetTasksByCreatorIdRequest = {
-      ...req.body,
-      creatorId: req.body.userId,
-    };
-    const tasks = await getTasksByCreatorId(request);
+    const request: GetTasksByUserIdRequest = req.body;
+    const tasks = await getTasksByUserId(request);
     res.send(tasks);
   } catch (error) {
     console.error("Error getting tasks by creator id: ", error);

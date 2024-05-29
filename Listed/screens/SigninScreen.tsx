@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HomeButton from "../components/Button";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../App";
+import { RootStackParamList } from "../routes/StackNavigator";
 
 type SigninScreenProps = NativeStackScreenProps<RootStackParamList, "Signin">;
 

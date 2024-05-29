@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, View, Image, Text } from "react-native";
 import { TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../App";
+import { RootStackParamList } from "../routes/StackNavigator";
 import HomeButton from "../components/Button";
 import WarningText from "../components/WarningText";
 import Spacer from "../components/Spacer";
@@ -46,7 +46,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          navigation.navigate("TaskManager");
+          navigation.navigate("LandingPage");
         }}
       >
         {({
