@@ -6,6 +6,7 @@ import { RootStackParamList } from "../routes/StackNavigator";
 import { TaskView } from "../components/TaskView";
 import CircleAddButton from "../components/CircleAddButton";
 import { useUserTasks } from "../hooks/useUserTasks";
+import WarningMessage from "../components/WarningText";
 
 type ListItemScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -15,7 +16,7 @@ type ListItemScreenProps = NativeStackScreenProps<
 const { width, height } = Dimensions.get("window");
 
 const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
-  const { data: tasks, isLoading } = useUserTasks();
+  const { data: tasks, isLoading, error } = useUserTasks();
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Task List</Text>
@@ -39,6 +40,7 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
           ></CircleAddButton>
         </>
       )}
+      <WarningMessage message={error?.message} visible={!!error} />
     </SafeAreaView>
   );
 };

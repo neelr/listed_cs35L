@@ -44,8 +44,16 @@ export const signup = async (payload: SignupPayload) => {
 };
 
 export const getUserTasks = async (token: string) => {
-  const response = await axios.get(`http://${API_DNS}:${API_PORT}/tasks`, {
-    ...getAuthHeader(token),
-  });
-  return response.data;
+  try {
+    const response = await axios.get(`http://${API_DNS}:${API_PORT}/tasks`, {
+      ...getAuthHeader(token),
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError<ApiError>(error)) {
+      console.log(error.response?.data);
+      throw error.response?.data;
+    }
+    throw error;
+  }
 };
