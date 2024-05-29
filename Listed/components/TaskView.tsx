@@ -9,6 +9,7 @@ export interface TaskProps {
 export const TaskView: React.FC<TaskProps> = ({ task }) => {
   return (
     <View style={styles.taskContainer}>
+      <Text style={{ fontWeight: "bold" }}>{task.name}</Text>
       <Text>Complete By: {task.completeBy}</Text>
       <Text>Completed: {task.completed ? "Yes" : "No"}</Text>
       {task.description && <Text>Description: {task.description}</Text>}

@@ -14,60 +14,6 @@ type ListItemScreenProps = NativeStackScreenProps<
 
 const { width, height } = Dimensions.get("window");
 
-// // Sample task data
-// const sampleTasks: Task[] = [
-//   {
-//     completed: false,
-//     completeBy: "2024-05-31",
-//     createdOn: "wkemf",
-//     description: "I have to do XYS",
-//     taskId: "1",
-//     userIds: ["u1", "u2"],
-//   },
-//   {
-//     completed: true,
-//     completeBy: "2024-06-01",
-//     description: "I have to do ABC",
-//     taskId: "2",
-//     userIds: ["u3"],
-//   },
-//   {
-//     completed: false,
-//     completeBy: "2024-06-02",
-//     description: "I have to do LKJ",
-//     taskId: "3",
-//     userIds: ["u4", "u5", "u6"],
-//   },
-//   {
-//     completed: false,
-//     completeBy: "2024-06-02",
-//     description: "I have to do LJ",
-//     taskId: "4",
-//     userIds: ["u4", "u5", "u6"],
-//   },
-//   {
-//     completed: false,
-//     completeBy: "2024-06-02",
-//     description: "I have to do KJ",
-//     taskId: "5",
-//     userIds: ["u4", "u5", "u6"],
-//   },
-//   {
-//     completed: false,
-//     completeBy: "2024-06-02",
-//     description: "I have to do J",
-//     taskId: "6",
-//     userIds: ["u4", "u5", "u6"],
-//   },
-//   {
-//     completed: false,
-//     completeBy: "2024-06-02",
-//     description: "I have to do K",
-//     taskId: "7",
-//     userIds: ["u4", "u5", "u6"],
-//   },
-// ];
-
 const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
   const { data: tasks, isLoading } = useUserTasks();
   return (
