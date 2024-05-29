@@ -6,10 +6,11 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../App";
 import HomeButton from "../components/Button";
 import WarningText from "../components/WarningText";
-import { isValidEmail } from "../utils/emailCheck";
-import { isValidPassword } from "../utils/passwordCheck";
 import Spacer from "../components/Spacer";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import { PASSWORD_SCHEMA } from "../constants";
 
 type SignupScreenProps = NativeStackScreenProps<RootStackParamList, "Signup">;
 
@@ -17,103 +18,134 @@ const { width, height } = Dimensions.get("window");
 const image1 = require("../assets/circles lol.png");
 
 const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
-  const [username, onChangeUsername] = React.useState("");
-  const [email, onChangeEmail] = React.useState("");
-  const [password, onChangePassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
-  const [confPassword, onChangeConfPassword] = React.useState("");
-  const [showConfPassword, setShowConfPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
+  const initialValues = {
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
+
+  const validationSchema = Yup.object().shape({
+    username: Yup.string().required("Username is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: PASSWORD_SCHEMA,
+    confirmPassword: Yup.string().oneOf(
+      [Yup.ref("password")],
+      "Passwords must match"
+    ),
+  });
+
+  const handleSubmit = (values: any) => {
+    navigation.navigate("TaskManager");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
 
-      <TextInput
-        editable
-        value={username}
-        onChangeText={(username) => onChangeUsername(username)}
-        style={[styles.input, { marginTop: height * 0.04 }]}
-        placeholder="Username"
-      ></TextInput>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
+          <View>
+            <TextInput
+              editable
+              value={values.username}
+              onChangeText={handleChange("username")}
+              onBlur={handleBlur("username")}
+              style={[styles.input, { marginTop: height * 0.04 }]}
+              placeholder="Username"
+            />
+            <WarningText message={errors.username} visible={touched.username} />
 
-      <TextInput
-        editable
-        value={email}
-        onChangeText={(email) => onChangeEmail(email)}
-        style={[styles.input, { marginTop: height * 0.04 }]}
-        placeholder="Email"
-      ></TextInput>
-      <WarningText
-        message="Invalid email"
-        visible={!isValidEmail(email) && email != ""}
-      />
+            <TextInput
+              editable
+              value={values.email}
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              style={[styles.input, { marginTop: height * 0.04 }]}
+              placeholder="Email"
+            />
+            <WarningText message={errors.email} visible={touched.email} />
 
-      <View style={styles.passwordContainer}>
-        <TextInput
-          editable
-          value={password}
-          onChangeText={(password) => onChangePassword(password)}
-          style={[
-            styles.input,
-            { paddingRight: width * 0.07, marginTop: height * 0.04 },
-          ]}
-          secureTextEntry={!showPassword}
-          placeholder="Password"
-          placeholderTextColor={"aaa"}
-        ></TextInput>
-        <MaterialCommunityIcons
-          name={showPassword ? "eye" : "eye-off"}
-          size={24}
-          color="#aaa"
-          style={[styles.icon, { marginTop: height * 0.04 }]}
-          onPress={() => setShowPassword(!showPassword)}
-        />
-      </View>
-      <WarningText
-        message="Password must be at least 8 characters without spaces"
-        visible={!isValidPassword(password) && password != ""}
-      />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                editable
+                value={values.password}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                style={[
+                  styles.input,
+                  { paddingRight: width * 0.07, marginTop: height * 0.04 },
+                ]}
+                secureTextEntry={!showPassword}
+                placeholder="Password"
+                placeholderTextColor="#aaa"
+              />
+              <MaterialCommunityIcons
+                name={showPassword ? "eye" : "eye-off"}
+                size={24}
+                color="#aaa"
+                style={[styles.icon, { marginTop: height * 0.04 }]}
+                onPress={() => setShowPassword(!showPassword)}
+              />
+            </View>
+            <WarningText message={errors.password} visible={touched.password} />
 
-      <View style={styles.passwordContainer}>
-        <TextInput
-          editable
-          value={confPassword}
-          onChangeText={(confPassword) => onChangeConfPassword(confPassword)}
-          style={[
-            styles.input,
-            { paddingRight: width * 0.07, marginTop: height * 0.04 },
-          ]}
-          secureTextEntry={!showConfPassword}
-          placeholder="Confirm Password"
-          placeholderTextColor={"aaa"}
-        ></TextInput>
-        <MaterialCommunityIcons
-          name={showConfPassword ? "eye" : "eye-off"}
-          size={24}
-          color="#aaa"
-          style={[styles.icon, { marginTop: height * 0.04 }]}
-          onPress={() => setShowConfPassword(!showConfPassword)}
-        />
-      </View>
-      <WarningText
-        message="Passwords do not match"
-        visible={password !== confPassword && confPassword != ""}
-      />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                editable
+                value={values.confirmPassword}
+                onChangeText={handleChange("confirmPassword")}
+                onBlur={handleBlur("confirmPassword")}
+                style={[
+                  styles.input,
+                  { paddingRight: width * 0.07, marginTop: height * 0.04 },
+                ]}
+                secureTextEntry={!showConfirmPassword}
+                placeholder="Confirm Password"
+                placeholderTextColor="#aaa"
+              />
+              <MaterialCommunityIcons
+                name={showConfirmPassword ? "eye" : "eye-off"}
+                size={24}
+                color="#aaa"
+                style={[styles.icon, { marginTop: height * 0.04 }]}
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              />
+            </View>
 
-      <HomeButton
-        title="Sign up"
-        onPress={() => {
-          navigation.navigate("ListItem");
-        }}
-        margin={height * 0.04}
-      ></HomeButton>
+            <WarningText
+              message={errors.confirmPassword}
+              visible={touched.confirmPassword}
+            />
+
+            <HomeButton
+              title="Sign up"
+              onPress={() => {
+                handleSubmit();
+              }}
+              customStyles={{ marginTop: height * 0.04 }}
+            />
+          </View>
+        )}
+      </Formik>
 
       <Spacer height={height * 0.2} />
 
-      <Image
-        source={require("../assets/circles lol.png")}
-        style={styles.image}
-      ></Image>
+      <Image source={image1} style={styles.image} />
     </SafeAreaView>
   );
 };
