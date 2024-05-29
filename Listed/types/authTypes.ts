@@ -5,6 +5,12 @@ export interface LoginPayload {
   password: string;
 }
 
+export interface SignupPayload {
+  username: string;
+  email: string;
+  password: string;
+}
+
 export interface UserPrivate extends User {
   password: string;
 }

@@ -11,6 +11,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { PASSWORD_SCHEMA } from "../constants";
+import { useSignup } from "../hooks/useSignUp";
+import { ApiError, LoginResponse } from "../types/authTypes";
 
 type SignupScreenProps = NativeStackScreenProps<RootStackParamList, "Signup">;
 
@@ -20,6 +22,21 @@ const image1 = require("../assets/circles lol.png");
 const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
+  const [signupError, setSignupError] = React.useState("");
+
+  const onSuccessfulSignup = (data: LoginResponse) => {
+    navigation.navigate("LandingPage");
+  };
+
+  const onError = (error: ApiError) => {
+    setSignupError(error.error);
+  };
+
+  const { mutate: signup } = useSignup({
+    onSuccess: onSuccessfulSignup,
+    onError: onError,
+  });
 
   const initialValues = {
     username: "",
@@ -45,9 +62,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values) => {
-          navigation.navigate("LandingPage");
-        }}
+        onSubmit={signup}
       >
         {({
           handleChange,
@@ -137,6 +152,8 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
               }}
               customStyles={{ marginTop: height * 0.04 }}
             />
+
+            <WarningText message={signupError} visible={!!signupError} />
           </View>
         )}
       </Formik>

@@ -3,18 +3,17 @@ import {
   UseMutationOptions,
   useQueryClient,
 } from "@tanstack/react-query";
-import { login } from "../api/api";
-import { ApiError, LoginPayload, LoginResponse } from "../types/authTypes";
+import { signup } from "../api/api";
+import { ApiError, SignupPayload, LoginResponse } from "../types/authTypes";
+import { LOGIN_MUTATION_KEY } from "./useLogin";
 
-export const LOGIN_MUTATION_KEY = "login";
-
-export const useLogin = (
-  options?: UseMutationOptions<LoginResponse, ApiError, LoginPayload>
+export const useSignup = (
+  options?: UseMutationOptions<LoginResponse, ApiError, SignupPayload>
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<LoginResponse, ApiError, LoginPayload>({
+  return useMutation<LoginResponse, ApiError, SignupPayload>({
     mutationKey: [LOGIN_MUTATION_KEY],
-    mutationFn: login,
+    mutationFn: signup,
     onError: (error, variables, context) => {
       if (options?.onError) {
         options.onError(error, variables, context);

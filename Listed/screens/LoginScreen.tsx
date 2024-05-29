@@ -19,14 +19,14 @@ const { width, height } = Dimensions.get("window");
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [showPassword, setShowPassword] = React.useState(false);
+  const [loginError, setLoginError] = React.useState("");
 
   const onSuccessfulLogin = (data: LoginResponse) => {
-    console.log(data);
     navigation.navigate("LandingPage");
   };
 
   const onError = (error: ApiError) => {
-    console.error(error);
+    setLoginError(error.error);
   };
 
   const { mutate: login } = useLogin({
@@ -100,6 +100,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               }}
               customStyles={{ marginTop: height * 0.04 }}
             />
+            <WarningText message={loginError} visible={!!loginError} />
           </View>
         )}
       </Formik>
