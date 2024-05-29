@@ -46,8 +46,8 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Listed Server is running!");
 });
 
-app.get(`/auth`, ddSignIn);
-app.post(`/auth`, ddSignUp);
+app.post(`/sign-in`, ddSignIn);
+app.post(`/sign-up`, ddSignUp);
 
 // authenticated routes
 app.get(`/user`, authenticateJWT, ddGetUserById);
