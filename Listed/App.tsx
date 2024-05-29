@@ -20,6 +20,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import TaskManagerScreen from "./screens/TaskManagerScreen";
 import ListItemScreen from "./screens/ListItemScreen";
 import AddTaskModal from "./modals/AddTaskModal";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export type RootStackParamList = {
   Signin: undefined;
@@ -82,47 +83,51 @@ const App: React.FC = () => {
     return null;
   }
 
+  const client = new QueryClient();
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Signin">
-        <Stack.Screen
-          name="Signin"
-          component={SigninScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Signup"
-          component={SignupScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="TaskManager"
-          component={TabNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ListItem"
-          component={ListItemScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="AddTaskModal"
-          component={AddTaskModal}
-          options={{ headerShown: false, presentation: "modal" }}
-        />
-        {/* <Stack.Screen name='Task' component={TaskManagerScreen} options={{ headerShown: false }} /> */}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <QueryClientProvider client={client}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Signin">
+          <Stack.Screen
+            name="Signin"
+            component={SigninScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Signup"
+            component={SignupScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="TaskManager"
+            component={TabNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ListItem"
+            component={ListItemScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="AddTaskModal"
+            component={AddTaskModal}
+            options={{ headerShown: false, presentation: "modal" }}
+          />
+          {/* <Stack.Screen name='Task' component={TaskManagerScreen} options={{ headerShown: false }} /> */}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 };
 

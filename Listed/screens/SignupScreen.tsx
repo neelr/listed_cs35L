@@ -38,10 +38,6 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
     ),
   });
 
-  const handleSubmit = (values: any) => {
-    navigation.navigate("TaskManager");
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
@@ -49,7 +45,9 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={(values) => {
+          navigation.navigate("TaskManager");
+        }}
       >
         {({
           handleChange,

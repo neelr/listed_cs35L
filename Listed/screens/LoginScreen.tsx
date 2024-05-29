@@ -10,6 +10,8 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { PASSWORD_SCHEMA } from "../constants";
 import WarningText from "../components/WarningText";
+import { useLogin } from "../hooks/useLogin";
+import { ApiError, LoginResponse } from "../types/types";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
@@ -17,6 +19,20 @@ const { width, height } = Dimensions.get("window");
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [showPassword, setShowPassword] = React.useState(false);
+
+  const onSuccessfulLogin = (data: LoginResponse) => {
+    console.log(data);
+    navigation.navigate("TaskManager");
+  };
+
+  const onError = (error: ApiError) => {
+    console.error(error);
+  };
+
+  const { mutate: login } = useLogin({
+    onSuccess: onSuccessfulLogin,
+    onError: onError,
+  });
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
@@ -28,11 +44,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       <Text style={styles.title}>Log In</Text>
 
       <Formik
-        initialValues={{ email: "", password: "" }}
-        validationSchema={validationSchema}
-        onSubmit={(values) => {
-          navigation.navigate("TaskManager");
+        initialValues={{
+          email: "crazyguy+5@gmail.com",
+          password: "CrazyWacky123$",
         }}
+        validationSchema={validationSchema}
+        onSubmit={login}
       >
         {({
           handleChange,

@@ -4,7 +4,10 @@ import { getTasksByCreatorId } from "../utils/dynamoDBTasks";
 
 export default async (req: Request, res: Response) => {
   try {
-    const request: GetTasksByCreatorIdRequest = req.body;
+    const request: GetTasksByCreatorIdRequest = {
+      ...req.body,
+      creatorId: req.body.userId,
+    };
     const tasks = await getTasksByCreatorId(request);
     res.send(tasks);
   } catch (error) {

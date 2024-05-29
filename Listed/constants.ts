@@ -10,3 +10,6 @@ export const PASSWORD_SCHEMA = Yup.string()
     "Password must contain a special character"
   )
   .matches(/.{8,}/, "Password must contain at least 8 characters");
+
+export const API_PORT = 3000;
+export const API_DNS = "ec2-35-95-43-181.us-west-2.compute.amazonaws.com";
