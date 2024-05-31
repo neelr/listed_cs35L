@@ -1,4 +1,4 @@
-import { API_DNS, API_PORT } from "../constants";
+import { HTTP_URL } from "../constants";
 import {
   ApiError,
   LoginPayload,
@@ -14,7 +14,7 @@ const getAuthHeader = (token: string) => ({
 export const login = async (payload: LoginPayload) => {
   try {
     const response = await axios.post<LoginResponse>(
-      `http://${API_DNS}:${API_PORT}/sign-in`,
+      `${HTTP_URL}/sign-in`,
       payload
     );
     return response.data;
@@ -30,7 +30,7 @@ export const login = async (payload: LoginPayload) => {
 export const signup = async (payload: SignupPayload) => {
   try {
     const response = await axios.post<LoginResponse>(
-      `http://${API_DNS}:${API_PORT}/sign-up`,
+      `${HTTP_URL}/sign-up`,
       payload
     );
     return response.data;
@@ -45,7 +45,7 @@ export const signup = async (payload: SignupPayload) => {
 
 export const getUserTasks = async (token: string) => {
   try {
-    const response = await axios.get(`http://${API_DNS}:${API_PORT}/tasks`, {
+    const response = await axios.get(`${HTTP_URL}/tasks`, {
       ...getAuthHeader(token),
     });
     return response.data;
