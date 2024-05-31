@@ -72,7 +72,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
           errors,
           touched,
         }) => (
-          <View>
+          <View style={{alignItems: "center"}}>
             <TextInput
               editable
               value={values.username}

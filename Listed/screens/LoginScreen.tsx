@@ -45,8 +45,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
       <Formik
         initialValues={{
-          email: "crazyguy+5@gmail.com",
-          password: "CrazyWacky123$",
+          email: "",
+          password: "",
         }}
         validationSchema={validationSchema}
         onSubmit={login}
@@ -59,7 +59,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           errors,
           touched,
         }) => (
-          <View>
+          <View style={{alignItems: "center"}}>
             <TextInput
               editable
               value={values.email}
@@ -119,6 +119,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8F9FA",
     alignItems: "center",
     justifyContent: "center",
+  },
+  mainView: {
+    alignItems: "center",
+    //justifyContent: "center",
   },
   image: {
     bottom: -0.1 * height,

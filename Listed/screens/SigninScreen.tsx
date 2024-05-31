@@ -26,14 +26,14 @@ const SigninScreen: React.FC<SigninScreenProps> = ({ navigation }) => {
         onPress={() => {
           navigation.navigate("Login");
         }}
-        customStyles={{ marginTop: height / 15.0 }}
+        customStyles={{ marginTop: height / 12.0 }}
       ></HomeButton>
       <HomeButton
         title="Sign up"
         onPress={() => {
           navigation.navigate("Signup");
         }}
-        customStyles={{ marginTop: height / 30.0 }}
+        customStyles={{ marginTop: height / 25.0 }}
       ></HomeButton>
       <StatusBar hidden={true} />
     </SafeAreaView>
