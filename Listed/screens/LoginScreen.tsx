@@ -65,7 +65,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               value={values.email}
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
-              style={[styles.input, { marginTop: height * 0.05 }]}
+              style={[styles.input, { marginTop: height * 0.05 , paddingRight: width * 0.04}]}
               placeholder="Email"
               placeholderTextColor="#aaa"
             />
@@ -78,7 +78,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 onBlur={handleBlur("password")}
                 style={[
                   styles.input,
-                  { paddingRight: width * 0.07, marginTop: height * 0.03 },
+                  { paddingRight: width * 0.11, marginTop: height * 0.03 },
                 ]}
                 secureTextEntry={!showPassword}
                 placeholder="Password"
