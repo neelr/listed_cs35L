@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RootStackParamList } from '../App';
+import { RootStackParamList } from '../routes/StackNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { View, Text, Button, StyleSheet, SafeAreaView } from 'react-native';
 
