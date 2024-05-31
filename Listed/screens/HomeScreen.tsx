@@ -6,7 +6,7 @@ import HomeButton from "../components/Button";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../routes/StackNavigator";
 
-type SigninScreenProps = NativeStackScreenProps<RootStackParamList, "Signin">;
+type SigninScreenProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
 const { width, height } = Dimensions.get("window");
 //Huh

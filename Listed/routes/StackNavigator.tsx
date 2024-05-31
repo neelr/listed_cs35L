@@ -3,12 +3,12 @@ import AddTaskModal from "../modals/AddTaskModal";
 import ListItemScreen from "../screens/ListItemScreen";
 import LoginScreen from "../screens/LoginScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import SigninScreen from "../screens/SigninScreen";
+import HomeScreen from "../screens/HomeScreen";
 import SignupScreen from "../screens/SignupScreen";
 import { TabNavigator } from "./TabNavigator";
 
 export type RootStackParamList = {
-  Signin: undefined;
+  Home: undefined;
   Login: undefined;
   LandingPage: undefined;
   Profile: undefined;
@@ -20,10 +20,10 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const StackNavigator = () => (
-  <Stack.Navigator initialRouteName="Signin">
+  <Stack.Navigator initialRouteName="LandingPage">
     <Stack.Screen
-      name="Signin"
-      component={SigninScreen}
+      name="Home"
+      component={HomeScreen}
       options={{ headerShown: false }}
     />
     <Stack.Screen
