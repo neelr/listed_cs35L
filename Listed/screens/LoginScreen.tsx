@@ -65,7 +65,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               value={values.email}
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
-              style={[styles.input, { marginTop: height * 0.06 }]}
+              style={[styles.input, { marginTop: height * 0.05 }]}
               placeholder="Email"
               placeholderTextColor="#aaa"
             />
@@ -78,7 +78,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 onBlur={handleBlur("password")}
                 style={[
                   styles.input,
-                  { paddingRight: width * 0.07, marginTop: height * 0.04 },
+                  { paddingRight: width * 0.07, marginTop: height * 0.03 },
                 ]}
                 secureTextEntry={!showPassword}
                 placeholder="Password"
@@ -88,7 +88,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 name={showPassword ? "eye" : "eye-off"}
                 size={24}
                 color="#aaa"
-                style={[styles.icon, { marginTop: height * 0.04 }]}
+                style={[styles.icon, { marginTop: height * 0.03 }]}
                 onPress={() => setShowPassword(!showPassword)}
               />
             </View>
@@ -98,7 +98,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               onPress={() => {
                 handleSubmit();
               }}
-              customStyles={{ marginTop: height * 0.04 }}
+              customStyles={{ marginTop: height * 0.03 }}
             />
             <WarningText message={loginError} visible={!!loginError} />
           </View>

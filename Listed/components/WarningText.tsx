@@ -19,9 +19,8 @@ const WarningMessage: React.FC<WarningMessageProps> = ({
 const styles = StyleSheet.create({
   warning: {
     color: "red",
-    fontWeight: "bold",
+    fontFamily: "InknutAntiqua_400Regular",
     fontSize: 10,
-    padding: 3,
   },
 });
 
