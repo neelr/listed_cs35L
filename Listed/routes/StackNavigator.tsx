@@ -20,7 +20,7 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const StackNavigator = () => (
-  <Stack.Navigator initialRouteName="LandingPage">
+  <Stack.Navigator initialRouteName="Home">
     <Stack.Screen
       name="Home"
       component={HomeScreen}
