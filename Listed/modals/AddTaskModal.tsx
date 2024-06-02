@@ -12,7 +12,7 @@ import { Keyboard } from 'react-native';
 type AddTaskModalProps = NativeStackScreenProps<RootStackParamList, 'AddTaskModal'>
 
 const { width, height } = Dimensions.get("window");
-const image1 = require("../assets/circles lol copy.png")
+const image1 = require("../assets/circlescopy.png")
 
 const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
     const [taskTitle, onChangeTaskTitle] = useState("")
