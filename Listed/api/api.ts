@@ -57,3 +57,19 @@ export const getUserTasks = async (token: string) => {
     throw error;
   }
 };
+
+export const deleteTask = async (taskId: string, token: string) => {
+  try {
+    const response = await axios.delete(`${HTTP_URL}/task`, {
+      ...getAuthHeader(token),
+      data: { taskId },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log(error.response?.data);
+      throw error.response?.data;
+    }
+    throw error;
+  }
+};
