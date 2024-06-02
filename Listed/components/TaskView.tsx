@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Task } from "../types/taskTypes";
 import { withSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -7,12 +7,24 @@ export interface TaskProps {
   task: Task;
 }
 
+const truncateText = (text: string, maxLength: number): string => {
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.substring(0, maxLength) + '...';
+};
+
 export const TaskView: React.FC<TaskProps> = ({ task }) => {
   return (
     <View style={styles.taskContainer}>
-      <Text style={styles.boldText}>{task.name}</Text>
-      <Text style={styles.text}>Complete By: {task.completeBy}</Text>
+      <View style={styles.header}>
+        <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
+        <TouchableOpacity style={styles.button} onPress={() => { /* Handle button press */ }}>
+          <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity>
+      </View>
       <Text style={styles.text}>Completed: {task.completed ? "Yes" : "No"}</Text>
+      <Text style={styles.text}>Description: {task.description}</Text>
       {task.description && <Text style={styles.text}>Description: {task.description}</Text>}
     </View>
   );
@@ -28,7 +40,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#DDDDDD",
   },
-
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "stretch",
+  },
   text: {
     fontFamily: "InknutAntiqua_400Regular",
     fontSize: 16,
@@ -45,5 +62,13 @@ const styles = StyleSheet.create({
     color: "#F8F9FA",
     marginBottom: 0,
   },
-  
+  button: {
+    backgroundColor: "transparent", // Adjust as needed for visibility
+    padding: 10,
+  },
+  buttonText: {
+    color: "#F8F9FA",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 });
