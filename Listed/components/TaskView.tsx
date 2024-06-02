@@ -18,12 +18,13 @@ const truncateText = (text: string, maxLength: number): string => {
 };
 
 export const TaskView: React.FC<TaskProps> = ({ task }) => {
-  const { mutate: deleteTask } = useDeleteTask();
+  const { mutate: deleteTask, isSuccess } = useDeleteTask();
 
   const handleDelete = () => {
-    deleteTask({ taskId: task.taskId }); 
+    deleteTask(task.taskId); 
   };
   
+
   return (
     <View style={styles.taskContainer}>
       <View style={styles.header}>
