@@ -1,9 +1,10 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Dimensions, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Task } from "../types/taskTypes";
 import { withSafeAreaInsets } from "react-native-safe-area-context";
 import { useDeleteTask } from '../hooks/useDeleteTask';
 
+const { width, height } = Dimensions.get("window");
 
 export interface TaskProps {
   task: Task;
@@ -42,6 +43,7 @@ export const TaskView: React.FC<TaskProps> = ({ task }) => {
 
 const styles = StyleSheet.create({
   taskContainer: {
+    width: width * (5/6),
     marginBottom: 20, // Adjust spacing between tasks
     alignItems: "center",
     backgroundColor: "#2B78C2",
