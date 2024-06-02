@@ -5,6 +5,7 @@ import LoginScreen from "../screens/LoginScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import HomeScreen from "../screens/HomeScreen";
 import SignupScreen from "../screens/SignupScreen";
+import SearchScreen from "../screens/SearchScreen";
 import { TabNavigator } from "./TabNavigator";
 
 export type RootStackParamList = {
@@ -13,6 +14,7 @@ export type RootStackParamList = {
   LandingPage: undefined;
   Profile: undefined;
   ListItem: undefined;
+  AddFriends: undefined;
   Signup: undefined;
   AddTaskModal: undefined;
 };
@@ -49,6 +51,11 @@ export const StackNavigator = () => (
     <Stack.Screen
       name="ListItem"
       component={ListItemScreen}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="AddFriends"
+      component={SearchScreen}
       options={{ headerShown: false }}
     />
     <Stack.Screen
