@@ -2,12 +2,15 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Task } from "../types/taskTypes";
 import { withSafeAreaInsets } from "react-native-safe-area-context";
+import { useDeleteTask } from '../hooks/useDeleteTask';
+
 
 export interface TaskProps {
   task: Task;
 }
 
 const truncateText = (text: string, maxLength: number): string => {
+
   if (text.length <= maxLength) {
     return text;
   }
@@ -15,11 +18,17 @@ const truncateText = (text: string, maxLength: number): string => {
 };
 
 export const TaskView: React.FC<TaskProps> = ({ task }) => {
+  const { mutate: deleteTask } = useDeleteTask();
+
+  const handleDelete = () => {
+    deleteTask({ taskId: task.taskId }); 
+  };
+  
   return (
     <View style={styles.taskContainer}>
       <View style={styles.header}>
         <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
-        <TouchableOpacity style={styles.button} onPress={() => { /* Handle button press */ }}>
+        <TouchableOpacity style={styles.button} onPress={ handleDelete }>
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity>
       </View>
