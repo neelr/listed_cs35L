@@ -19,6 +19,9 @@ export const useDeleteTask = () => {
       }
       return deleteTask(taskId, token.token);
     },
-    
+    onSuccess: () => {
+      // Invalidate and refetch the user tasks query after a task is deleted
+      queryClient.invalidateQueries();
+    },
   });
 };
