@@ -64,6 +64,7 @@ export const deleteTask = async (taskId: string, token: string) => {
       ...getAuthHeader(token),
       data: { taskId },
     });
+    
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

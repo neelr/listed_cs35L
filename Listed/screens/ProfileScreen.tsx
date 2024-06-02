@@ -8,7 +8,6 @@ import {
   FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import { Calendar } from 'react-native-calendars';
 import { RootStackParamList } from "../routes/StackNavigator";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
@@ -83,41 +82,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             style={styles.taskList}
           />
         );
-      /*case 'Calendar':
-        return (
-         <Calendar
-            onDayPress={(day) => {
-              // console.log('selected day', day);
-            }}
-            markedDates={{
-              '2024-05-17': { selected: true, marked: true, selectedColor: '#00adf5' },
-              '2024-05-18': { marked: true },
-              '2024-05-19': { marked: true, dotColor: '#00adf5', activeOpacity: 0 },
-              '2024-05-20': { disabled: true, disableTouchEvent: true }
-            }}
-            theme={{
-              backgroundColor: '#ffffff',
-              calendarBackground: '#ffffff',
-              textSectionTitleColor: '#b6c1cd',
-              selectedDayBackgroundColor: '#00adf5',
-              selectedDayTextColor: '#ffffff',
-              todayTextColor: '#00adf5',
-              dayTextColor: '#2d4150',
-              textDisabledColor: '#d9e1e8',
-              dotColor: '#00adf5',
-              selectedDotColor: '#ffffff',
-              arrowColor: 'black',
-              monthTextColor: 'black',
-              indicatorColor: 'blue',
-              textDayFontWeight: '300',
-              textMonthFontWeight: 'bold',
-              textDayHeaderFontWeight: '500',
-              textDayFontSize: 16,
-              textMonthFontSize: 16,
-              textDayHeaderFontSize: 16
-            }}
-          />
-        );*/
     }
   };
 
