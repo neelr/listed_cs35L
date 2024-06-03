@@ -30,6 +30,8 @@ export function rankUsers(users: User[], search: string, num: number, user: User
             continue;
         }
 
+        //TODO: check if user is already friends with users[i]
+
         if (users[i].username.includes(search) || users[i].email.includes(search)) {
             rankedUsers.push([users[i], getMutualCount(users[i], user)]);
         }
