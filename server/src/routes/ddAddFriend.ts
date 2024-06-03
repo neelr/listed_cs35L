@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { AddFriendRequest } from "../types";
-import { addFriend, createUser } from "../utils/dynamoDBUsers";
+import { addFriend } from "../utils/dynamoDBUsers";
 
 export default async (req: Request, res: Response) => {
   try {

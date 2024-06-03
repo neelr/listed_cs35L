@@ -3,8 +3,7 @@ import { deleteTask } from "../api/api";
 import { ApiError } from "../types/authTypes";
 import { LOGIN_MUTATION_KEY } from "./useLogin";
 import { LoginResponse } from "../types/authTypes";
-import { USER_TASKS_QUERY_KEY } from "./useUserTasks"; 
-
+import { USER_TASKS_QUERY_KEY } from "./useUserTasks";
 
 export const useDeleteTask = () => {
   const queryClient = useQueryClient();
@@ -21,7 +20,7 @@ export const useDeleteTask = () => {
     },
     onSuccess: () => {
       // Invalidate and refetch the user tasks query after a task is deleted
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({ queryKey: [USER_TASKS_QUERY_KEY] });
     },
   });
 };
