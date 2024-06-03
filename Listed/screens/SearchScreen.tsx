@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../routes/StackNavigator";
-import { TaskView } from "../components/TaskView";
+import { UserView } from "../components/UserView";
 import { useSearchUsers } from "../hooks/useSearchUsers";
 import WarningMessage from "../components/WarningText";
 
@@ -15,7 +15,7 @@ type SearchScreenProps = NativeStackScreenProps<
 const { width, height } = Dimensions.get("window");
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
-  const { data: friends, isLoading, error } = useSearchUsers();
+  const { data: friends, isLoading, error } = useSearchUsers("test");
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Search Friends</Text>
@@ -26,8 +26,8 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           {friends?.length === 0 && <Text>No results!</Text>}
           <FlatList
             data={friends} // Passed tasks state to FlatList
-            keyExtractor={(item) => item.taskId} // Set key extractor
-            renderItem={(item) => <TaskView task={item.item} />} // TODO: replace TaskView with new view
+            keyExtractor={(inUser) => inUser.email} // Set key extractor
+            renderItem={(inUser) => <UserView user={inUser.item} />} // TODO: replace TaskView with new view
           />
         </>
       )}
