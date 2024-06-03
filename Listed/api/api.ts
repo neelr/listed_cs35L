@@ -8,7 +8,7 @@ import {
 import { LoginPayload, LoginResponse, SignupPayload } from "../types/authTypes";
 import axios from "axios";
 import qs from "qs";
-import { Task } from "../types/taskTypes";
+import { Task, TaskChanges } from "../types/taskTypes";
 import { User } from "../types/userTypes";
 
 const getAuthHeader = (token: string) => ({
@@ -44,9 +44,7 @@ export const signup = async (payload: SignupPayload) => {
 export const getUserTasks = async (token: string) => {
   const response = await axiosClient.get<Task[]>(
     `${HTTP_URL}/${USER_ROUTE}/${TASK_ROUTE}`,
-    {
-      ...getAuthHeader(token),
-    }
+    getAuthHeader(token)
   );
   return response.data;
 };
@@ -54,9 +52,21 @@ export const getUserTasks = async (token: string) => {
 export const deleteTask = async (taskId: string, token: string) => {
   const response = await axiosClient.delete(
     `${HTTP_URL}/${TASK_ROUTE}/${taskId}`,
-    {
-      ...getAuthHeader(token),
-    }
+    getAuthHeader(token)
+  );
+
+  return response.data;
+};
+
+export const editTask = async (
+  changes: TaskChanges,
+  taskId: string,
+  token: string
+) => {
+  const response = await axiosClient.put(
+    `${HTTP_URL}/${TASK_ROUTE}/${taskId}`,
+    changes,
+    getAuthHeader(token)
   );
 
   return response.data;
@@ -65,9 +75,7 @@ export const deleteTask = async (taskId: string, token: string) => {
 export const searchForUsers = async (username: string, token: string) => {
   const response = await axiosClient.get<User[]>(
     `${HTTP_URL}/${USER_ROUTE}/search?${qs.stringify({ username })}`,
-    {
-      ...getAuthHeader(token),
-    }
+    getAuthHeader(token)
   );
   return response.data;
 };

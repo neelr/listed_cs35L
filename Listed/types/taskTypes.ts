@@ -9,6 +9,11 @@ export interface Task {
   name: string;
 }
 
+export type TaskChanges = Partial<Omit<Task, "taskId">>;
+export interface TaskChangesRequest extends TaskChanges {
+  taskId: string;
+}
+
 export interface GetUserTasksRequest {
   userId: string;
 }

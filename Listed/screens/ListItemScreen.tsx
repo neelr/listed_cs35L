@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Dimensions, StyleSheet, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -7,7 +7,6 @@ import { TaskView } from "../components/TaskView";
 import CircleAddButton from "../components/CircleAddButton";
 import { useUserTasks } from "../hooks/useUserTasks";
 import WarningMessage from "../components/WarningText";
-import { useQueryClient } from "@tanstack/react-query";
 
 type ListItemScreenProps = NativeStackScreenProps<
   RootStackParamList["LandingPage"]
@@ -15,18 +14,16 @@ type ListItemScreenProps = NativeStackScreenProps<
 
 const { width, height } = Dimensions.get("window");
 
-const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation, reload }) => {
+const ListItemScreen: React.FC<ListItemScreenProps> = ({
+  navigation,
+  // reload,
+}) => {
   const { data: tasksRaw, isLoading, error } = useUserTasks();
 
-  const queryClient = useQueryClient();
-  useEffect(() => {
-    queryClient.invalidateQueries();
-  }, [reload]);
-
   console.log(tasksRaw);
-  const tasks = tasksRaw?.filter(tasksRaw => !tasksRaw.completed) || [];
-  const tasksComplete = tasksRaw?.filter(tasksRaw => tasksRaw.completed) || [];
-
+  const tasks = tasksRaw?.filter?.((tasksRaw) => !tasksRaw.completed) || [];
+  const tasksComplete =
+    tasksRaw?.filter?.((tasksRaw) => tasksRaw.completed) || [];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -39,20 +36,26 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation, reload }) =
           <FlatList
             data={tasks} // Passed tasks state to FlatList
             keyExtractor={(item) => item.taskId} // Set key extractor
-            renderItem={(item) => <TaskView task={item.item} navigation={navigation} />} // Render each task using Task component
+            renderItem={(item) => (
+              <TaskView task={item.item} navigation={navigation} />
+            )} // Render each task using Task component
           />
 
-          {tasksComplete?.length != 0 && <Text style={styles.completedText}>Completed Tasks</Text>}
+          {tasksComplete?.length != 0 && (
+            <Text style={styles.completedText}>Completed Tasks</Text>
+          )}
           <FlatList
             data={tasksComplete}
             keyExtractor={(item) => item.taskId}
-            renderItem={(item) => <TaskView task={item.item} navigation={navigation} />}
+            renderItem={(item) => (
+              <TaskView task={item.item} navigation={navigation} />
+            )}
           />
 
           <CircleAddButton
             title="+"
             onPress={() => {
-              navigation.navigate("AddTaskModal");
+              // navigation.navigate("AddTaskModal");
             }}
             style={styles.button}
           ></CircleAddButton>

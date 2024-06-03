@@ -1,23 +1,23 @@
 import React from "react";
-import { Dimensions, View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
+import {
+  Dimensions,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { Task } from "../types/taskTypes";
-import { withSafeAreaInsets } from "react-native-safe-area-context";
-import { useDeleteTask } from '../hooks/useDeleteTask';
-import { axiosClient } from "../constants";
-import { useQueryClient } from "@tanstack/react-query";
-import { LOGIN_MUTATION_KEY } from "../hooks/useLogin";
-import { LoginResponse } from "../types/authTypes";
-
+import { useDeleteTask } from "../hooks/useDeleteTask";
+import { useEditTask } from "../hooks/useEditTask";
 
 const { width, height } = Dimensions.get("window");
 
 export interface TaskProps {
   task: Task;
-  navigation: any
+  navigation: any;
 }
 
 const truncateText = (text: string, maxLength: number): string => {
-
   if (!text) {
     return "";
   }
@@ -25,48 +25,44 @@ const truncateText = (text: string, maxLength: number): string => {
   if (text.length <= maxLength) {
     return text;
   }
-  return text.substring(0, maxLength) + '...';
+  return text.substring(0, maxLength) + "...";
 };
 
 export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
   const { mutate: deleteTask, isSuccess } = useDeleteTask();
-  const queryClient = useQueryClient();
+  const { mutate: editTask } = useEditTask();
 
   const handleDelete = () => {
     deleteTask(task.taskId);
   };
 
-  const taskContainerStyle = task.completed ? styles.completedTaskContainer : styles.incompleteTaskContainer;
-
+  const taskContainerStyle = task.completed
+    ? styles.completedTaskContainer
+    : styles.incompleteTaskContainer;
 
   return (
     <View style={taskContainerStyle}>
-      <Text onPress={async () => {
-        await axiosClient.put(`/task`, {
-          ...task,
-          taskId: task.taskId,
-          completed: !task.completed
-        }, {
-          headers: {
-            Authorization: `Bearer ${queryClient.getQueryData<LoginResponse>([LOGIN_MUTATION_KEY])?.token}`
-          }
-        });
-        navigation.setOptions({ animation: "none" });
-        navigation.push("LandingPage", { reload: true });
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "LandingPage" }],
-        });
-      }} style={styles.buttonText}>click to complete me!</Text>
+      <Text
+        onPress={() => {
+          editTask({ taskId: task.taskId, completed: !task.completed });
+        }}
+        style={styles.buttonText}
+      >
+        click to complete me!
+      </Text>
       <View style={styles.header}>
         <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
         <TouchableOpacity style={styles.button} onPress={handleDelete}>
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.text}>Completed: {task.completed ? "Yes" : "No"}</Text>
+      <Text style={styles.text}>
+        Completed: {task.completed ? "Yes" : "No"}
+      </Text>
       {/* <Text style={styles.text}>Name: {task.name}</Text> */}
-      {task.description && <Text style={styles.text}>Description: {task.description}</Text>}
+      {task.description && (
+        <Text style={styles.text}>Description: {task.description}</Text>
+      )}
     </View>
   );
 };
