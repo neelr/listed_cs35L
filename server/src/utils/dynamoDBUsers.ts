@@ -7,16 +7,23 @@ import {
   QueryCommand,
   PutCommand,
   UpdateCommand,
+  BatchGetCommand,
 } from "@aws-sdk/lib-dynamodb";
 import {
   CreateUserRequest,
+  GetFriendsDetailsRequest,
   GetUserByIdRequest,
   GetUserIdByEmailRequest,
   SearchUsersByNameRequest,
   SignInErrors,
   SignInRequest,
 } from "../types";
-import { encryptPassword, getHashFromCurrentDate } from "./utils";
+import {
+  encryptPassword,
+  getHashFromCurrentDate,
+  omitKeys,
+  omitSensitiveKeys,
+} from "./utils";
 import { documentClient, USERS_TABLE_NAME } from "./constants";
 import { SECRET_KEY } from "../server";
 import { AddFriendRequest } from "../types";
@@ -120,9 +127,7 @@ export const signUp = async (user: CreateUserRequest) => {
   }
 };
 
-export const searchUsersByName = async ({
-  username,
-}: SearchUsersByNameRequest) => {
+export const searchUsers = async ({ username }: SearchUsersByNameRequest) => {
   const params = {
     TableName: USERS_TABLE_NAME,
     FilterExpression: "contains(#username, :searchTerm)",
@@ -212,5 +217,32 @@ export const addFriend = async ({ userId, friendId }: AddFriendRequest) => {
   } catch (error) {
     console.error("Error adding friend: ", error);
     throw "Error adding friend";
+  }
+};
+
+export const getFriendsDetails = async ({
+  userIds,
+}: GetFriendsDetailsRequest) => {
+  const keys = userIds.map((userId) => ({ userId }));
+
+  const params = {
+    RequestItems: {
+      [USERS_TABLE_NAME]: {
+        Keys: keys,
+      },
+    },
+  };
+
+  try {
+    const { Responses } = await documentClient.send(
+      new BatchGetCommand(params)
+    );
+    const friends = Responses?.[USERS_TABLE_NAME] || [];
+    const sanitizedFriends = friends.map((friend) => omitSensitiveKeys(friend));
+
+    return sanitizedFriends;
+  } catch (error) {
+    console.error("Error getting friend details: ", error);
+    throw "Error getting friend details";
   }
 };

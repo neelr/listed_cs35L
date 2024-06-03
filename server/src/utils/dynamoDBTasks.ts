@@ -8,11 +8,9 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 import {
   CreateTaskRequest,
-  DeleteTaskRequest,
   EditTaskRequest,
-  GetTaskByIdRequest,
-  GetTasksByUserIdRequest,
   GetTasksByUserIdsRequest,
+  TaskFields,
 } from "../types";
 import { getHashFromCurrentDate } from "./utils";
 import { documentClient, TASKS_TABLE_NAME } from "./constants";
@@ -44,27 +42,6 @@ export const createTask = async (task: CreateTaskRequest) => {
   }
 };
 
-export const getTasksByUserId = async (creator: GetTasksByUserIdRequest) => {
-  const params = {
-    TableName: TASKS_TABLE_NAME,
-    FilterExpression: "#userId = :userId",
-    ExpressionAttributeNames: {
-      "#userId": "userId",
-    },
-    ExpressionAttributeValues: {
-      ":userId": creator.userId,
-    },
-  };
-
-  try {
-    const { Items } = await documentClient.send(new ScanCommand(params));
-    return Items || [];
-  } catch (error) {
-    console.error("Error scanning table: ", error);
-    throw "Error scanning table";
-  }
-};
-
 export const getTasksByUserIds = async ({
   userIds,
 }: GetTasksByUserIdsRequest) => {
@@ -93,7 +70,7 @@ export const getTasksByUserIds = async ({
   }
 };
 
-export const getTaskById = async ({ taskId }: GetTaskByIdRequest) => {
+export const getTaskById = async (taskId: string) => {
   const params = {
     TableName: TASKS_TABLE_NAME,
     Key: {
@@ -110,7 +87,7 @@ export const getTaskById = async ({ taskId }: GetTaskByIdRequest) => {
   }
 };
 
-export const deleteTask = async ({ taskId }: DeleteTaskRequest) => {
+export const deleteTask = async (taskId: string) => {
   const params = {
     TableName: TASKS_TABLE_NAME,
     Key: {
@@ -129,23 +106,39 @@ export const deleteTask = async ({ taskId }: DeleteTaskRequest) => {
   }
 };
 
-export const editTask = async (task: EditTaskRequest) => {
+export const editTask = async (taskId: string, task: EditTaskRequest) => {
+  const allowedFields: TaskFields[] = [
+    "name",
+    "description",
+    "completeBy",
+    "completed",
+    "userId",
+    "userIds",
+  ];
+
+  let updateExpression = "SET";
+  const ExpressionAttributeValues: { [key: string]: any } = {};
+  const ExpressionAttributeNames: { [key: string]: string } = {};
+
+  let first = true;
+  for (const key of allowedFields) {
+    if (key in task) {
+      if (!first) {
+        updateExpression += ",";
+      }
+      updateExpression += ` #${key} = :${key}`;
+      ExpressionAttributeNames[`#${key}`] = key;
+      ExpressionAttributeValues[`:${key}`] = task[key];
+      first = false;
+    }
+  }
+
   const params = {
     TableName: TASKS_TABLE_NAME,
-    Key: {
-      taskId: task.taskId,
-    },
-    UpdateExpression:
-      "SET #name = :name, description = :description, completeBy = :completeBy, completed = :completed",
-    ExpressionAttributeNames: {
-      "#name": "name",
-    },
-    ExpressionAttributeValues: {
-      ":name": task.name,
-      ":description": task.description || null,
-      ":completeBy": task.completeBy || null,
-      ":completed": task.completed,
-    },
+    Key: { taskId },
+    UpdateExpression: updateExpression,
+    ExpressionAttributeNames,
+    ExpressionAttributeValues,
     ReturnValues: ReturnValue.ALL_NEW,
   };
 

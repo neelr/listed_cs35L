@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
-import { DeleteTaskRequest } from "../types";
 import { deleteTask } from "../utils/dynamoDBTasks";
 
 export default async (req: Request, res: Response) => {
   try {
-    const taskId: DeleteTaskRequest = req.body;
+    const taskId = req.params.taskId;
     const taskToBeDeleted = await deleteTask(taskId);
     res.send(taskToBeDeleted);
   } catch (error) {

@@ -16,6 +16,11 @@ export const API_DNS = "ec2-35-95-43-181.us-west-2.compute.amazonaws.com";
 
 export const HTTP_URL = `http://${API_DNS}`;
 
+export const TASK_ROUTE = "task";
+export const USER_ROUTE = "user";
+export const AUTH_ROUTE = "auth";
+export const FRIEND_ROUTE = "friend";
+
 export const axiosClient = axios.create({
   baseURL: HTTP_URL,
 });

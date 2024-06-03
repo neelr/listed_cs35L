@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../server";
+import { SENSITIVE_KEYS } from "./constants";
 
 export const getHashFromCurrentDate = () => {
   const currentDate = new Date();
@@ -12,6 +13,17 @@ export const getHashFromCurrentDate = () => {
 export const encryptPassword = async (password: string) => {
   return await bcrypt.hash(password, 10);
 };
+
+export const omitKeys = (obj: any, keys: string[]) => {
+  const newObj = { ...obj };
+  keys.forEach((key) => delete newObj[key]);
+  return newObj;
+};
+
+export const omitSensitiveKeys = (obj: any) => {
+  return omitKeys(obj, SENSITIVE_KEYS);
+};
+
 export const authenticateJWT = (
   req: Request,
   res: Response,

@@ -1,16 +1,11 @@
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-}
-
 export interface Task {
-  id: string;
+  taskId: string;
   name: string;
   userId: string;
   description: string;
   completed: boolean;
+  completeBy: string;
+  userIds: string[];
 }
 
 export interface GetUserIdByEmailRequest {
@@ -55,7 +50,7 @@ export interface CreateTaskRequest {
   completeBy?: string;
 }
 
-export interface GetTasksByUserIdRequest {
+export interface GetUserTasksRequest {
   userId: string;
 }
 
@@ -63,6 +58,13 @@ export interface GetTasksByUserIdsRequest {
   userIds: string[];
 }
 
+export interface GetFriendsDetailsRequest {
+  userIds: string[];
+}
+
+export interface GetFriendDetailsRequest {
+  userIds: string;
+}
 export interface AddFriendRequest {
   userId: string;
   friendId: string;
@@ -75,10 +77,9 @@ export interface DeleteTaskRequest {
   taskId: string;
 }
 
-export interface EditTaskRequest extends CreateTaskRequest {
-  taskId: string;
-  completed: boolean;
-}
+export type EditTaskRequest = Partial<Omit<Task, "taskId">>;
+
+export type TaskFields = keyof Omit<Task, "taskId">;
 
 export interface PublicUser {
   userId: string;

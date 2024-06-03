@@ -2,12 +2,9 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { Request, Response } from "express";
-import addTask from "./routes/addTask";
-import getTasks from "./routes/getTasks";
-import addUser from "./routes/addUser";
 import dotenv from "dotenv";
 import ddCreateTask from "./routes/ddCreateTask";
-import ddGetTasksByUserId from "./routes/ddGetTasksByUserId";
+import ddGetUserTasks from "./routes/ddGetUserTasks";
 import ddGetTaskById from "./routes/ddGetTaskById";
 import ddDeleteTask from "./routes/ddDeleteTask";
 import ddDeleteUser from "./routes/ddDeleteUser";
@@ -15,11 +12,20 @@ import { authenticateJWT } from "./utils/utils";
 import ddSignIn from "./routes/ddSignIn";
 import ddSignUp from "./routes/ddSignUp";
 import ddGetUserById from "./routes/ddGetUserById";
-import ddGetTasksByUserIds from "./routes/ddGetTasksByUserIds";
 import ddAddFriend from "./routes/ddAddFriend";
 import ddSearchUsersByName from "./routes/ddSearchUsersByName";
 import rateLimit from "express-rate-limit";
 import ddEditTask from "./routes/ddEditTask";
+import {
+  AUTH_ROUTE,
+  FRIEND_ROUTE,
+  TASK_ROUTE,
+  USER_ROUTE,
+} from "./utils/constants";
+import ddGetFriendTasks from "./routes/ddGetFriendTasks";
+import ddGetTasksByUserIds from "./routes/ddGetTasksByUserIds";
+import ddGetFriendDetails from "./routes/ddGetFriendDetails";
+import ddGetFriendsDetails from "./routes/ddGetFriendsDetails";
 
 dotenv.config();
 
@@ -34,33 +40,34 @@ const limiter = rateLimit({
 
 const app = express();
 
-const oldRoutesPreface = "/old";
-
 app.use(bodyParser.json());
 app.use(limiter);
-
-app.post(`${oldRoutesPreface}/add-task`, addTask);
-app.post(`${oldRoutesPreface}/add-user`, addUser);
-app.get(`${oldRoutesPreface}/get-tasks`, getTasks);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Listed Server is running!");
 });
 
-app.post(`/sign-in`, ddSignIn);
-app.post(`/sign-up`, ddSignUp);
+app.post(`/${AUTH_ROUTE}/sign-in`, ddSignIn);
+app.post(`/${AUTH_ROUTE}/sign-up`, ddSignUp);
 
 // authenticated routes
-app.get(`/user`, authenticateJWT, ddGetUserById);
-app.delete(`/user`, authenticateJWT, ddDeleteUser);
-app.get(`/users`, authenticateJWT, ddSearchUsersByName);
-app.post(`/task`, authenticateJWT, ddCreateTask);
-app.get(`/task`, authenticateJWT, ddGetTaskById);
-app.put(`/task`, authenticateJWT, ddEditTask);
-app.get(`/tasks`, authenticateJWT, ddGetTasksByUserId);
-app.get(`/friends/tasks`, authenticateJWT, ddGetTasksByUserIds);
-app.post(`/friends`, authenticateJWT, ddAddFriend);
-app.delete(`/task`, authenticateJWT, ddDeleteTask);
+app.get(`/${USER_ROUTE}`, authenticateJWT, ddGetUserById);
+app.delete(`/${USER_ROUTE}`, authenticateJWT, ddDeleteUser);
+app.get(`/${USER_ROUTE}/search`, authenticateJWT, ddSearchUsersByName);
+app.post(`/${TASK_ROUTE}`, authenticateJWT, ddCreateTask);
+app.get(`/${TASK_ROUTE}/:taskId`, authenticateJWT, ddGetTaskById);
+app.put(`/${TASK_ROUTE}/:taskId`, authenticateJWT, ddEditTask);
+app.delete(`/${TASK_ROUTE}/:taskId`, authenticateJWT, ddDeleteTask);
+app.get(`/${USER_ROUTE}/${TASK_ROUTE}`, authenticateJWT, ddGetUserTasks);
+app.post(`/${USER_ROUTE}/${TASK_ROUTE}`, authenticateJWT, ddGetTasksByUserIds);
+app.get(`/${FRIEND_ROUTE}/:userId`, authenticateJWT, ddGetFriendDetails);
+app.get(
+  `/${FRIEND_ROUTE}/${TASK_ROUTE}/:userId`,
+  authenticateJWT,
+  ddGetFriendTasks
+);
+app.post(`/${FRIEND_ROUTE}/batch`, authenticateJWT, ddGetFriendsDetails);
+app.post(`/${FRIEND_ROUTE}`, authenticateJWT, ddAddFriend);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

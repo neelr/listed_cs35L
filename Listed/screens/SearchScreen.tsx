@@ -17,12 +17,15 @@ type SearchScreenProps = NativeStackScreenProps<
 const { width, height } = Dimensions.get("window");
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
-  const { data: friends, isLoading, error } = useSearchUsers("test");
+  const { data: friends, isLoading, error } = useSearchUsers("dude");
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Search Friends</Text>
       <TextInput
-        style={[styles.input, { marginTop: height * 0.05 , paddingRight: width * 0.04}]}
+        style={[
+          styles.input,
+          { marginTop: height * 0.05, paddingRight: width * 0.04 },
+        ]}
         placeholder="Search for users"
         placeholderTextColor="#aaa"
       />
