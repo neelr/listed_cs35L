@@ -21,6 +21,7 @@ export const useSignup = (
     },
     onSuccess: (data, variables, context) => {
       queryClient.setQueryData<LoginResponse>([LOGIN_MUTATION_KEY], data);
+      alert(JSON.stringify(data));
       if (options?.onSuccess) {
         options.onSuccess(data, variables, context);
       }

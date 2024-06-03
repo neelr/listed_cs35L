@@ -26,11 +26,16 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
   const [signupError, setSignupError] = React.useState("");
 
   const onSuccessfulSignup = (data: LoginResponse) => {
-    navigation.navigate("LandingPage");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "LandingPage" }],
+    });
   };
 
   const onError = (error: ApiError) => {
-    setSignupError(error.error);
+
+    // clear password fields
+    setSignupError("Email already exists!");
   };
 
   const { mutate: signup } = useSignup({
@@ -72,7 +77,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
           errors,
           touched,
         }) => (
-          <View style={{alignItems: "center"}}>
+          <View style={{ alignItems: "center" }}>
             <TextInput
               editable
               value={values.username}

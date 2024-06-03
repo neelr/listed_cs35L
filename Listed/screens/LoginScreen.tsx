@@ -22,11 +22,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [loginError, setLoginError] = React.useState("");
 
   const onSuccessfulLogin = (data: LoginResponse) => {
-    navigation.navigate("LandingPage");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "LandingPage" }],
+    });
   };
 
   const onError = (error: ApiError) => {
-    setLoginError(error.error);
+    setLoginError("Invalid email or password");
   };
 
   const { mutate: login } = useLogin({
@@ -59,13 +62,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           errors,
           touched,
         }) => (
-          <View style={{alignItems: "center"}}>
+          <View style={{ alignItems: "center" }}>
             <TextInput
               editable
               value={values.email}
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
-              style={[styles.input, { marginTop: height * 0.05 , paddingRight: width * 0.04}]}
+              style={[styles.input, { marginTop: height * 0.05, paddingRight: width * 0.04 }]}
               placeholder="Email"
               placeholderTextColor="#aaa"
             />

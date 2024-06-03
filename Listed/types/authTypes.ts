@@ -17,6 +17,8 @@ export interface UserPrivate extends User {
 
 export interface LoginResponse extends UserPrivate {
   token: string;
+  message?: string;
+  error?: string;
 }
 
 export interface ApiError {
