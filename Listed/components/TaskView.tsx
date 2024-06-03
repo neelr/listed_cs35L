@@ -25,9 +25,11 @@ export const TaskView: React.FC<TaskProps> = ({ task }) => {
     deleteTask(task.taskId); 
   };
   
+  const taskContainerStyle = task.completed ? styles.completedTaskContainer : styles.incompleteTaskContainer;
+
 
   return (
-    <View style={styles.taskContainer}>
+    <View style={taskContainerStyle}>
       <View style={styles.header}>
         <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
         <TouchableOpacity style={styles.button} onPress={ handleDelete }>
@@ -42,11 +44,21 @@ export const TaskView: React.FC<TaskProps> = ({ task }) => {
 };
 
 const styles = StyleSheet.create({
-  taskContainer: {
+  incompleteTaskContainer: {
     width: width * (5/6),
     marginBottom: 20, // Adjust spacing between tasks
     alignItems: "center",
     backgroundColor: "#2B78C2",
+    borderRadius: 10, // Adjust border radius for curved edges
+    padding: 3, // Adjust padding as needed
+    borderWidth: 1,
+    borderColor: "#DDDDDD",
+  },
+  completedTaskContainer: {
+    width: width * (5/6),
+    marginBottom: 20, // Adjust spacing between tasks
+    alignItems: "center",
+    backgroundColor: "#14a2eb",
     borderRadius: 10, // Adjust border radius for curved edges
     padding: 3, // Adjust padding as needed
     borderWidth: 1,
