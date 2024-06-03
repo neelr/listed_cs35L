@@ -2,7 +2,7 @@ import { User } from "../types/userTypes";
 
 type RankedUser = [User, number];
 
-function getMutualCount(user1: User, user2: User): number {
+export function getMutualCount(user1: User, user2: User): number {
 
     let mutualCount: number = 0;
 
