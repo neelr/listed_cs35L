@@ -54,7 +54,30 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{
+        height: 60,
+      }}>
+        <Text
+          style={{
+            ...styles.followButton,
+            backgroundColor: "#E63946",
+            height: 13
+          }}
+          onPress={() => {
+            queryClient.removeQueries();
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Home" }],
+            });
+          }}
+        >
+          <Text style={styles.followButtonText}>
+            Logout
+          </Text>
+        </Text>
+      </View>
       <View style={styles.profileContainer}>
+
         <View style={{
           marginTop: 50,
         }}>

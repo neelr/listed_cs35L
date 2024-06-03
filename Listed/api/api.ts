@@ -55,5 +55,6 @@ export const searchForUsers = async (username: string, token: string) => {
     ...getAuthHeader(token),
     data: { username },
   });
+
   return response.data;
 };

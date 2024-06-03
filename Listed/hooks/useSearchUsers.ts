@@ -26,7 +26,10 @@ export const useSearchUsers = (
       if (!token) {
         throw new Error("No user data");
       }
-      return searchForUsers(username, token.token);
+      const result = searchForUsers(username, token.token);
+
+      alert(JSON.stringify(result));
+      return result;
     },
     enabled: !!username,
   });

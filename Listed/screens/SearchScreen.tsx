@@ -8,6 +8,8 @@ import { UserView } from "../components/UserView";
 import { useSearchUsers } from "../hooks/useSearchUsers";
 import WarningMessage from "../components/WarningText";
 import Spacer from "../components/Spacer";
+import { axiosClient } from "../constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 type SearchScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -17,15 +19,32 @@ type SearchScreenProps = NativeStackScreenProps<
 const { width, height } = Dimensions.get("window");
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
-  const { data: friends, isLoading, error } = useSearchUsers("test");
+  const [searchBar, setSearchBar] = useState("");
+  const [searchText, setSearchText] = useState("");
+  const { data: friends, isLoading, error } = useSearchUsers(searchText);
+
+  const queryClient = useQueryClient();
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Search Friends</Text>
       <TextInput
-        style={[styles.input, { marginTop: height * 0.05 , paddingRight: width * 0.04}]}
+        style={[styles.input, { marginTop: height * 0.05, paddingRight: width * 0.04 }]}
         placeholder="Search for users"
         placeholderTextColor="#aaa"
+        onChange={(event) => {
+          setSearchBar(event.nativeEvent.text);
+        }}
       />
+      <Text style={{
+        backgroundColor: "#DDDDDD",
+        borderRadius: 10,
+        padding: 10,
+        marginTop: height * 0.01,
+      }}
+        onPress={() => {
+          setSearchText(searchBar);
+        }}>Search</Text>
       <Spacer height={height * 0.05} />
       {isLoading ? (
         <Text>Loading...</Text>
