@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Dimensions, StyleSheet, Text, FlatList } from "react-native";
+import { TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../routes/StackNavigator";
 import { UserView } from "../components/UserView";
 import { useSearchUsers } from "../hooks/useSearchUsers";
 import WarningMessage from "../components/WarningText";
+import Spacer from "../components/Spacer";
 
 type SearchScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -19,6 +21,12 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Search Friends</Text>
+      <TextInput
+        style={[styles.input, { marginTop: height * 0.05 , paddingRight: width * 0.04}]}
+        placeholder="Search for users"
+        placeholderTextColor="#aaa"
+      />
+      <Spacer height={height * 0.05} />
       {isLoading ? (
         <Text>Loading...</Text>
       ) : (
@@ -49,6 +57,17 @@ const styles = StyleSheet.create({
     fontSize: width / 10.0,
     color: "#3B4552",
     // marginBottom: 20,
+  },
+  input: {
+    height: height * 0.07,
+    width: width * 0.6,
+    backgroundColor: "#DDDDDD",
+    borderWidth: 0,
+    borderRadius: 10,
+    fontFamily: "InknutAntiqua_400Regular",
+    paddingLeft: width * 0.04,
+    color: "#3B4552",
+    textAlignVertical: "center",
   },
   button: {
     position: "absolute",
