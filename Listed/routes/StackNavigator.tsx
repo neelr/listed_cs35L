@@ -11,7 +11,9 @@ import { TabNavigator } from "./TabNavigator";
 export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
-  LandingPage: undefined;
+  LandingPage: {
+    reload: object;
+  };
   Profile: undefined;
   ListItem: undefined;
   AddFriends: undefined;

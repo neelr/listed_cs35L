@@ -1,24 +1,44 @@
-import React, { useState } from 'react';
-import { RootStackParamList } from '../routes/StackNavigator';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import React, { useState } from "react";
+import { RootStackParamList } from "../routes/StackNavigator";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import {
-    View, Text, Button, StyleSheet, SafeAreaView,
-    Image, Dimensions, TextInput, ScrollView // Import ScrollView
-} from 'react-native';
+    View,
+    Text,
+    Button,
+    StyleSheet,
+    SafeAreaView,
+    Image,
+    Dimensions,
+    TextInput,
+    ScrollView, // Import ScrollView
+} from "react-native";
 import HomeButton from "../components/Button";
-import { Keyboard } from 'react-native';
+import { Keyboard } from "react-native";
+import axios from "axios";
+import { axiosClient } from "../constants";
+import {
+    useQuery,
+    useQueryClient,
+    UseQueryOptions,
+} from "@tanstack/react-query";
+import { LOGIN_MUTATION_KEY } from "../hooks/useLogin";
+import { LoginResponse } from "../types/authTypes";
 
-type AddTaskModalProps = NativeStackScreenProps<RootStackParamList, 'AddTaskModal'>
+type AddTaskModalProps = NativeStackScreenProps<
+    RootStackParamList,
+    "AddTaskModal"
+>;
 
 const { width, height } = Dimensions.get("window");
-const image1 = require("../assets/circlescopy.png")
+const image1 = require("../assets/circlescopy.png");
 
 const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
-    const [taskTitle, onChangeTaskTitle] = useState("")
-    const [description, onChangeDescription] = useState("")
-    const [date, setDate] = useState(new Date())
-    const [open, setOpen] = useState(false)
+    const [taskTitle, onChangeTaskTitle] = useState("");
+    const [description, onChangeDescription] = useState("");
+    const [date, setDate] = useState(new Date());
+    const [open, setOpen] = useState(false);
+    const queryClient = useQueryClient();
 
     const handleDismissKeyboard = () => {
         Keyboard.dismiss();
@@ -27,16 +47,19 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView
-                contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}
+                contentContainerStyle={{
+                    flexGrow: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
                 keyboardShouldPersistTaps="handled" // Ensure taps outside of TextInput dismiss the keyboard
             >
-                
                 <View style={{ flex: 0.4, alignItems: "center", width: "100%" }}>
                     <Text style={styles.title}>Add Task</Text>
                     <TextInput
                         editable
                         value={taskTitle}
-                        onChangeText={taskTitle => onChangeTaskTitle(taskTitle)}
+                        onChangeText={(taskTitle) => onChangeTaskTitle(taskTitle)}
                         onSubmitEditing={handleDismissKeyboard}
                         style={[
                             styles.input,
@@ -50,7 +73,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
                         editable
                         value={description}
                         multiline={true}
-                        onChangeText={description => onChangeDescription(description)}
+                        onChangeText={(description) => onChangeDescription(description)}
                         onSubmitEditing={handleDismissKeyboard}
                         style={[
                             styles.input,
@@ -62,13 +85,37 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
                     />
                     <DateTimePicker
                         mode="datetime"
-                        display='default'
+                        display="default"
                         value={date}
                         style={{ marginTop: height * 0.03 }}
                     />
                     <HomeButton
-                        title='Add'
-                        onPress={() => { navigation.goBack() }}
+                        title="Add"
+                        onPress={async () => {
+                            await axiosClient.post(
+                                "/task",
+                                {
+                                    taskTitle,
+                                    description,
+                                    date,
+                                },
+                                {
+                                    headers: {
+                                        Authorization: `Bearer ${queryClient.getQueryData<LoginResponse>([
+                                            LOGIN_MUTATION_KEY,
+                                        ])?.token
+                                            }`,
+                                    },
+                                }
+                            );
+
+                            alert("Task added successfully");
+                            navigation.push("LandingPage", { reload: true });
+                            navigation.reset({
+                                index: 0,
+                                routes: [{ name: "LandingPage" }],
+                            });
+                        }}
                         customStyles={{ marginTop: height * 0.03 }}
                     />
                 </View>
@@ -76,15 +123,14 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
             <Image source={image1} style={styles.image} />
         </SafeAreaView>
     );
-}
+};
 
 const styles = StyleSheet.create({
     image: {
-        position: 'absolute',
+        position: "absolute",
         bottom: 0, // Adjust bottom position as needed
-        width: width*(1), // Set width to full screen width
+        width: width * 1, // Set width to full screen width
         height: 0.25 * height, // Set height to a specific percentage of screen height
-
     },
     title: {
         fontWeight: "bold",
@@ -108,7 +154,7 @@ const styles = StyleSheet.create({
     },
     inputCenter: {
         textAlign: "center",
-    }
+    },
 });
 
 export default AddTaskModal;

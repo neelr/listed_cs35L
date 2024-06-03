@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,157 +10,66 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../routes/StackNavigator";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useQueryClient } from "@tanstack/react-query";
+import { LOGIN_MUTATION_KEY } from "../hooks/useLogin";
+import { LoginResponse } from "../types/authTypes";
+import { TaskView } from "../components/TaskView";
+import { Task } from "../types/taskTypes";
+import { axiosClient } from "../constants";
 
 type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Profile">;
 
-interface Task {
-  id: string;
-  title: string;
-  date: string;
-  description: string;
-  completed: boolean;
-}
-
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [followingTasks, setFollowingTasks] = useState<Task[]>([]);
   const [activeTab, setActiveTab] = useState<"ToDo" | "Completed" | "Calendar">(
     "ToDo"
   );
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: "1",
-      title: "Meeting with team",
-      date: "2024-05-17",
-      description: "Discuss project updates and next steps.",
-      completed: false,
-    },
-    {
-      id: "2",
-      title: "Code Review",
-      date: "2024-05-18",
-      description: "Review code for the new feature implementation.",
-      completed: true,
-    },
-    {
-      id: "3",
-      title: "Client Presentation",
-      date: "2024-05-19",
-      description: "Present the project progress to the client.",
-      completed: false,
-    },
-  ]);
+  const queryClient = useQueryClient();
 
-  const handleFollowPress = () => {
-    setIsFollowing(!isFollowing);
-  };
+  const data = queryClient.getQueryData<LoginResponse>([LOGIN_MUTATION_KEY]);
+  const token = data?.token;
 
-  const renderTask = ({ item }: { item: Task }) => (
-    <View style={styles.taskCard}>
-      <Text style={styles.taskTitle}>{item.title}</Text>
-      <Text style={styles.taskDate}>{item.date}</Text>
-      <Text style={styles.taskDescription}>{item.description}</Text>
-    </View>
-  );
+  useEffect(() => {
+    const followers = data?.friends;
+    const taskAcc = [];
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case "ToDo":
-        return (
-          <FlatList
-            data={tasks.filter((task) => !task.completed)}
-            renderItem={renderTask}
-            keyExtractor={(item) => item.id}
-            style={styles.taskList}
-          />
-        );
-      case "Completed":
-        return (
-          <FlatList
-            data={tasks.filter((task) => task.completed)}
-            renderItem={renderTask}
-            keyExtractor={(item) => item.id}
-            style={styles.taskList}
-          />
-        );
-    }
-  };
+    followers?.forEach(async (follower) => {
+      const response = await axiosClient.post<Task[]>(`/tasks`,
+        {
+          creatorId: follower
+        }
+        , {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+
+      // TODO: get users with the shared page
+
+      taskAcc.push(...response.data);
+    });
+
+  }, []);
+
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
-        <View style={styles.header}>
-          <Text style={styles.username}>@DoubleBBinks</Text>
-        </View>
-        <View style={styles.profileHeader}>
-          <Image
-            source={{
-              uri: "https://media.licdn.com/dms/image/D5603AQEA8P_tgwCuZQ/profile-displayphoto-shrink_200_200/0/1677975599737?e=2147483647&v=beta&t=WhAO0hCoV8ULGg6FjJTTra24lgfp73YsgXTlUOn-gD4",
-            }}
-            style={styles.profileImage}
-          />
-          <View>
-            <Text style={styles.name}>Arman Bagdasarian</Text>
-            <View style={styles.followContainer}>
-              <View style={styles.followBox}>
-                <Text style={styles.followCount}>69</Text>
-                <Text style={styles.followLabel}>Followers</Text>
-              </View>
-              <View style={styles.verticalBar} />
-              <View style={styles.followBox}>
-                <Text style={styles.followCount}>420</Text>
-                <Text style={styles.followLabel}>Following</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-        <Text style={styles.bio}>
-          Software Developer. Tech Enthusiast. Avid Climber. Always curious and
-          exploring new things!
-        </Text>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.followButton,
-              isFollowing ? styles.followingButton : {},
-            ]}
-            onPress={handleFollowPress}
-          >
-            <Text style={styles.followButtonText}>
-              {isFollowing ? "Unfollow" : "Follow"}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.PokeButton}>
-            <Text style={styles.PokeButtonText}>Poke</Text>
-          </TouchableOpacity>
+        <View style={{
+          marginTop: 50,
+        }}>
+          <Text style={styles.name}>{data?.username}</Text>
+          <Text style={styles.username}>Followers: {data?.friends.length}</Text>
         </View>
       </View>
       <View style={styles.separator} />
       <View style={styles.tabsContainer}>
-        <TouchableOpacity
-          style={[
-            styles.tabButton,
-            activeTab === "ToDo" && styles.activeTabButton,
-          ]}
-          onPress={() => setActiveTab("ToDo")}
-        >
-          <Text style={styles.tabButtonText}>❌</Text>
-          {activeTab === "ToDo" && <View style={styles.activeTabIndicator} />}
-        </TouchableOpacity>
-        <View style={styles.tabSeparator} />
-        <TouchableOpacity
-          style={[
-            styles.tabButton,
-            activeTab === "Completed" && styles.activeTabButton,
-          ]}
-          onPress={() => setActiveTab("Completed")}
-        >
-          <Text style={styles.tabButtonText}>✅</Text>
-          {activeTab === "Completed" && (
-            <View style={styles.activeTabIndicator} />
-          )}
-        </TouchableOpacity>
+        {
+          followingTasks.map((task) => (
+            <TaskView task={task} navigation={navigation} />
+          ))
+        }
       </View>
-      <View style={styles.contentContainer}>{renderContent()}</View>
     </SafeAreaView>
   );
 };

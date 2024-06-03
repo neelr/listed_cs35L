@@ -17,6 +17,9 @@ export interface UserPrivate extends User {
 
 export interface LoginResponse extends UserPrivate {
   token: string;
+  username: string;
+  email: string;
+  friends: string[];
   message?: string;
   error?: string;
 }
