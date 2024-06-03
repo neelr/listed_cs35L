@@ -4,16 +4,19 @@ import {
   DeleteCommand,
   ScanCommand,
   ScanCommandInput,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import {
   CreateTaskRequest,
   DeleteTaskRequest,
+  EditTaskRequest,
   GetTaskByIdRequest,
   GetTasksByUserIdRequest,
   GetTasksByUserIdsRequest,
 } from "../types";
 import { getHashFromCurrentDate } from "./utils";
 import { documentClient, TASKS_TABLE_NAME } from "./constants";
+import { ReturnValue } from "@aws-sdk/client-dynamodb";
 
 export const createTask = async (task: CreateTaskRequest) => {
   const item = {
@@ -123,5 +126,34 @@ export const deleteTask = async ({ taskId }: DeleteTaskRequest) => {
   } catch (error) {
     console.error("Error deleting task: ", error);
     throw "Error deleting task";
+  }
+};
+
+export const editTask = async (task: EditTaskRequest) => {
+  const params = {
+    TableName: TASKS_TABLE_NAME,
+    Key: {
+      taskId: task.taskId,
+    },
+    UpdateExpression:
+      "SET #name = :name, description = :description, completeBy = :completeBy, completed = :completed",
+    ExpressionAttributeNames: {
+      "#name": "name",
+    },
+    ExpressionAttributeValues: {
+      ":name": task.name,
+      ":description": task.description || null,
+      ":completeBy": task.completeBy || null,
+      ":completed": task.completed,
+    },
+    ReturnValues: ReturnValue.ALL_NEW,
+  };
+
+  try {
+    const { Attributes } = await documentClient.send(new UpdateCommand(params));
+    return Attributes;
+  } catch (error) {
+    console.error("Error updating task: ", error);
+    throw "Error updating task";
   }
 };

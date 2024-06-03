@@ -19,6 +19,7 @@ import ddGetTasksByUserIds from "./routes/ddGetTasksByUserIds";
 import ddAddFriend from "./routes/ddAddFriend";
 import ddSearchUsersByName from "./routes/ddSearchUsersByName";
 import rateLimit from "express-rate-limit";
+import ddEditTask from "./routes/ddEditTask";
 
 dotenv.config();
 
@@ -55,6 +56,7 @@ app.delete(`/user`, authenticateJWT, ddDeleteUser);
 app.get(`/users`, authenticateJWT, ddSearchUsersByName);
 app.post(`/task`, authenticateJWT, ddCreateTask);
 app.get(`/task`, authenticateJWT, ddGetTaskById);
+app.put(`/task`, authenticateJWT, ddEditTask);
 app.get(`/tasks`, authenticateJWT, ddGetTasksByUserId);
 app.get(`/friends/tasks`, authenticateJWT, ddGetTasksByUserIds);
 app.post(`/friends`, authenticateJWT, ddAddFriend);

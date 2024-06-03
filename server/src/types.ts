@@ -75,6 +75,11 @@ export interface DeleteTaskRequest {
   taskId: string;
 }
 
+export interface EditTaskRequest extends CreateTaskRequest {
+  taskId: string;
+  completed: boolean;
+}
+
 export interface PublicUser {
   userId: string;
   username: string;
