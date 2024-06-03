@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../routes/StackNavigator";
 import { TaskView } from "../components/TaskView";
-import { useUserFriends } from "../hooks/useUserFriends";
+import { useSearchUsers } from "../hooks/useSearchUsers";
 import WarningMessage from "../components/WarningText";
 
 type SearchScreenProps = NativeStackScreenProps<
@@ -15,7 +15,7 @@ type SearchScreenProps = NativeStackScreenProps<
 const { width, height } = Dimensions.get("window");
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
-  const { data: friends, isLoading, error } = useUserFriends();
+  const { data: friends, isLoading, error } = useSearchUsers();
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Search Friends</Text>

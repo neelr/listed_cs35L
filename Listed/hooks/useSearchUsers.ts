@@ -3,19 +3,22 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from "@tanstack/react-query";
-import { getUserTasks } from "../api/api";
-import { Task } from "../types/taskTypes";
+import { searchForUsers } from "../api/api";
 import { LOGIN_MUTATION_KEY } from "./useLogin";
 import { LoginResponse } from "../types/authTypes";
+import { User } from "../types/userTypes";
 
-export const USER_TASKS_QUERY_KEY = "userTasks";
+export const USER_SEARCH_QUERY_KEY = "userSearch";
 
-// TODO: implement this. Currently behaves identically to useUserTasks.
-export const useUserFriends = (options?: UseQueryOptions) => {
+export const useSearchUsers = (
+  username: string,
+  options?: UseQueryOptions<User[]>
+) => {
   const queryClient = useQueryClient();
 
-  return useQuery<Task[]>({
-    queryKey: [USER_TASKS_QUERY_KEY],
+  return useQuery<User[]>({
+    ...options,
+    queryKey: [USER_SEARCH_QUERY_KEY, username],
     queryFn: async () => {
       const token = queryClient.getQueryData<LoginResponse>([
         LOGIN_MUTATION_KEY,
@@ -23,7 +26,8 @@ export const useUserFriends = (options?: UseQueryOptions) => {
       if (!token) {
         throw new Error("No user data");
       }
-      return getUserTasks(token.token);
+      return searchForUsers(username, token.token);
     },
+    enabled: !!username,
   });
 };

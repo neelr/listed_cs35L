@@ -5,3 +5,7 @@ export interface User {
   createdOn: string;
   userId: string;
 }
+
+export interface UserSearchPayload {
+  username: string;
+}
