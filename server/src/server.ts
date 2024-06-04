@@ -32,6 +32,8 @@ dotenv.config();
 
 export const SECRET_KEY = process.env.AUTH_SECRET || "test-secret";
 
+export const PEPPER = process.env.PEPPER || "test-pepper";
+
 const PORT = process.env.PORT || 3000;
 
 const limiter = rateLimit({
