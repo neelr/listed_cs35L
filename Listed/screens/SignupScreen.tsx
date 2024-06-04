@@ -180,6 +180,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: -0.1 * height,
     zIndex: -1,
+    width: width * 1,
   },
 
   title: {

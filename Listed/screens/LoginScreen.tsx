@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
   },
   image: {
     bottom: -0.1 * height,
+    width: width * 1,
   },
   title: {
     fontFamily: "InknutAntiqua_400Regular",
