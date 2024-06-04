@@ -55,7 +55,7 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
 
   const renderRightActions = () => (
     <View style={styles.deleteButton}>
-      <Feather name="trash-2" size={24} color="black"/>
+      <Feather name="trash-2" size={24} color="#3B4552"/>
     </View>
   );
 
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   deleteButton: {
     justifyContent: 'center',
     alignItems: 'flex-end',
-    backgroundColor: 'red',
+    backgroundColor: "#E63946",
     width: width * (5 / 6),
     borderRadius: 10,
     height: 'auto',
