@@ -49,61 +49,58 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
   const { mutate: deleteTask, isSuccess } = useDeleteTask();
   const { mutate: editTask } = useEditTask();
 
-  const handleDelete = () => {
-    deleteTask(task.taskId);
+  const handleSwipe = (direction: string) => {
+    direction === "right" ? deleteTask(task.taskId)
+      : editTask({ taskId: task.taskId, completed: !task.completed });
   };
 
-  const renderRightActions = () => (
-    <View style={styles.deleteButton}>
-      <Feather name="trash-2" size={24} color="#3B4552"/>
+  const renderLeftActions = () => (
+    <View style={[styles.swipeButton, {backgroundColor: "#aaa", paddingLeft: 15}]}>
+      <Fontisto name={task.completed ? "checkbox-active" : "checkbox-passive"} size={24} color="#3B4552" />
     </View>
   );
 
-
-  const taskContainerStyle = task.completed
-    ? styles.completedTaskContainer
-    : styles.incompleteTaskContainer;
+  const renderRightActions = () => (
+    <View style={[styles.swipeButton, {backgroundColor: "#E63946", alignItems: 'flex-end', paddingRight: 15}]}>
+      <Feather name="trash-2" size={24} color="#3B4552" />
+    </View>
+  );
 
   return (
-    <Swipeable renderRightActions={renderRightActions} onSwipeableWillOpen={handleDelete}>
-      <View style={taskContainerStyle}>
+    <Swipeable 
+    renderLeftActions={renderLeftActions}
+    renderRightActions={renderRightActions} 
+    onSwipeableWillOpen={(direction) => handleSwipe(direction)}>
+      <TouchableOpacity onPress={() => navigation.navigate("TaskModal", { task }) }>
+        <View style={[styles.taskContainer, {backgroundColor: !task.completed ? "#2B78C2": "#14a2eb" }]}>
 
-        <View style={styles.header}>
-          <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
+          <View style={styles.header}>
+            <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
 
-          <TouchableOpacity style={styles.button} onPress={() => {
-            editTask({ taskId: task.taskId, completed: !task.completed });
+            <TouchableOpacity style={styles.button} onPress={() => {
+              editTask({ taskId: task.taskId, completed: !task.completed });
             }}>
-            <Fontisto name={task.completed ? "checkbox-active" : "checkbox-passive"} size={24} color="white" />
-          </TouchableOpacity>
+              
+            </TouchableOpacity>
 
+          </View>
+
+          <Text style={[styles.text, {fontSize: 12}]}> Do by: {formatDateString(task.completeBy)}</Text>
+
+          {task.description && (
+            <Text style={[styles.text, {fontSize: 16}]}> {task.description}</Text>
+          )}
         </View>
-
-        <Text style={styles.timeText}> Do by: {formatDateString(task.completeBy)}</Text>
-        
-        {task.description && (
-          <Text style={styles.text}> {task.description}</Text>
-        )}
-      </View>
+      </TouchableOpacity>
     </Swipeable>
 
   );
 };
 
 const styles = StyleSheet.create({
-  incompleteTaskContainer: {
+  taskContainer: {
     width: width * (5 / 6),
     alignItems: "center",
-    backgroundColor: "#2B78C2",
-    borderRadius: 10, // Adjust border radius for curved edges
-    padding: 3, // Adjust padding as needed
-    borderWidth: 1,
-    borderColor: "#DDDDDD",
-  },
-  completedTaskContainer: {
-    width: width * (5 / 6),
-    alignItems: "center",
-    backgroundColor: "#14a2eb",
     borderRadius: 10, // Adjust border radius for curved edges
     padding: 3, // Adjust padding as needed
     borderWidth: 1,
@@ -117,23 +114,12 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "InknutAntiqua_400Regular",
-    fontSize: 16,
     color: "#F8F9FA",
     marginBottom: 0,
     textAlign: "left",
     alignSelf: "stretch",
     paddingLeft: 10,
   },
-  timeText: {
-    fontFamily: "InknutAntiqua_400Regular",
-    fontSize: 12,
-    color: "#F8F9FA",
-    marginBottom: 0,
-    textAlign: "left",
-    alignSelf: "stretch",
-    paddingLeft: 10,
-  },
-
   boldText: {
     fontFamily: "InknutAntiqua_700Bold",
     fontSize: 16,
@@ -150,13 +136,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  deleteButton: {
+  swipeButton: {
     justifyContent: 'center',
-    alignItems: 'flex-end',
-    backgroundColor: "#E63946",
     width: width * (5 / 6),
     borderRadius: 10,
     height: 'auto',
-    paddingRight: 15,
   },
 });

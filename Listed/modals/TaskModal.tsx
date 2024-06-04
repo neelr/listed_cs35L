@@ -15,29 +15,42 @@ import {
 import HomeButton from "../components/Button";
 import { Keyboard } from "react-native";
 import { useAddTask } from "../hooks/useAddTask";
+import { useEditTask } from "../hooks/useEditTask";
 import { useQueryClient } from "@tanstack/react-query";
 import { USER_TASKS_QUERY_KEY } from "../hooks/useUserTasks";
 
 type AddTaskModalProps = NativeStackScreenProps<
   RootStackParamList,
-  "AddTaskModal"
+  "TaskModal"
 >;
 
 const { width, height } = Dimensions.get("window");
 const image1 = require("../assets/circlescopy.png");
 
-const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
-  const [taskTitle, onChangeTaskTitle] = useState("");
-  const [description, onChangeDescription] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState(new Date())
+const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
+  const curTask = route.params?.task
+
+  const [taskTitle, onChangeTaskTitle] = curTask ? useState(curTask.name) : useState("");
+  const [description, onChangeDescription] = curTask ? useState(curTask.description) : useState("");
+  const [date, setDate] = curTask ? useState(new Date(curTask.completeBy)) : useState(new Date());
+  const [time, setTime] = curTask ? useState(new Date(curTask.completeBy)) : useState(new Date())
 
   const queryClient = useQueryClient();
 
-
   const { mutate: addTask } = useAddTask({
     onSuccess: () => {
-      alert("Task added successfully");
+      alert("Task added successfully!");
+      queryClient.invalidateQueries({
+        queryKey: [USER_TASKS_QUERY_KEY]
+      });
+
+      navigation.goBack();
+    },
+  });
+
+  const { mutate: editTask } = useEditTask({
+    onSuccess: () => {
+      alert("Task edited successfully!");
       queryClient.invalidateQueries({
         queryKey: [USER_TASKS_QUERY_KEY]
       });
@@ -60,7 +73,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
     let strminutes = minutes < 10 ? '0' + minutes.toString() : minutes.toString();
-    let strTime = hours.toString() + ':' + minutes.toString() + ' ' + ampm;
+    let strTime = hours.toString() + ':' + strminutes + ' ' + ampm;
     return strTime;
   }
 
@@ -75,7 +88,8 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
         keyboardShouldPersistTaps="handled" // Ensure taps outside of TextInput dismiss the keyboard
       >
         <View style={{ flex: 0.4, alignItems: "center", width: "100%" }}>
-          <Text style={styles.title}>Add Task</Text>
+          <Text style={styles.title}>
+          {curTask ? "Edit" : "Add"} Task</Text>
           <TextInput
             editable
             value={taskTitle}
@@ -134,9 +148,17 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
             />
           )}
           <HomeButton
-            title="Add"
+            title={ curTask ? "Edit" : "Add" }
             onPress={() => {
+              !curTask ? 
               addTask({
+                name: taskTitle,
+                description,
+                completeBy: date.toISOString(),
+              }) :
+              
+              editTask({
+                taskId: curTask.taskId,
                 name: taskTitle,
                 description,
                 completeBy: date.toISOString(),
@@ -181,4 +203,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddTaskModal;
+export default TaskModal;

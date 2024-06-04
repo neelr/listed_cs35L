@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AddTaskModal from "../modals/AddTaskModal";
+import TaskModal from "../modals/TaskModal";
 import ListItemScreen from "../screens/ListItemScreen";
 import LoginScreen from "../screens/LoginScreen";
 import ProfileScreen from "../screens/ProfileScreen";
@@ -9,6 +9,7 @@ import SearchScreen from "../screens/SearchScreen";
 import { TabNavigator } from "./TabNavigator";
 import { useAuthToken } from "../hooks/useAuthToken";
 import LoadingScreen from "../screens/LoadingScreen";
+import { Task } from "../types/taskTypes"
 
 export type RootStackParamList = {
   Home: undefined;
@@ -18,7 +19,9 @@ export type RootStackParamList = {
   Tasks: undefined;
   Search: undefined;
   Signup: undefined;
-  AddTaskModal: undefined;
+  TaskModal: {
+    task?: Task
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -40,7 +43,7 @@ export const StackNavigator = () => {
       <Stack.Group
         screenOptions={{ headerShown: false, presentation: "modal" }}
       >
-        <Stack.Screen name="AddTaskModal" component={AddTaskModal} />
+        <Stack.Screen name="TaskModal" component={TaskModal} />
       </Stack.Group>
       <Stack.Screen
         name="Home"
