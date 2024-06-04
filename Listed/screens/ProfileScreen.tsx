@@ -247,9 +247,9 @@ const styles = StyleSheet.create({
   },
   taskDescription: {
     fontFamily: "InknutAntiqua_300Light",
-    fontSize: 5,
+    fontSize: 7,
     color: "#666",
-    marginTop: -10,
+    marginTop: -5,
   },
   friendCard: {
     backgroundColor: "#fff",
