@@ -44,7 +44,6 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
   return (
     <View style={taskContainerStyle}>
 
-
       <View style={styles.header}>
         <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
 
@@ -55,6 +54,8 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
         </TouchableOpacity>
 
       </View>
+
+      <Text style={styles.text}> Do by: {task.completeBy}</Text>
       
       {task.description && (
         <Text style={styles.text}> {task.description}</Text>
