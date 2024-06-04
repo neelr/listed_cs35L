@@ -117,7 +117,7 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
             placeholder="Description"
             placeholderTextColor="#aaa"
           />
-          <Text style={{ marginTop: height * 0.02, fontFamily: "InknutAntiqua_400Regular" }}>
+          <Text style={{ marginTop: height * 0.02, fontFamily: "InknutAntiqua_400Regular", color:"#3B4552" }}>
             {formatDateString(date.toISOString())}
           </Text>
           <HomeButton
