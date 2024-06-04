@@ -140,7 +140,7 @@ export const searchUsers = async ({ username }: SearchUsersByNameRequest) => {
 
   try {
     const data = await documentClient.send(new ScanCommand(params));
-    return data.Items || [];
+    return data.Items?.map((user) => omitSensitiveKeys(user)) || [];
   } catch (error) {
     console.error("Error scanning table: ", error);
     throw "Error scanning table";
