@@ -1,5 +1,5 @@
-import React from "react";
-import { Dimensions, StyleSheet, Text, FlatList } from "react-native";
+import React, { useState } from "react";
+import { Dimensions, StyleSheet, Text, FlatList, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../routes/StackNavigator";
@@ -7,6 +7,7 @@ import { TaskView } from "../components/TaskView";
 import CircleAddButton from "../components/CircleAddButton";
 import { useUserTasks } from "../hooks/useUserTasks";
 import WarningMessage from "../components/WarningText";
+import { AntDesign } from '@expo/vector-icons';
 import { USER_TASKS_QUERY_KEY } from "../hooks/useUserTasks";
 
 type ListItemScreenProps = NativeStackScreenProps<
@@ -18,8 +19,9 @@ const { width, height } = Dimensions.get("window");
 
 const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
   const { data: tasksRaw, isLoading, error } = useUserTasks();
+  const [showCompleted, setShowCompleted] = useState(true); // Local boolean state
 
-  console.log(tasksRaw);
+
   const tasks = tasksRaw?.filter?.((tasksRaw) => !tasksRaw.completed) || [];
   const tasksComplete =
     tasksRaw?.filter?.((tasksRaw) => tasksRaw.completed) || [];
@@ -31,7 +33,7 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
         <Text>Loading...</Text>
       ) : (
         <>
-          {tasks?.length === 0 && <Text>No tasks yet!</Text>}
+          {tasks?.length === 0 && <Text style={styles.noTasksText}>No Tasks Yet</Text>}
           <FlatList
             data={tasks} // Passed tasks state to FlatList
             keyExtractor={(item) => item.taskId} // Set key extractor
@@ -41,15 +43,24 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
           />
 
           {tasksComplete?.length != 0 && (
-            <Text style={styles.completedText}>Completed Tasks</Text>
+            <View style={styles.completedHeader}>
+              <Text style={styles.completedText}>Completed Tasks</Text>
+              <TouchableOpacity onPress={() => setShowCompleted(!showCompleted)}>
+                <AntDesign name={showCompleted ? "caretleft" : "caretdown"} size={24} color="gray" />
+              </TouchableOpacity>
+            </View>
           )}
-          <FlatList
+
+          {/* {!showCompleted */ true && ( 
+            <FlatList
             data={tasksComplete}
             keyExtractor={(item) => item.taskId}
             renderItem={(item) => (
               <TaskView task={item.item} navigation={navigation} />
             )}
           />
+          )}
+          
 
           <CircleAddButton
             title="+"
@@ -78,10 +89,35 @@ const styles = StyleSheet.create({
     fontSize: width / 10.0,
     color: "#3B4552",
   },
+  completedHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    justifyContent: 'space-between',
+    paddingLeft: 10,
+    paddingRight: 30,
+    paddingBottom: 30,
+
+
+    marginVertical: 10,
+  },
   completedText: {
     fontFamily: "InknutAntiqua_300Light",
     fontSize: width / 20.0,
     color: "#3B4552",
+    textAlign: "left", // Align text to the left
+    alignSelf: "stretch", // Ensure it takes full width
+    paddingLeft: 25,
+
+  },
+  noTasksText: {
+    fontFamily: "InknutAntiqua_300Light",
+    fontSize: width / 20.0,
+    color: "#3B4552",
+    textAlign: "left", // Align text to the left
+    alignSelf: "stretch", // Ensure it takes full width
+    paddingLeft: 35,
+
   },
   button: {
     position: "absolute",
