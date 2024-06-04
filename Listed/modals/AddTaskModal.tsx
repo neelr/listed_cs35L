@@ -139,7 +139,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
               addTask({
                 name: taskTitle,
                 description,
-                completeBy: date.toISOString() + ", " + time.toTimeString(),
+                completeBy: date.toISOString(),
               });
             }}
             customStyles={{
