@@ -21,7 +21,6 @@ import {
 import {
   encryptPassword,
   getHashFromCurrentDate,
-  omitKeys,
   omitSensitiveKeys,
 } from "./utils";
 import { documentClient, USERS_TABLE_NAME } from "./constants";
@@ -148,6 +147,20 @@ export const searchUsers = async ({ username }: SearchUsersByNameRequest) => {
   }
 };
 
+export const getAllUsers = async () => {
+  const params = {
+    TableName: USERS_TABLE_NAME,
+  };
+
+  try {
+    const data = await documentClient.send(new ScanCommand(params));
+    return data.Items?.map((user) => omitSensitiveKeys(user)) || [];
+  } catch (error) {
+    console.error("Error scanning table: ", error);
+    throw "Error scanning table";
+  }
+};
+
 export const getUserById = async ({ userId }: GetUserByIdRequest) => {
   const params = {
     TableName: USERS_TABLE_NAME,
@@ -196,6 +209,9 @@ export const addFriend = async ({ userId, friendId }: AddFriendRequest) => {
   if (user.friends.includes(friendId)) {
     throw "Friend already added";
   }
+  if (userId === friendId) {
+    throw "Cannot add self as friend";
+  }
 
   const params = {
     TableName: USERS_TABLE_NAME,
@@ -217,6 +233,41 @@ export const addFriend = async ({ userId, friendId }: AddFriendRequest) => {
   } catch (error) {
     console.error("Error adding friend: ", error);
     throw "Error adding friend";
+  }
+};
+
+export const removeFriend = async ({ userId, friendId }: AddFriendRequest) => {
+  const user = await getUserById({ userId });
+  if (!user) {
+    throw "User not found";
+  }
+
+  if (!user.friends.includes(friendId)) {
+    throw "Friend not found";
+  }
+
+  const newFriends = user.friends?.filter((id: string) => id !== friendId);
+
+  const params = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      userId: userId,
+    },
+    UpdateExpression: "SET friends = :newFriends",
+    ExpressionAttributeValues: {
+      ":newFriends": newFriends,
+    },
+    ReturnValues: ReturnValue.ALL_NEW,
+  };
+
+  const command = new UpdateCommand(params);
+
+  try {
+    const data = await documentClient.send(command);
+    return data.Attributes;
+  } catch (error) {
+    console.error("Error removing friend: ", error);
+    throw "Error removing friend";
   }
 };
 

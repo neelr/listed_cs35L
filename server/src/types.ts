@@ -8,6 +8,15 @@ export interface Task {
   userIds: string[];
 }
 
+export interface User {
+  userId: string;
+  username: string;
+  email: string;
+  friends: string[];
+  createdOn: string;
+  password: string;
+}
+
 export interface GetUserIdByEmailRequest {
   email: string;
 }
@@ -66,6 +75,11 @@ export interface GetFriendDetailsRequest {
   userIds: string;
 }
 export interface AddFriendRequest {
+  userId: string;
+  friendId: string;
+}
+
+export interface RemoveFriendRequest {
   userId: string;
   friendId: string;
 }

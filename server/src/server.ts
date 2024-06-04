@@ -26,6 +26,7 @@ import ddGetFriendTasks from "./routes/ddGetFriendTasks";
 import ddGetTasksByUserIds from "./routes/ddGetTasksByUserIds";
 import ddGetFriendDetails from "./routes/ddGetFriendDetails";
 import ddGetFriendsDetails from "./routes/ddGetFriendsDetails";
+import ddRemoveFriend from "./routes/ddRemoveFriend";
 
 dotenv.config();
 
@@ -68,6 +69,7 @@ app.get(
 );
 app.post(`/${FRIEND_ROUTE}/batch`, authenticateJWT, ddGetFriendsDetails);
 app.post(`/${FRIEND_ROUTE}`, authenticateJWT, ddAddFriend);
+app.put(`/${FRIEND_ROUTE}`, authenticateJWT, ddRemoveFriend);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
