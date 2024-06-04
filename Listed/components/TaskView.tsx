@@ -29,6 +29,20 @@ const truncateText = (text: string, maxLength: number): string => {
   return text.substring(0, maxLength) + "...";
 };
 
+const formatDateString = (dateString: string): string => {
+  const date = new Date(dateString);
+  const formattedDate = date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+  const formattedTime = date.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return `${formattedDate} at ${formattedTime}`;
+};
+
 export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
   const { mutate: deleteTask, isSuccess } = useDeleteTask();
   const { mutate: editTask } = useEditTask();
@@ -55,7 +69,7 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
 
       </View>
 
-      <Text style={styles.text}> Do by: {task.completeBy}</Text>
+      <Text style={styles.timeText}> Do by: {formatDateString(task.completeBy)}</Text>
       
       {task.description && (
         <Text style={styles.text}> {task.description}</Text>
@@ -94,6 +108,15 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "InknutAntiqua_400Regular",
     fontSize: 16,
+    color: "#F8F9FA",
+    marginBottom: 0,
+    textAlign: "left",
+    alignSelf: "stretch",
+    paddingLeft: 10,
+  },
+  timeText: {
+    fontFamily: "InknutAntiqua_400Regular",
+    fontSize: 12,
     color: "#F8F9FA",
     marginBottom: 0,
     textAlign: "left",
