@@ -49,19 +49,21 @@ export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
 
   return (
     userData?.userId != user.userId ? (
-      <View style={styles.taskContainer}>
+      <View style={userData?.friends.includes(user.userId) ? styles.removeFriendContainer : styles.addFriendContainer}>
         <View style={styles.header}>
           <View>
             <Text style={styles.boldText}>{truncateText(user.username, 20)}</Text>
-            <Text style={styles.text}>{mutualCount} Mutuals</Text>
+            <Text style={styles.text}>{mutualCount} Mutual{mutualCount === 1 ? "" : "s"}</Text>
           </View>
-          <TouchableOpacity style={styles.button} onPress={handleAddFriend}>
             {userData?.friends.includes(user.userId) ? (
-              <Text style={styles.buttonText}>Remove friend</Text>
+              <TouchableOpacity style={styles.buttonRemove} onPress={handleAddFriend}>
+                <Text style={styles.removeFriend}>Remove friend</Text>
+              </TouchableOpacity>
             ) : (
-              <Text style={styles.buttonText}>Add friend</Text>
+              <TouchableOpacity style={styles.buttonAdd} onPress={handleAddFriend}>
+                <Text style={styles.addFriend}>Add friend</Text>
+              </TouchableOpacity>
             )}
-          </TouchableOpacity>
         </View>
       </View>) : (
       <></>
@@ -70,11 +72,21 @@ export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
 };
 
 const styles = StyleSheet.create({
-  taskContainer: {
+  addFriendContainer: {
     width: width * (5 / 6),
     marginBottom: 20, // Adjust spacing between tasks
     alignItems: "center",
     backgroundColor: "#2B78C2",
+    borderRadius: 10, // Adjust border radius for curved edges
+    padding: 3, // Adjust padding as needed
+    borderWidth: 1,
+    borderColor: "#DDDDDD",
+  },
+  removeFriendContainer: {
+    width: width * (5 / 6),
+    marginBottom: 20, // Adjust spacing between tasks
+    alignItems: "center",
+    backgroundColor: "#7BC8F2",
     borderRadius: 10, // Adjust border radius for curved edges
     padding: 3, // Adjust padding as needed
     borderWidth: 1,
@@ -90,25 +102,41 @@ const styles = StyleSheet.create({
     fontFamily: "InknutAntiqua_400Regular",
     fontSize: 12,
     color: "#F8F9FA",
-    marginBottom: 0,
+    marginTop: -5,
+    marginBottom: 5,
     textAlign: "left",
     alignSelf: "stretch",
-    paddingLeft: 10,
+    paddingLeft: 15,
   },
   boldText: {
     fontFamily: "InknutAntiqua_700Bold",
     fontSize: 16,
     color: "#F8F9FA",
-    paddingLeft: 10,
+    paddingLeft: 15,
     marginBottom: 0,
   },
-  button: {
-    backgroundColor: "transparent", // Adjust as needed for visibility
+  buttonAdd: {
+    backgroundColor: "#CDE8FA",
+    borderRadius: 10,
     padding: 10,
+    marginRight: 10
   },
-  buttonText: {
-    color: "#F8F9FA",
-    fontSize: 16,
+  buttonRemove: {
+    backgroundColor: "#CDE8FA",
+    borderRadius: 10,
+    padding: 10,
+    marginRight: 10
+  },
+  addFriend: {
+    fontFamily: "InknutAntiqua_400Regular",
+    color: "#2B78C2",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  removeFriend: {
+    fontFamily: "InknutAntiqua_400Regular",
+    color: "#FF4444",
+    fontSize: 12,
     fontWeight: "bold",
   },
 });

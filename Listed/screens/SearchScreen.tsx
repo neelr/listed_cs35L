@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     // marginBottom: 20,
   },
   text: {
+    fontFamily: "InknutAntiqua_400Regular",
     marginTop: 10
   },
   input: {
