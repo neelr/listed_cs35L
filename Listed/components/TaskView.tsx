@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Task } from "../types/taskTypes";
+import { Swipeable } from 'react-native-gesture-handler';
 import { useDeleteTask } from "../hooks/useDeleteTask";
 import { Fontisto } from '@expo/vector-icons';
 import { useEditTask } from "../hooks/useEditTask";
+import { Feather } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get("window");
 
@@ -51,37 +53,46 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
     deleteTask(task.taskId);
   };
 
+  const renderRightActions = () => (
+    <View style={styles.deleteButton}>
+      <Feather name="trash-2" size={24} color="#3B4552"/>
+    </View>
+  );
+
+
   const taskContainerStyle = task.completed
     ? styles.completedTaskContainer
     : styles.incompleteTaskContainer;
 
   return (
-    <View style={taskContainerStyle}>
+    <Swipeable renderRightActions={renderRightActions} onSwipeableWillOpen={handleDelete}>
+      <View style={taskContainerStyle}>
 
-      <View style={styles.header}>
-        <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
+        <View style={styles.header}>
+          <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
 
-        <TouchableOpacity style={styles.button} onPress={() => {
-          editTask({ taskId: task.taskId, completed: !task.completed });
-          }}>
-          <Fontisto name={task.completed ? "checkbox-active" : "checkbox-passive"} size={24} color="white" />
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => {
+            editTask({ taskId: task.taskId, completed: !task.completed });
+            }}>
+            <Fontisto name={task.completed ? "checkbox-active" : "checkbox-passive"} size={24} color="white" />
+          </TouchableOpacity>
 
+        </View>
+
+        <Text style={styles.timeText}> Do by: {formatDateString(task.completeBy)}</Text>
+        
+        {task.description && (
+          <Text style={styles.text}> {task.description}</Text>
+        )}
       </View>
+    </Swipeable>
 
-      <Text style={styles.timeText}> Do by: {formatDateString(task.completeBy)}</Text>
-      
-      {task.description && (
-        <Text style={styles.text}> {task.description}</Text>
-      )}
-    </View>
   );
 };
 
 const styles = StyleSheet.create({
   incompleteTaskContainer: {
     width: width * (5 / 6),
-    marginBottom: 20, // Adjust spacing between tasks
     alignItems: "center",
     backgroundColor: "#2B78C2",
     borderRadius: 10, // Adjust border radius for curved edges
@@ -91,7 +102,6 @@ const styles = StyleSheet.create({
   },
   completedTaskContainer: {
     width: width * (5 / 6),
-    marginBottom: 20, // Adjust spacing between tasks
     alignItems: "center",
     backgroundColor: "#14a2eb",
     borderRadius: 10, // Adjust border radius for curved edges
@@ -139,5 +149,14 @@ const styles = StyleSheet.create({
     color: "#F8F9FA",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  deleteButton: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    backgroundColor: "#E63946",
+    width: width * (5 / 6),
+    borderRadius: 10,
+    height: 'auto',
+    paddingRight: 15,
   },
 });

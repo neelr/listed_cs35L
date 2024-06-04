@@ -50,6 +50,8 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
             renderItem={(item) => (
               <TaskView task={item.item} navigation={navigation} />
             )} // Render each task using Task component
+            ItemSeparatorComponent={() => <View style={{ height: 20 }} />} // Adjust the height for desired padding
+
           />
 
           {tasksComplete?.length != 0 && (
@@ -68,6 +70,8 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
             renderItem={(item) => (
               <TaskView task={item.item} navigation={navigation} />
             )}
+            ItemSeparatorComponent={() => <View style={{ height: 20 }} />} // Adjust the height for desired padding
+
           />
           )}
           
