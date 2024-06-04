@@ -37,7 +37,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           {friends?.length === 0 && <Text>No results!</Text>}
           <FlatList
             data={friends} // Passed tasks state to FlatList
-            keyExtractor={(inUser) => inUser.email} // Set key extractor
+            keyExtractor={(inUser) => inUser.username} // Set key extractor
             renderItem={(inUser) => <UserView user={inUser.item} />} // TODO: replace TaskView with new view
           />
         </>

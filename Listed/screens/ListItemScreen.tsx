@@ -9,15 +9,13 @@ import { useUserTasks } from "../hooks/useUserTasks";
 import WarningMessage from "../components/WarningText";
 
 type ListItemScreenProps = NativeStackScreenProps<
-  RootStackParamList["LandingPage"]
+  RootStackParamList,
+  "ListItem"
 >;
 
 const { width, height } = Dimensions.get("window");
 
-const ListItemScreen: React.FC<ListItemScreenProps> = ({
-  navigation,
-  // reload,
-}) => {
+const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
   const { data: tasksRaw, isLoading, error } = useUserTasks();
 
   console.log(tasksRaw);
@@ -55,7 +53,7 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({
           <CircleAddButton
             title="+"
             onPress={() => {
-              // navigation.navigate("AddTaskModal");
+              navigation.navigate("AddTaskModal");
             }}
             style={styles.button}
           ></CircleAddButton>

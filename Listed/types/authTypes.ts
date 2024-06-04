@@ -13,6 +13,7 @@ export interface SignupPayload {
 
 export interface UserPrivate extends User {
   password: string;
+  email: string;
 }
 
 export interface LoginResponse extends UserPrivate {

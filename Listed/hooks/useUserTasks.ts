@@ -1,28 +1,13 @@
-import {
-  useQuery,
-  useQueryClient,
-  UseQueryOptions,
-} from "@tanstack/react-query";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { getUserTasks } from "../api/api";
 import { Task } from "../types/taskTypes";
-import { LOGIN_MUTATION_KEY } from "./useLogin";
-import { LoginResponse } from "../types/authTypes";
 
 export const USER_TASKS_QUERY_KEY = "userTasks";
 
-export const useUserTasks = (options?: UseQueryOptions) => {
-  const queryClient = useQueryClient();
-
+export const useUserTasks = (options?: UseQueryOptions<Task[]>) => {
   return useQuery<Task[]>({
+    ...options,
     queryKey: [USER_TASKS_QUERY_KEY],
-    queryFn: async () => {
-      const token = queryClient.getQueryData<LoginResponse>([
-        LOGIN_MUTATION_KEY,
-      ]);
-      if (!token) {
-        throw new Error("No user data");
-      }
-      return getUserTasks(token.token);
-    },
+    queryFn: getUserTasks,
   });
 };

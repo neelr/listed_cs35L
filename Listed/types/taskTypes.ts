@@ -17,3 +17,9 @@ export interface TaskChangesRequest extends TaskChanges {
 export interface GetUserTasksRequest {
   userId: string;
 }
+
+export interface AddTaskRequest {
+  name: string;
+  description?: string;
+  completeBy?: string;
+}

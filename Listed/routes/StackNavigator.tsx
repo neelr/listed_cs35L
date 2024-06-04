@@ -7,13 +7,13 @@ import HomeScreen from "../screens/HomeScreen";
 import SignupScreen from "../screens/SignupScreen";
 import SearchScreen from "../screens/SearchScreen";
 import { TabNavigator } from "./TabNavigator";
+import { useAuthToken } from "../hooks/useAuthToken";
+import LoadingScreen from "../screens/LoadingScreen";
 
 export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
-  LandingPage: {
-    reload: object;
-  };
+  LandingPage: undefined;
   Profile: undefined;
   ListItem: undefined;
   AddFriends: undefined;
@@ -23,48 +23,47 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export const StackNavigator = () => (
-  <Stack.Navigator initialRouteName="Home">
-    <Stack.Screen
-      name="Home"
-      component={HomeScreen}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
-      name="Signup"
-      component={SignupScreen}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
-      name="Login"
-      component={LoginScreen}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
-      name="Profile"
-      component={ProfileScreen}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
-      name="LandingPage"
-      component={TabNavigator}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
-      name="ListItem"
-      component={ListItemScreen}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
-      name="AddFriends"
-      component={SearchScreen}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
-      name="AddTaskModal"
-      component={AddTaskModal}
-      options={{ headerShown: false, presentation: "modal" }}
-    />
-    {/* <Stack.Screen name='Task' component={TaskManagerScreen} options={{ headerShown: false }} /> */}
-  </Stack.Navigator>
-);
+export const StackNavigator = () => {
+  const { data: authToken, isLoading } = useAuthToken();
+
+  return isLoading ? (
+    <LoadingScreen />
+  ) : (
+    <Stack.Navigator initialRouteName="Home">
+      {authToken ? (
+        <>
+          <Stack.Group screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="LandingPage"
+              component={TabNavigator}
+              options={{ headerShown: false }}
+            />
+          </Stack.Group>
+          <Stack.Group
+            screenOptions={{ headerShown: false, presentation: "modal" }}
+          >
+            <Stack.Screen name="AddTaskModal" component={AddTaskModal} />
+          </Stack.Group>
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Signup"
+            component={SignupScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+        </>
+      )}
+    </Stack.Navigator>
+  );
+};

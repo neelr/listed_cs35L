@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as Yup from "yup";
+import * as SecureStore from "expo-secure-store";
 
 export const PASSWORD_SCHEMA = Yup.string()
   .required("Password is required")
@@ -20,18 +21,3 @@ export const TASK_ROUTE = "task";
 export const USER_ROUTE = "user";
 export const AUTH_ROUTE = "auth";
 export const FRIEND_ROUTE = "friend";
-
-export const axiosClient = axios.create({
-  baseURL: HTTP_URL,
-});
-
-axiosClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (axios.isAxiosError(error)) {
-      console.log(error.response?.data);
-      throw error.response?.data;
-    }
-    throw error;
-  }
-);

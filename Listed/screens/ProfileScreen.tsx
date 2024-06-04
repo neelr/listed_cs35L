@@ -1,21 +1,13 @@
-import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../routes/StackNavigator";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useQueryClient } from "@tanstack/react-query";
-import { LOGIN_MUTATION_KEY } from "../hooks/useLogin";
-import { LoginResponse } from "../types/authTypes";
 import { TaskView } from "../components/TaskView";
 import { Task } from "../types/taskTypes";
-import { axiosClient } from "../constants";
+import { useUserFriends } from "../hooks/useUserFriends";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Profile">;
 
@@ -26,49 +18,33 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   );
   const queryClient = useQueryClient();
 
-  const data = queryClient.getQueryData<LoginResponse>([LOGIN_MUTATION_KEY]);
-  const token = data?.token;
+  const { data: userData } = useCurrentUser();
 
-  useEffect(() => {
-    const followers = data?.friends;
-    const taskAcc = [];
-
-    followers?.forEach(async (follower) => {
-      const response = await axiosClient.post<Task[]>(`/tasks`,
-        {
-          creatorId: follower
-        }
-        , {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        });
-
-      // TODO: get users with the shared page
-
-      taskAcc.push(...response.data);
-    });
-
-  }, []);
-
+  const {
+    data: friends,
+    isLoading,
+    error,
+  } = useUserFriends(userData?.friends || []);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
-        <View style={{
-          marginTop: 50,
-        }}>
-          <Text style={styles.name}>{data?.username}</Text>
-          <Text style={styles.username}>Followers: {data?.friends.length}</Text>
+        <View
+          style={{
+            marginTop: 50,
+          }}
+        >
+          <Text style={styles.name}>{userData?.username}</Text>
+          <Text style={styles.username}>
+            Following: {friends?.map((friend) => friend.username).join(", ")}
+          </Text>
         </View>
       </View>
       <View style={styles.separator} />
       <View style={styles.tabsContainer}>
-        {
-          followingTasks.map((task) => (
-            <TaskView task={task} navigation={navigation} />
-          ))
-        }
+        {followingTasks.map((task) => (
+          <TaskView task={task} navigation={navigation} />
+        ))}
       </View>
     </SafeAreaView>
   );
@@ -89,7 +65,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#ffffff",
     width: "100%",
-    elevation: 4,
+    // elevation: 4,
     marginTop: -25,
   },
   header: {
@@ -255,13 +231,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#ebebeb",
     borderRadius: 10,
     padding: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
   },
   taskList: {
     width: "100%",
