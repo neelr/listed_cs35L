@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   activeTabButton: {
-    backgroundColor: "#4B88A2",
+    backgroundColor: "#2B78C2",
   },
   tabButtonText: {
     fontFamily: "InknutAntiqua_300Light",
