@@ -31,10 +31,10 @@ export function getMutualCount(user1: User | undefined, user2: User): number {
     return mutualCount;
 }
 
-export function rankUsers(users: User[] = [], search: string, num: number, user: User | undefined): User[] {
+export function rankUsers(users: User[] = [], search: string, num: number, user: User | undefined): [User[], number] {
     
     if (user === undefined) {
-        return [];
+        return [[], 0];
     }
 
     const rankedUsers: RankedUser[] = [];
@@ -61,5 +61,5 @@ export function rankUsers(users: User[] = [], search: string, num: number, user:
         returnList.push(sortedUsers[i][0]);
     }
     
-    return returnList;
+    return [returnList, sortedUsers.length];
 }
