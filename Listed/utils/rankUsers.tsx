@@ -9,7 +9,11 @@ function includesCaseInsensitive(mainString: string, substring: string): boolean
     return lowerMainString.includes(lowerSubstring);
 }
 
-export function getMutualCount(user1: User, user2: User): number {
+export function getMutualCount(user1: User | undefined, user2: User): number {
+
+    if (user1 === undefined) {
+        return 0;
+    }
 
     let mutualCount: number = 0;
 

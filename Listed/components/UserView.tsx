@@ -13,6 +13,7 @@ const { width, height } = Dimensions.get("window");
 
 export interface UserProps {
   user: User;
+  mutualCount: number;
 }
 
 const truncateText = (text: string, maxLength: number): string => {
@@ -23,7 +24,7 @@ const truncateText = (text: string, maxLength: number): string => {
   return text.substring(0, maxLength) + '...';
 };
 
-export const UserView: React.FC<UserProps> = ({ user }) => {
+export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
   const { data: userData } = useCurrentUser();
 
   const queryClient = useQueryClient();
@@ -50,7 +51,10 @@ export const UserView: React.FC<UserProps> = ({ user }) => {
     userData?.userId != user.userId ? (
       <View style={styles.taskContainer}>
         <View style={styles.header}>
-          <Text style={styles.boldText}>{truncateText(user.username, 20)}</Text>
+          <View>
+            <Text style={styles.boldText}>{truncateText(user.username, 20)}</Text>
+            <Text style={styles.text}>{mutualCount} Mutuals</Text>
+          </View>
           <TouchableOpacity style={styles.button} onPress={handleAddFriend}>
             {userData?.friends.includes(user.userId) ? (
               <Text style={styles.buttonText}>Remove friend</Text>
@@ -84,18 +88,18 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "InknutAntiqua_400Regular",
-    fontSize: 16,
+    fontSize: 12,
     color: "#F8F9FA",
     marginBottom: 0,
     textAlign: "left",
     alignSelf: "stretch",
     paddingLeft: 10,
   },
-
   boldText: {
     fontFamily: "InknutAntiqua_700Bold",
     fontSize: 16,
     color: "#F8F9FA",
+    paddingLeft: 10,
     marginBottom: 0,
   },
   button: {
