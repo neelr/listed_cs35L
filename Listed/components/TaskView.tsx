@@ -11,6 +11,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { useDeleteTask } from "../hooks/useDeleteTask";
 import { Fontisto } from '@expo/vector-icons';
 import { useEditTask } from "../hooks/useEditTask";
+import { Feather } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get("window");
 
@@ -54,7 +55,7 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
 
   const renderRightActions = () => (
     <View style={styles.deleteButton}>
-      <Text style={styles.deleteButtonText}>Delete</Text>
+      <Feather name="trash-2" size={24} color="black"/>
     </View>
   );
 
@@ -92,7 +93,6 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
 const styles = StyleSheet.create({
   incompleteTaskContainer: {
     width: width * (5 / 6),
-    marginBottom: 20, // Adjust spacing between tasks
     alignItems: "center",
     backgroundColor: "#2B78C2",
     borderRadius: 10, // Adjust border radius for curved edges
@@ -102,7 +102,6 @@ const styles = StyleSheet.create({
   },
   completedTaskContainer: {
     width: width * (5 / 6),
-    marginBottom: 20, // Adjust spacing between tasks
     alignItems: "center",
     backgroundColor: "#14a2eb",
     borderRadius: 10, // Adjust border radius for curved edges
@@ -153,12 +152,11 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     backgroundColor: 'red',
     width: width * (5 / 6),
-  },
-  deleteButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    borderRadius: 10,
+    height: 'auto',
+    paddingRight: 15,
   },
 });
