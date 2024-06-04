@@ -8,6 +8,7 @@ import CircleAddButton from "../components/CircleAddButton";
 import { useUserTasks } from "../hooks/useUserTasks";
 import WarningMessage from "../components/WarningText";
 import { AntDesign } from '@expo/vector-icons';
+import { Task } from "../types/taskTypes";
 import { USER_TASKS_QUERY_KEY } from "../hooks/useUserTasks";
 
 type ListItemScreenProps = NativeStackScreenProps<
@@ -21,10 +22,19 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
   const { data: tasksRaw, isLoading, error } = useUserTasks();
   const [showCompleted, setShowCompleted] = useState(true); // Local boolean state
 
+  const sortByDate = (tasks: Task[]): Task[] => {
+    return tasks.slice().sort((a, b) => {
+      const dateA = new Date(a.completeBy).getTime();
+      const dateB = new Date(b.completeBy).getTime();
+      if (isNaN(dateA) || isNaN(dateB)) {
+        return 0; 
+      }
+      return dateA - dateB;
+    });
+  };
 
-  const tasks = tasksRaw?.filter?.((tasksRaw) => !tasksRaw.completed) || [];
-  const tasksComplete =
-    tasksRaw?.filter?.((tasksRaw) => tasksRaw.completed) || [];
+  const tasks = sortByDate(tasksRaw?.filter?.((tasksRaw) => !tasksRaw.completed) || []);
+  const tasksComplete = sortByDate(tasksRaw?.filter?.((tasksRaw) => tasksRaw.completed) || []);
 
   return (
     <SafeAreaView style={styles.container}>
