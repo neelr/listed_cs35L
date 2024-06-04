@@ -51,7 +51,7 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
             </View>
           )}
 
-          {/* {!showCompleted */ true && ( 
+          { !showCompleted   && ( 
             <FlatList
             data={tasksComplete}
             keyExtractor={(item) => item.taskId}
