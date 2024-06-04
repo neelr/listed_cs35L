@@ -73,6 +73,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
           handleChange,
           handleBlur,
           handleSubmit,
+          setFieldTouched,
           values,
           errors,
           touched,
@@ -104,6 +105,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 value={values.password}
                 onChangeText={handleChange("password")}
                 onBlur={handleBlur("password")}
+                onFocus={() => setFieldTouched("password")}
                 style={[
                   styles.input,
                   { paddingRight: width * 0.07, marginTop: height * 0.04 },
