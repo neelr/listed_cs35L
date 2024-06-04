@@ -15,29 +15,41 @@ import {
 import HomeButton from "../components/Button";
 import { Keyboard } from "react-native";
 import { useAddTask } from "../hooks/useAddTask";
+import { useEditTask } from "../hooks/useEditTask";
 import { useQueryClient } from "@tanstack/react-query";
 import { USER_TASKS_QUERY_KEY } from "../hooks/useUserTasks";
 
 type AddTaskModalProps = NativeStackScreenProps<
   RootStackParamList,
-  "AddTaskModal"
+  "TaskModal"
 >;
 
 const { width, height } = Dimensions.get("window");
 const image1 = require("../assets/circlescopy.png");
 
-const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
-  const [taskTitle, onChangeTaskTitle] = useState("");
-  const [description, onChangeDescription] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState(new Date())
+const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
+  const curTask = route.params?.task
+
+  const [taskTitle, onChangeTaskTitle] = curTask ? useState(curTask.name) : useState("");
+  const [description, onChangeDescription] = curTask ? useState(curTask.description) : useState("");
+  const [date, setDate] = curTask ? useState(new Date(curTask.completeBy)) : useState(new Date());
 
   const queryClient = useQueryClient();
 
-
   const { mutate: addTask } = useAddTask({
     onSuccess: () => {
-      alert("Task added successfully");
+      alert("Task added successfully!");
+      queryClient.invalidateQueries({
+        queryKey: [USER_TASKS_QUERY_KEY]
+      });
+
+      navigation.goBack();
+    },
+  });
+
+  const { mutate: editTask } = useEditTask({
+    onSuccess: () => {
+      alert("Task edited successfully!");
       queryClient.invalidateQueries({
         queryKey: [USER_TASKS_QUERY_KEY]
       });
@@ -53,16 +65,19 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
     Keyboard.dismiss();
   };
 
-  const formatToAMPM = (time: Date) => {
-    let hours = time.getHours();
-    let minutes = time.getMinutes();
-    let ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    let strminutes = minutes < 10 ? '0' + minutes.toString() : minutes.toString();
-    let strTime = hours.toString() + ':' + minutes.toString() + ' ' + ampm;
-    return strTime;
-  }
+  const formatDateString = (dateString: string): string => {
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+    const formattedTime = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return `Do by: ${formattedDate} at ${formattedTime}`;
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -75,7 +90,8 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
         keyboardShouldPersistTaps="handled" // Ensure taps outside of TextInput dismiss the keyboard
       >
         <View style={{ flex: 0.4, alignItems: "center", width: "100%" }}>
-          <Text style={styles.title}>Add Task</Text>
+          <Text style={styles.title}>
+          {curTask ? "Edit" : "Add"} Task</Text>
           <TextInput
             editable
             value={taskTitle}
@@ -102,7 +118,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
             placeholderTextColor="#aaa"
           />
           <Text style={{ marginTop: height * 0.02, fontFamily: "InknutAntiqua_400Regular" }}>
-            {date.toDateString() + ", " + formatToAMPM(time)}
+            {formatDateString(date.toISOString())}
           </Text>
           <HomeButton
             title="Select Date"
@@ -124,19 +140,27 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
             <DateTimePicker
               mode={mode}
               display="default"
-              value={mode === "date" ? date : time}
+              value={date}
               onChange={(event, selectedDate?: Date) => {
                 const currentDate = selectedDate || date;
                 setOpen(false);
-                mode === "date" ? setDate(currentDate) : setTime(currentDate);
+                setDate(currentDate);
               }}
               style={{ marginTop: height * 0.02 }}
             />
           )}
           <HomeButton
-            title="Add"
+            title={ curTask ? "Save" : "Add" }
             onPress={() => {
+              !curTask ? 
               addTask({
+                name: taskTitle,
+                description,
+                completeBy: date.toISOString(),
+              }) :
+              
+              editTask({
+                taskId: curTask.taskId,
                 name: taskTitle,
                 description,
                 completeBy: date.toISOString(),
@@ -181,4 +205,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddTaskModal;
+export default TaskModal;

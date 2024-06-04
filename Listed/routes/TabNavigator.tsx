@@ -3,7 +3,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import ListItemScreen from "../screens/ListItemScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import SearchScreen from "../screens/SearchScreen";
-import AddTaskModal from "../modals/AddTaskModal";
+import AddTaskModal from "../modals/TaskModal";
 import { RootStackParamList } from "./StackNavigator";
 
 export type TabParamList = {

@@ -27,7 +27,7 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
       const dateA = new Date(a.completeBy).getTime();
       const dateB = new Date(b.completeBy).getTime();
       if (isNaN(dateA) || isNaN(dateB)) {
-        return 0; 
+        return 0;
       }
       return dateA - dateB;
     });
@@ -63,23 +63,22 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
             </View>
           )}
 
-          { !showCompleted   && ( 
+          {!showCompleted && (
             <FlatList
-            data={tasksComplete}
-            keyExtractor={(item) => item.taskId}
-            renderItem={(item) => (
-              <TaskView task={item.item} navigation={navigation} />
-            )}
-            ItemSeparatorComponent={() => <View style={{ height: 20 }} />} // Adjust the height for desired padding
-
-          />
+              data={tasksComplete}
+              keyExtractor={(item) => item.taskId}
+              renderItem={(item) => (
+                <TaskView task={item.item} navigation={navigation} />
+              )}
+              ItemSeparatorComponent={() => <View style={{ height: 20 }} />} // Adjust the height for desired padding
+            />
           )}
-          
+
 
           <CircleAddButton
             title="+"
             onPress={() => {
-              navigation.navigate("AddTaskModal");
+              navigation.navigate("TaskModal", {});
             }}
             style={styles.button}
           ></CircleAddButton>
