@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Task } from "../types/taskTypes";
+import { Swipeable } from 'react-native-gesture-handler';
 import { useDeleteTask } from "../hooks/useDeleteTask";
 import { Fontisto } from '@expo/vector-icons';
 import { useEditTask } from "../hooks/useEditTask";
@@ -51,30 +52,40 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
     deleteTask(task.taskId);
   };
 
+  const renderRightActions = () => (
+    <View style={styles.deleteButton}>
+      <Text style={styles.deleteButtonText}>Delete</Text>
+    </View>
+  );
+
+
   const taskContainerStyle = task.completed
     ? styles.completedTaskContainer
     : styles.incompleteTaskContainer;
 
   return (
-    <View style={taskContainerStyle}>
+    <Swipeable renderRightActions={renderRightActions} onSwipeableWillOpen={handleDelete}>
+      <View style={taskContainerStyle}>
 
-      <View style={styles.header}>
-        <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
+        <View style={styles.header}>
+          <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
 
-        <TouchableOpacity style={styles.button} onPress={() => {
-          editTask({ taskId: task.taskId, completed: !task.completed });
-          }}>
-          <Fontisto name={task.completed ? "checkbox-active" : "checkbox-passive"} size={24} color="white" />
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => {
+            editTask({ taskId: task.taskId, completed: !task.completed });
+            }}>
+            <Fontisto name={task.completed ? "checkbox-active" : "checkbox-passive"} size={24} color="white" />
+          </TouchableOpacity>
 
+        </View>
+
+        <Text style={styles.timeText}> Do by: {formatDateString(task.completeBy)}</Text>
+        
+        {task.description && (
+          <Text style={styles.text}> {task.description}</Text>
+        )}
       </View>
+    </Swipeable>
 
-      <Text style={styles.timeText}> Do by: {formatDateString(task.completeBy)}</Text>
-      
-      {task.description && (
-        <Text style={styles.text}> {task.description}</Text>
-      )}
-    </View>
   );
 };
 
@@ -139,5 +150,15 @@ const styles = StyleSheet.create({
     color: "#F8F9FA",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  deleteButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'red',
+    width: width * (5 / 6),
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
