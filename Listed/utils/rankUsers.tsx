@@ -2,6 +2,13 @@ import { User } from "../types/userTypes";
 
 type RankedUser = [User, number];
 
+function includesCaseInsensitive(mainString: string, substring: string): boolean {
+    let lowerMainString: string = mainString.toLowerCase();
+    let lowerSubstring: string = substring.toLowerCase();
+
+    return lowerMainString.includes(lowerSubstring);
+}
+
 export function getMutualCount(user1: User, user2: User): number {
 
     let mutualCount: number = 0;
@@ -20,8 +27,12 @@ export function getMutualCount(user1: User, user2: User): number {
     return mutualCount;
 }
 
-export function rankUsers(users: User[], search: string, num: number, user: User): User[] {
+export function rankUsers(users: User[] = [], search: string, num: number, user: User | undefined): User[] {
     
+    if (user === undefined) {
+        return [];
+    }
+
     const rankedUsers: RankedUser[] = [];
 
     for (let i = 0; i < users.length; i++) {
@@ -30,9 +41,11 @@ export function rankUsers(users: User[], search: string, num: number, user: User
             continue;
         }
 
-        //TODO: check if user is already friends with users[i]
+        if (users[i].username !== undefined && includesCaseInsensitive(users[i].username, search)) {
+            rankedUsers.push([users[i], getMutualCount(users[i], user)]);
+        }
 
-        if (users[i].username.includes(search) || users[i].email.includes(search)) {
+        if (users[i].email !== undefined && includesCaseInsensitive(users[i].email, search)) {
             rankedUsers.push([users[i], getMutualCount(users[i], user)]);
         }
     }

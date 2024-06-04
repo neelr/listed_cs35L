@@ -8,6 +8,9 @@ import { UserView } from "../components/UserView";
 import { useSearchUsers } from "../hooks/useSearchUsers";
 import WarningMessage from "../components/WarningText";
 import Spacer from "../components/Spacer";
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import { rankUsers } from "../utils/rankUsers";
+import { User } from "../types/userTypes";
 
 type SearchScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -18,7 +21,9 @@ const { width, height } = Dimensions.get("window");
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   const [searchText, setSearchText] = useState("");
-  const { data: friends, isLoading, error } = useSearchUsers(searchText);
+  const { data: userData } = useCurrentUser();
+  const { data: friends, isLoading, error } = useSearchUsers("");
+  const results: User[]  = rankUsers(friends, searchText, 10, userData);
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Search Friends</Text>
@@ -37,9 +42,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
         <Text>Loading...</Text>
       ) : (
         <>
-          {friends?.length === 0 && <Text>No results!</Text>}
+          {results?.length === 0 && <Text>No results!</Text>}
           <FlatList
-            data={friends} // Passed tasks state to FlatList
+            data={results} // Passed tasks state to FlatList
             keyExtractor={(inUser) => inUser.userId} // Set key extractor
             renderItem={(inUser) => <UserView user={inUser.item} />} // TODO: replace TaskView with new view
           />
