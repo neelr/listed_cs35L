@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Task } from "../types/taskTypes";
 import { useDeleteTask } from "../hooks/useDeleteTask";
+import { Fontisto } from '@expo/vector-icons';
 import { useEditTask } from "../hooks/useEditTask";
 
 const { width, height } = Dimensions.get("window");
@@ -42,16 +43,25 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
 
   return (
     <View style={taskContainerStyle}>
-      <Text
+      {/* <Text
         onPress={() => {
           editTask({ taskId: task.taskId, completed: !task.completed });
         }}
         style={styles.buttonText}
       >
         click to complete me!
-      </Text>
+      </Text> */}
+
       <View style={styles.header}>
         <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
+        
+        <TouchableOpacity style={styles.button} onPress={() => {
+          editTask({ taskId: task.taskId, completed: !task.completed });
+        }}>
+        <Fontisto name={task.completed ? "checkbox-active" : "checkbox-passive"} size={24} color="white" />
+      </TouchableOpacity>
+
+
         <TouchableOpacity style={styles.button} onPress={handleDelete}>
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity>
