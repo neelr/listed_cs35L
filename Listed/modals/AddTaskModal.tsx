@@ -30,6 +30,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
   const [taskTitle, onChangeTaskTitle] = useState("");
   const [description, onChangeDescription] = useState("");
   const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date())
 
   const queryClient = useQueryClient();
 
@@ -52,6 +53,17 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
     Keyboard.dismiss();
   };
 
+  const formatToAMPM = (time: Date) => {
+    let hours = time.getHours();
+    let minutes = time.getMinutes();
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    let strminutes = minutes < 10 ? '0' + minutes.toString() : minutes.toString();
+    let strTime = hours.toString() + ':' + minutes.toString() + ' ' + ampm;
+    return strTime;
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
@@ -71,8 +83,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
             onSubmitEditing={handleDismissKeyboard}
             style={[
               styles.input,
-              taskTitle ? styles.inputLeft : styles.inputCenter,
-              { marginTop: height * 0.03, height: height * 0.05 },
+              { marginTop: height * 0.02, height: height * 0.05 },
             ]}
             placeholder="Task Name"
             placeholderTextColor="#aaa"
@@ -85,39 +96,41 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
             onSubmitEditing={handleDismissKeyboard}
             style={[
               styles.input,
-              styles.inputLeft,
-              { marginTop: height * 0.03, height: height * 0.15 },
+              { marginTop: height * 0.02, height: height * 0.15 },
             ]}
             placeholder="Description"
             placeholderTextColor="#aaa"
           />
-          <Text style={{ marginTop: height * 0.03 }}>
-            {date.toDateString()}
+          <Text style={{ marginTop: height * 0.02, fontFamily: "InknutAntiqua_400Regular" }}>
+            {date.toDateString() + ", " + formatToAMPM(time)}
           </Text>
           <HomeButton
             title="Select Date"
             onPress={() => {
+              setMode("date")
               setOpen(true);
             }}
-            customStyles={{ marginTop: height * 0.03, height: height * 0.05 }}
+            customStyles={{ marginTop: height * 0.02, height: height * 0.07 }}
           />
           <HomeButton
             title="Select Time"
             onPress={() => {
+              setMode("time")
               setOpen(true);
             }}
-            customStyles={{ marginTop: height * 0.03, height: height * 0.05 }}
+            customStyles={{ marginTop: height * 0.02, height: height * 0.07 }}
           />
           {open && (
             <DateTimePicker
               mode={mode}
               display="default"
-              value={date}
+              value={mode === "date" ? date : time}
               onChange={(event, selectedDate?: Date) => {
                 const currentDate = selectedDate || date;
                 setOpen(false);
-                setDate(currentDate);
+                mode === "date" ? setDate(currentDate) : setTime(currentDate);
               }}
+              style={{ marginTop: height * 0.02 }}
             />
           )}
           <HomeButton
@@ -126,10 +139,13 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
               addTask({
                 name: taskTitle,
                 description,
-                completeBy: date.toISOString(),
+                completeBy: date.toISOString() + ", " + time.toTimeString(),
               });
             }}
-            customStyles={{ marginTop: height * 0.03, height: height * 0.05 }}
+            customStyles={{
+              marginTop: height * 0.02,
+              height: height * 0.07
+            }}
           />
         </View>
       </ScrollView>
@@ -162,12 +178,6 @@ const styles = StyleSheet.create({
     paddingLeft: width * 0.04,
     paddingRight: width * 0.04,
     color: "#3B4552",
-  },
-  inputLeft: {
-    textAlign: "left",
-  },
-  inputCenter: {
-    textAlign: "center",
   },
 });
 

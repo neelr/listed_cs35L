@@ -7,7 +7,7 @@ import { RootStackParamList } from "../routes/StackNavigator";
 import HomeButton from "../components/Button";
 import WarningText from "../components/WarningText";
 import Spacer from "../components/Spacer";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { PASSWORD_SCHEMA } from "../constants";
@@ -62,7 +62,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Sign up</Text>
+      <Text style={styles.title}>Sign Up</Text>
 
       <Formik
         initialValues={initialValues}
@@ -112,13 +112,12 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 placeholder="Password"
                 placeholderTextColor="#aaa"
               />
-              <MaterialCommunityIcons
-                name={showPassword ? "eye" : "eye-off"}
+              <Ionicons
+                name={showPassword ? "eye-outline" : "eye-off-outline"}
                 size={24}
                 color="#aaa"
                 style={[styles.icon, { marginTop: height * 0.04 }]}
-                onPress={() => setShowPassword(!showPassword)}
-              />
+                onPress={() => setShowPassword(!showPassword)} />
             </View>
             <WarningText message={errors.password} visible={touched.password} />
 
@@ -136,13 +135,12 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 placeholder="Confirm Password"
                 placeholderTextColor="#aaa"
               />
-              <MaterialCommunityIcons
-                name={showConfirmPassword ? "eye" : "eye-off"}
+              <Ionicons
+                name={showConfirmPassword ? "eye-outline" : "eye-off-outline"}
                 size={24}
                 color="#aaa"
                 style={[styles.icon, { marginTop: height * 0.04 }]}
-                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-              />
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)} />
             </View>
 
             <WarningText

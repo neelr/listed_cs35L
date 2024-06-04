@@ -9,17 +9,15 @@ import { RootStackParamList } from "./StackNavigator";
 export type TabParamList = {
   Profile: undefined;
   Tasks: undefined;
-  ListItem: undefined;
-  AddFriends: undefined;
+  Search: undefined;
 };
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const icons = {
-  ListItem: "home-outline",
   Profile: "person-outline",
   Tasks: "list-outline",
-  AddFriends: "search-outline",
+  Search: "search-outline",
 };
 
 export const TabNavigator: React.FC = () => (
@@ -31,11 +29,14 @@ export const TabNavigator: React.FC = () => (
       tabBarActiveTintColor: "tomato",
       tabBarInactiveTintColor: "gray",
       headerShown: false,
+      tabBarLabelStyle: {
+        fontFamily: "InknutAntiqua_400Regular",
+        fontSize: 8
+      }
     })}
   >
-    <Tab.Screen name="ListItem" component={ListItemScreen} />
-    {/* <Tab.Screen name="Task" component={TaskManagerScreen} /> */}
+    <Tab.Screen name="Tasks" component={ListItemScreen} />
+    <Tab.Screen name="Search" component={SearchScreen} />
     <Tab.Screen name="Profile" component={ProfileScreen} />
-    <Tab.Screen name="AddFriends" component={SearchScreen} />
   </Tab.Navigator>
 );

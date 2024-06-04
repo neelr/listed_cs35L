@@ -11,7 +11,7 @@ import { USER_TASKS_QUERY_KEY } from "../hooks/useUserTasks";
 
 type ListItemScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  "ListItem"
+  "Tasks"
 >;
 
 const { width, height } = Dimensions.get("window");

@@ -5,7 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../routes/StackNavigator";
 import HomeButton from "../components/Button";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+//import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { PASSWORD_SCHEMA } from "../constants";
@@ -87,13 +88,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 placeholder="Password"
                 placeholderTextColor="#aaa"
               />
-              <MaterialCommunityIcons
-                name={showPassword ? "eye" : "eye-off"}
+
+              <Ionicons
+                name={showPassword ? "eye-outline" : "eye-off-outline"}
                 size={24}
                 color="#aaa"
                 style={[styles.icon, { marginTop: height * 0.03 }]}
-                onPress={() => setShowPassword(!showPassword)}
-              />
+                onPress={() => setShowPassword(!showPassword)} />
+
             </View>
             <WarningText message={errors.password} visible={touched.password} />
             <HomeButton

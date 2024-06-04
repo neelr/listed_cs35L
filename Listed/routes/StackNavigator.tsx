@@ -15,8 +15,8 @@ export type RootStackParamList = {
   Login: undefined;
   LandingPage: undefined;
   Profile: undefined;
-  ListItem: undefined;
-  AddFriends: undefined;
+  Tasks: undefined;
+  Search: undefined;
   Signup: undefined;
   AddTaskModal: undefined;
 };

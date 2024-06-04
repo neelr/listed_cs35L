@@ -11,7 +11,7 @@ import Spacer from "../components/Spacer";
 
 type SearchScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  "AddFriends"
+  "Search"
 >;
 
 const { width, height } = Dimensions.get("window");
