@@ -30,40 +30,33 @@ export const StackNavigator = () => {
     <LoadingScreen />
   ) : (
     <Stack.Navigator initialRouteName="Home">
-      {authToken ? (
-        <>
-          <Stack.Group screenOptions={{ headerShown: false }}>
-            <Stack.Screen
-              name="LandingPage"
-              component={TabNavigator}
-              options={{ headerShown: false }}
-            />
-          </Stack.Group>
-          <Stack.Group
-            screenOptions={{ headerShown: false, presentation: "modal" }}
-          >
-            <Stack.Screen name="AddTaskModal" component={AddTaskModal} />
-          </Stack.Group>
-        </>
-      ) : (
-        <>
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Signup"
-            component={SignupScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{ headerShown: false }}
-          />
-        </>
-      )}
+      <Stack.Group screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="LandingPage"
+          component={TabNavigator}
+          options={{ headerShown: false }}
+        />
+      </Stack.Group>
+      <Stack.Group
+        screenOptions={{ headerShown: false, presentation: "modal" }}
+      >
+        <Stack.Screen name="AddTaskModal" component={AddTaskModal} />
+      </Stack.Group>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Signup"
+        component={SignupScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

@@ -2,6 +2,12 @@ import React from "react";
 import { Dimensions, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { User } from "../types/userTypes";
 import { withSafeAreaInsets } from "react-native-safe-area-context";
+import { authClient } from "../api/authClient";
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useQueryClient } from "@tanstack/react-query";
+import { CURRENT_USER_QUERY_KEY } from "../hooks/useCurrentUser";
+import { FRIEND_TASKS_QUERY_KEY } from "../hooks/useFriendTasks";
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -18,26 +24,50 @@ const truncateText = (text: string, maxLength: number): string => {
 };
 
 export const UserView: React.FC<UserProps> = ({ user }) => {
-  const handleAddFriend = () => {
-    
+  const { data: userData } = useCurrentUser();
+
+  const queryClient = useQueryClient();
+
+  const handleAddFriend = async () => {
+    if (userData?.friends.includes(user.userId)) {
+      let resp = await authClient.put("/friend", {
+        friendId: user.userId,
+      });
+    } else {
+      await authClient.post("/friend", {
+        friendId: user.userId,
+      });
+    }
+    queryClient.invalidateQueries({
+      queryKey: [CURRENT_USER_QUERY_KEY],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [FRIEND_TASKS_QUERY_KEY],
+    });
   };
-  
+
   return (
-    <View style={styles.taskContainer}>
-      <View style={styles.header}>
-        <Text style={styles.boldText}>{truncateText(user.username, 20)}</Text>
-        <TouchableOpacity style={styles.button} onPress={ handleAddFriend }>
-          <Text style={styles.buttonText}>Add friend</Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.text}>Email: {user.email}</Text>
-    </View>
+    userData?.userId != user.userId ? (
+      <View style={styles.taskContainer}>
+        <View style={styles.header}>
+          <Text style={styles.boldText}>{truncateText(user.username, 20)}</Text>
+          <TouchableOpacity style={styles.button} onPress={handleAddFriend}>
+            {userData?.friends.includes(user.userId) ? (
+              <Text style={styles.buttonText}>Remove friend</Text>
+            ) : (
+              <Text style={styles.buttonText}>Add friend</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>) : (
+      <></>
+    )
   );
 };
 
 const styles = StyleSheet.create({
   taskContainer: {
-    width: width * (5/6),
+    width: width * (5 / 6),
     marginBottom: 20, // Adjust spacing between tasks
     alignItems: "center",
     backgroundColor: "#2B78C2",
@@ -57,7 +87,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#F8F9FA",
     marginBottom: 0,
-    textAlign: "left", 
+    textAlign: "left",
     alignSelf: "stretch",
     paddingLeft: 10,
   },

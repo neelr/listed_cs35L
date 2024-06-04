@@ -1,10 +1,5 @@
-import {
-  useQuery,
-  useQueryClient,
-  UseQueryOptions,
-} from "@tanstack/react-query";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { searchForUsers } from "../api/api";
-import { LOGIN_MUTATION_KEY } from "./useLogin";
 import { LoginResponse } from "../types/authTypes";
 import { User } from "../types/userTypes";
 
@@ -14,20 +9,11 @@ export const useSearchUsers = (
   username: string,
   options?: UseQueryOptions<User[]>
 ) => {
-  const queryClient = useQueryClient();
-
   return useQuery<User[]>({
     ...options,
     queryKey: [USER_SEARCH_QUERY_KEY, username],
     queryFn: async () => {
-      const token = queryClient.getQueryData<LoginResponse>([
-        LOGIN_MUTATION_KEY,
-      ]);
-      if (!token) {
-        throw new Error("No user data");
-      }
-      return searchForUsers(username, token.token);
+      return searchForUsers(username);
     },
-    enabled: !!username,
   });
 };

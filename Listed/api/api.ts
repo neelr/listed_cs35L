@@ -60,6 +60,16 @@ export const getUserFriends = async (friends: string[]) => {
   return response.data;
 };
 
+export const getFriendTasks = async (friends: string[]) => {
+  const response = await authClient.post<Task[]>(
+    `${USER_ROUTE}/${TASK_ROUTE}`,
+    {
+      userIds: friends,
+    }
+  );
+  return response.data;
+};
+
 export const deleteTask = async (taskId: string) => {
   const response = await authClient.delete(`${TASK_ROUTE}/${taskId}`);
 
@@ -78,7 +88,7 @@ export const addTask = async (newTask: AddTaskRequest) => {
 
 export const searchForUsers = async (username: string) => {
   const response = await authClient.get<User[]>(
-    `${USER_ROUTE}/search?${qs.stringify({ username })}`
+    `${USER_ROUTE}/search?username=${username}`
   );
   return response.data;
 };

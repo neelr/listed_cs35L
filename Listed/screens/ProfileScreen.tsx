@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../routes/StackNavigator";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { CommonActions } from '@react-navigation/native';
 import { useQueryClient } from "@tanstack/react-query";
 import { TaskView } from "../components/TaskView";
 import { Task } from "../types/taskTypes";
 import { useUserFriends } from "../hooks/useUserFriends";
 import { useCurrentUser } from "../hooks/useCurrentUser";
+import * as SecureStore from "expo-secure-store";
+import CircleAddButton from "../components/CircleAddButton";
+import { useFriendTasks } from "../hooks/useFriendTasks";
 
 type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Profile">;
 
@@ -26,8 +30,35 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
     error,
   } = useUserFriends(userData?.friends || []);
 
+  const { data: friendTasks, isLoading: friendTasksLoading } = useFriendTasks(userData?.friends || []);
+
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{
+        height: 60,
+      }}>
+        <Text
+          style={{
+            ...styles.followButton,
+            backgroundColor: "#E63946",
+            height: 13
+          }}
+          onPress={async () => {
+            queryClient.removeQueries();
+
+            await SecureStore.deleteItemAsync("token");
+
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Home" }],
+            });
+          }}
+        >
+          <Text style={styles.followButtonText}>
+            Logout
+          </Text>
+        </Text>
+      </View>
       <View style={styles.profileContainer}>
         <View
           style={{
@@ -41,12 +72,38 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.separator} />
+      <View>
+        {isLoading ? (
+          <Text>Loading...</Text>
+        ) : (
+          <>
+            {friendTasks?.length === 0 && <Text>No tasks yet!</Text>}
+            <FlatList
+              data={friendTasks} // Passed tasks state to FlatList
+              keyExtractor={(item) => item.userId + item.taskId} // Set key extractor
+              renderItem={(item) => (
+                <View style={styles.taskCard}>
+                  <Text style={{
+                    fontWeight: "bold",
+                    fontSize: 20,
+                  }}>user: {friends?.find((x) => x.userId == item.item.userId)?.username}</Text>
+                  <Text style={{
+                    fontWeight: "bold",
+                    fontSize: 16,
+                  }}>{item.item.name}</Text>
+                  <Text>{item.item.description}</Text>
+                </View>
+              )} // Render each task using Task component
+            />
+          </>
+        )}
+      </View>
       <View style={styles.tabsContainer}>
         {followingTasks.map((task) => (
           <TaskView task={task} navigation={navigation} />
         ))}
       </View>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 };
 
@@ -236,7 +293,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   taskCard: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#839ea0",
     borderRadius: 10,
     padding: 15,
     marginBottom: 10,

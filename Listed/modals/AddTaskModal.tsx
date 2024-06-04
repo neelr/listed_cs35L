@@ -15,6 +15,8 @@ import {
 import HomeButton from "../components/Button";
 import { Keyboard } from "react-native";
 import { useAddTask } from "../hooks/useAddTask";
+import { useQueryClient } from "@tanstack/react-query";
+import { USER_TASKS_QUERY_KEY } from "../hooks/useUserTasks";
 
 type AddTaskModalProps = NativeStackScreenProps<
   RootStackParamList,
@@ -29,9 +31,16 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
   const [description, onChangeDescription] = useState("");
   const [date, setDate] = useState(new Date());
 
+  const queryClient = useQueryClient();
+
+
   const { mutate: addTask } = useAddTask({
     onSuccess: () => {
       alert("Task added successfully");
+      queryClient.invalidateQueries({
+        queryKey: [USER_TASKS_QUERY_KEY]
+      });
+
       navigation.goBack();
     },
   });
@@ -90,14 +99,14 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
             onPress={() => {
               setOpen(true);
             }}
-            customStyles={{ marginTop: height * 0.03 }}
+            customStyles={{ marginTop: height * 0.03, height: height * 0.05 }}
           />
           <HomeButton
             title="Select Time"
             onPress={() => {
               setOpen(true);
             }}
-            customStyles={{ marginTop: height * 0.03 }}
+            customStyles={{ marginTop: height * 0.03, height: height * 0.05 }}
           />
           {open && (
             <DateTimePicker
@@ -120,7 +129,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
                 completeBy: date.toISOString(),
               });
             }}
-            customStyles={{ marginTop: height * 0.03 }}
+            customStyles={{ marginTop: height * 0.03, height: height * 0.05 }}
           />
         </View>
       </ScrollView>
@@ -132,9 +141,10 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   image: {
     position: "absolute",
-    bottom: 0, // Adjust bottom position as needed
+    bottom: -50, // Adjust bottom position as needed
     width: width * 1, // Set width to full screen width
     height: 0.25 * height, // Set height to a specific percentage of screen height
+    zIndex: -1, // Set z-index to send image to back
   },
   title: {
     fontWeight: "bold",

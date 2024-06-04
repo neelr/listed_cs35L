@@ -17,7 +17,8 @@ type SearchScreenProps = NativeStackScreenProps<
 const { width, height } = Dimensions.get("window");
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
-  const { data: friends, isLoading, error } = useSearchUsers("dude");
+  const [searchText, setSearchText] = useState("");
+  const { data: friends, isLoading, error } = useSearchUsers(searchText);
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Search Friends</Text>
@@ -28,6 +29,8 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
         ]}
         placeholder="Search for users"
         placeholderTextColor="#aaa"
+        value={searchText}
+        onChangeText={setSearchText}
       />
       <Spacer height={height * 0.05} />
       {isLoading ? (
@@ -37,7 +40,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           {friends?.length === 0 && <Text>No results!</Text>}
           <FlatList
             data={friends} // Passed tasks state to FlatList
-            keyExtractor={(inUser) => inUser.username} // Set key extractor
+            keyExtractor={(inUser) => inUser.userId} // Set key extractor
             renderItem={(inUser) => <UserView user={inUser.item} />} // TODO: replace TaskView with new view
           />
         </>

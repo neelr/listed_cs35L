@@ -3,6 +3,7 @@ export interface User {
   friends: string[];
   createdOn: string;
   userId: string;
+  email: string;
 }
 
 export interface UserSearchPayload {

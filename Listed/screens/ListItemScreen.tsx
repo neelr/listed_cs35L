@@ -7,6 +7,7 @@ import { TaskView } from "../components/TaskView";
 import CircleAddButton from "../components/CircleAddButton";
 import { useUserTasks } from "../hooks/useUserTasks";
 import WarningMessage from "../components/WarningText";
+import { USER_TASKS_QUERY_KEY } from "../hooks/useUserTasks";
 
 type ListItemScreenProps = NativeStackScreenProps<
   RootStackParamList,
