@@ -21,7 +21,7 @@ export const PASSWORD_SCHEMA = Yup.string()
     if (value.length < 8) {
       errors.push('Password must be at least 8 characters long');
     }
-    return errors.length > 0 ? this.createError({ message: errors.join(', ') }) : true;
+    return errors.length > 0 ? this.createError({ message: errors.join('\n') }) : true;
   });
 
 
