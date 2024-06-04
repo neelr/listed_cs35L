@@ -33,7 +33,6 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
   const [taskTitle, onChangeTaskTitle] = curTask ? useState(curTask.name) : useState("");
   const [description, onChangeDescription] = curTask ? useState(curTask.description) : useState("");
   const [date, setDate] = curTask ? useState(new Date(curTask.completeBy)) : useState(new Date());
-  const [time, setTime] = curTask ? useState(new Date(curTask.completeBy)) : useState(new Date())
 
   const queryClient = useQueryClient();
 
@@ -66,16 +65,19 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
     Keyboard.dismiss();
   };
 
-  const formatToAMPM = (time: Date) => {
-    let hours = time.getHours();
-    let minutes = time.getMinutes();
-    let ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    let strminutes = minutes < 10 ? '0' + minutes.toString() : minutes.toString();
-    let strTime = hours.toString() + ':' + strminutes + ' ' + ampm;
-    return strTime;
-  }
+  const formatDateString = (dateString: string): string => {
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+    const formattedTime = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return `Do by: ${formattedDate} at ${formattedTime}`;
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -116,7 +118,7 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
             placeholderTextColor="#aaa"
           />
           <Text style={{ marginTop: height * 0.02, fontFamily: "InknutAntiqua_400Regular" }}>
-            {date.toDateString() + ", " + formatToAMPM(time)}
+            {formatDateString(date.toISOString())}
           </Text>
           <HomeButton
             title="Select Date"
@@ -138,17 +140,17 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
             <DateTimePicker
               mode={mode}
               display="default"
-              value={mode === "date" ? date : time}
+              value={date}
               onChange={(event, selectedDate?: Date) => {
                 const currentDate = selectedDate || date;
                 setOpen(false);
-                mode === "date" ? setDate(currentDate) : setTime(currentDate);
+                setDate(currentDate);
               }}
               style={{ marginTop: height * 0.02 }}
             />
           )}
           <HomeButton
-            title={ curTask ? "Edit" : "Add" }
+            title={ curTask ? "Save" : "Add" }
             onPress={() => {
               !curTask ? 
               addTask({
