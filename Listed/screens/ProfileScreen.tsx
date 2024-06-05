@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   Alert,
+  Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -19,6 +20,8 @@ import { RootStackParamList } from "../routes/StackNavigator";
 import { useDeleteUser } from "../hooks/useDeleteUser";
 
 type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Profile">;
+
+const { width, height } = Dimensions.get("window");
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState<"Tasks" | "Followers">("Tasks");
@@ -113,7 +116,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               activeTab === "Tasks" && styles.activeTabButtonText,
             ]}
           >
-            Friend's Tasks
+            Friends' Tasks
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -187,8 +190,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logoutContainer: {
-    height: 60,
-    alignSelf: "flex-end",
+    height: height * 0.07,
+    width: width,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    paddingHorizontal: 20
   },
   profileContainer: {
     alignItems: "center",
@@ -209,17 +215,15 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   name: {
-    fontFamily: "InknutAntiqua_300Light",
+    fontFamily: "InknutAntiqua_500Medium",
     fontSize: 24,
-    fontWeight: "bold",
     color: "#3B4552",
     marginTop: -15,
     textAlign: "center",
   },
   followersCount: {
-    fontFamily: "InknutAntiqua_300Light",
+    fontFamily: "InknutAntiqua_500Medium",
     fontSize: 28,
-    fontWeight: "bold",
     marginTop: -30,
     color: "#3B4552",
   },
@@ -284,16 +288,14 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   taskUser: {
-    fontFamily: "InknutAntiqua_400Regular",
-    fontWeight: "bold",
+    fontFamily: "InknutAntiqua_600SemiBold",
     fontSize: 15,
     marginTop: -10,
     color: "#3B4552",
   },
   taskTitle: {
-    fontFamily: "InknutAntiqua_300Light",
+    fontFamily: "InknutAntiqua_500Medium",
     fontSize: 13,
-    fontWeight: "bold",
     color: "#3B4552",
     marginTop: -12,
   },
@@ -315,9 +317,8 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   friendName: {
-    fontFamily: "InknutAntiqua_300Light",
+    fontFamily: "InknutAntiqua_500Medium",
     fontSize: 15,
-    fontWeight: "bold",
     color: "#3B4552",
   },
 });

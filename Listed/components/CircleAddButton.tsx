@@ -41,9 +41,8 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    fontFamily: "InknutAntiqua_400Regular",
+    fontFamily: "InknutAntiqua_600Semibold",
     color: "#FFFFFF",
-    fontWeight: "bold",
     fontSize: screenWidth * 0.045,
     textAlign: "center", // Ensure text is centered
   },

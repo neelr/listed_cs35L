@@ -220,8 +220,7 @@ const styles = StyleSheet.create({
     zIndex: -1, // Set z-index to send image to back
   },
   title: {
-    fontWeight: "bold",
-    fontFamily: "InknutAntiqua_400Regular",
+    fontFamily: "InknutAntiqua_600SemiBold",
     fontSize: width / 12,
     color: "#3B4552",
   },

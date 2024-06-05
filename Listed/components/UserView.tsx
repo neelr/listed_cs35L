@@ -128,15 +128,15 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   addFriend: {
-    fontFamily: "InknutAntiqua_400Regular",
+    fontFamily: "InknutAntiqua_600SemiBold",
     color: "#2B78C2",
     fontSize: 13,
-    fontWeight: "bold",
+    //fontWeight: "bold",
   },
   removeFriend: {
-    fontFamily: "InknutAntiqua_400Regular",
+    fontFamily: "InknutAntiqua_600SemiBold",
     color: "#FF4444",
     fontSize: 13,
-    fontWeight: "bold",
+    //fontWeight: "bold",
   },
 });

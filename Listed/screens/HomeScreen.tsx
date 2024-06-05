@@ -55,8 +55,7 @@ const styles = StyleSheet.create({
 
   title: {
     flex: 0.5,
-    fontWeight: "bold",
-    fontFamily: "InknutAntiqua_400Regular",
+    fontFamily: "InknutAntiqua_600SemiBold",
     fontSize: width / 10.0,
     color: "#3B4552",
   },
