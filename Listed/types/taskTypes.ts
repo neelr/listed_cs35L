@@ -1,4 +1,5 @@
 export interface Task {
+  private: boolean;
   completed: boolean;
   createdOn: string;
   description: string;
@@ -7,7 +8,6 @@ export interface Task {
   userId: string;
   userIds: string[];
   name: string;
-  private: boolean;
 }
 
 export type TaskChanges = Partial<Omit<Task, "taskId">>;
@@ -21,6 +21,7 @@ export interface GetUserTasksRequest {
 
 export interface AddTaskRequest {
   name: string;
+  private: boolean;
   description?: string;
   completeBy?: string;
 }

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useQueryClient } from "@tanstack/react-query";
@@ -7,9 +14,9 @@ import { Task } from "../types/taskTypes";
 import { useUserFriends } from "../hooks/useUserFriends";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import * as SecureStore from "expo-secure-store";
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from "@expo/vector-icons";
 import { useFriendTasks } from "../hooks/useFriendTasks";
-import CircleAddButton from "../components/CircleAddButton";
+import CircleIconButton from "../components/CircleAddButton";
 import { RootStackParamList } from "../routes/StackNavigator";
 
 type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Profile">;
@@ -27,30 +34,28 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
     error,
   } = useUserFriends(userData?.friends || []);
 
-  const { data: friendTasks, isLoading: friendTasksLoading } = useFriendTasks(userData?.friends || []);
+  const { data: friendTasks, isLoading: friendTasksLoading } = useFriendTasks(
+    userData?.friends || []
+  );
 
   const handleLogout = () => {
-    Alert.alert(
-      "Logout",
-      "Are you sure you want to log out?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel"
+    Alert.alert("Logout", "Are you sure you want to log out?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Logout",
+        onPress: async () => {
+          queryClient.removeQueries();
+          await SecureStore.deleteItemAsync("token");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Home" }],
+          });
         },
-        {
-          text: "Logout",
-          onPress: async () => {
-            queryClient.removeQueries();
-            await SecureStore.deleteItemAsync("token");
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Home" }],
-            });
-          }
-        }
-      ]
-    );
+      },
+    ]);
   };
 
   return (
@@ -76,7 +81,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
           ]}
           onPress={() => setActiveTab("Tasks")}
         >
-          <Text style={[styles.tabButtonText, activeTab === "Tasks" && styles.activeTabButtonText]}>Friend's Tasks</Text>
+          <Text
+            style={[
+              styles.tabButtonText,
+              activeTab === "Tasks" && styles.activeTabButtonText,
+            ]}
+          >
+            Friend's Tasks
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -85,7 +97,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
           ]}
           onPress={() => setActiveTab("Followers")}
         >
-          <Text style={[styles.tabButtonText, activeTab === "Followers" && styles.activeTabButtonText]}>Friends List</Text>
+          <Text
+            style={[
+              styles.tabButtonText,
+              activeTab === "Followers" && styles.activeTabButtonText,
+            ]}
+          >
+            Friends List
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.separator} />
@@ -101,9 +120,16 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
                 keyExtractor={(item) => item.userId + item.taskId}
                 renderItem={(item) => (
                   <View style={styles.taskCard}>
-                    <Text style={styles.taskUser}>{friends?.find((x) => x.userId == item.item.userId)?.username}</Text>
+                    <Text style={styles.taskUser}>
+                      {
+                        friends?.find((x) => x.userId == item.item.userId)
+                          ?.username
+                      }
+                    </Text>
                     <Text style={styles.taskTitle}>{item.item.name}</Text>
-                    <Text style={styles.taskDescription}>{item.item.description}</Text>
+                    <Text style={styles.taskDescription}>
+                      {item.item.description}
+                    </Text>
                   </View>
                 )}
               />
@@ -136,7 +162,7 @@ const styles = StyleSheet.create({
   },
   logoutContainer: {
     height: 60,
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
   profileContainer: {
     alignItems: "center",

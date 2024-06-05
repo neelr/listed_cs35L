@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Task } from "../types/taskTypes";
-import { Swipeable } from 'react-native-gesture-handler';
+import { Swipeable } from "react-native-gesture-handler";
 import { useDeleteTask } from "../hooks/useDeleteTask";
-import { Fontisto } from '@expo/vector-icons';
+import { Fontisto } from "@expo/vector-icons";
 import { useEditTask } from "../hooks/useEditTask";
-import { Feather } from '@expo/vector-icons';
+import { Feather } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 
@@ -50,50 +50,78 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
   const { mutate: editTask } = useEditTask();
 
   const handleSwipe = (direction: string) => {
-    direction === "right" ? deleteTask(task.taskId)
+    direction === "right"
+      ? deleteTask(task.taskId)
       : editTask({ taskId: task.taskId, completed: !task.completed });
   };
 
   const renderLeftActions = () => (
-    <View style={[styles.swipeButton, {backgroundColor: "#aaa", paddingLeft: 15}]}>
-      <Fontisto name={task.completed ? "checkbox-active" : "checkbox-passive"} size={24} color="#3B4552" />
+    <View
+      style={[styles.swipeButton, { backgroundColor: "#aaa", paddingLeft: 15 }]}
+    >
+      <Fontisto
+        name={task.completed ? "undo" : "check"}
+        size={24}
+        color="#3B4552"
+      />
     </View>
   );
 
   const renderRightActions = () => (
-    <View style={[styles.swipeButton, {backgroundColor: "#E63946", alignItems: 'flex-end', paddingRight: 15}]}>
+    <View
+      style={[
+        styles.swipeButton,
+        {
+          backgroundColor: "#E63946",
+          alignItems: "flex-end",
+          paddingRight: 15,
+        },
+      ]}
+    >
       <Feather name="trash-2" size={24} color="#3B4552" />
     </View>
   );
 
   return (
-    <Swipeable 
-    renderLeftActions={renderLeftActions}
-    renderRightActions={renderRightActions} 
-    onSwipeableWillOpen={(direction) => handleSwipe(direction)}>
-      <TouchableOpacity onPress={() => navigation.navigate("TaskModal", { task }) }>
-        <View style={[styles.taskContainer, {backgroundColor: !task.completed ? "#2B78C2": "#14a2eb" }]}>
-
+    <Swipeable
+      renderLeftActions={renderLeftActions}
+      renderRightActions={renderRightActions}
+      onSwipeableWillOpen={(direction) => handleSwipe(direction)}
+    >
+      <TouchableOpacity
+        onPress={() => navigation.navigate("TaskModal", { task })}
+      >
+        <View
+          style={[
+            styles.taskContainer,
+            { backgroundColor: !task.completed ? "#2B78C2" : "#14a2eb" },
+          ]}
+        >
           <View style={styles.header}>
             <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
 
-            <TouchableOpacity style={styles.button} onPress={() => {
-              editTask({ taskId: task.taskId, completed: !task.completed });
-            }}>
-              
-            </TouchableOpacity>
-
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                editTask({ taskId: task.taskId, completed: !task.completed });
+              }}
+            ></TouchableOpacity>
           </View>
 
-          <Text style={[styles.text, {fontSize: 12}]}> Do by: {formatDateString(task.completeBy)}</Text>
+          <Text style={[styles.text, { fontSize: 12 }]}>
+            {" "}
+            Do by: {formatDateString(task.completeBy)}
+          </Text>
 
           {task.description && (
-            <Text style={[styles.text, {fontSize: 16}]}> {task.description}</Text>
+            <Text style={[styles.text, { fontSize: 16 }]}>
+              {" "}
+              {task.description}
+            </Text>
           )}
         </View>
       </TouchableOpacity>
     </Swipeable>
-
   );
 };
 
@@ -137,9 +165,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   swipeButton: {
-    justifyContent: 'center',
+    justifyContent: "center",
     width: width * (5 / 6),
     borderRadius: 10,
-    height: 'auto',
+    height: "auto",
   },
 });

@@ -14,6 +14,7 @@ export const useEditTask = (
   const queryClient = useQueryClient();
 
   return useMutation<Task, ApiError, TaskChangesRequest>({
+    ...options,
     mutationFn: async (task) => {
       const changes: TaskChanges = { ...task };
       return editTask(changes, task.taskId);

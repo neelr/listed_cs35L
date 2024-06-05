@@ -1,20 +1,24 @@
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text, FlatList, View, TouchableOpacity } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  FlatList,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../routes/StackNavigator";
 import { TaskView } from "../components/TaskView";
-import CircleAddButton from "../components/CircleAddButton";
+import CircleIconButton from "../components/CircleAddButton";
 import { useUserTasks } from "../hooks/useUserTasks";
 import WarningMessage from "../components/WarningText";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
 import { Task } from "../types/taskTypes";
 import { USER_TASKS_QUERY_KEY } from "../hooks/useUserTasks";
 
-type ListItemScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  "Tasks"
->;
+type ListItemScreenProps = NativeStackScreenProps<RootStackParamList, "Tasks">;
 
 const { width, height } = Dimensions.get("window");
 
@@ -33,8 +37,12 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
     });
   };
 
-  const tasks = sortByDate(tasksRaw?.filter?.((tasksRaw) => !tasksRaw.completed) || []);
-  const tasksComplete = sortByDate(tasksRaw?.filter?.((tasksRaw) => tasksRaw.completed) || []);
+  const tasks = sortByDate(
+    tasksRaw?.filter?.((tasksRaw) => !tasksRaw.completed) || []
+  );
+  const tasksComplete = sortByDate(
+    tasksRaw?.filter?.((tasksRaw) => tasksRaw.completed) || []
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,7 +51,9 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
         <Text>Loading...</Text>
       ) : (
         <>
-          {tasks?.length === 0 && <Text style={styles.noTasksText}>No Tasks Yet</Text>}
+          {tasks?.length === 0 && (
+            <Text style={styles.noTasksText}>No Tasks Yet</Text>
+          )}
           <FlatList
             data={tasks} // Passed tasks state to FlatList
             keyExtractor={(item) => item.taskId} // Set key extractor
@@ -51,14 +61,21 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
               <TaskView task={item.item} navigation={navigation} />
             )} // Render each task using Task component
             ItemSeparatorComponent={() => <View style={{ height: 20 }} />} // Adjust the height for desired padding
-
           />
 
           {tasksComplete?.length != 0 && (
             <View style={styles.completedHeader}>
-              <Text style={styles.completedText}>Completed Tasks</Text>
-              <TouchableOpacity onPress={() => setShowCompleted(!showCompleted)}>
-                <AntDesign name={showCompleted ? "caretleft" : "caretdown"} size={24} color="gray" />
+              <TouchableOpacity
+                onPress={() => setShowCompleted(!showCompleted)}
+                style={{ flexDirection: "row", alignItems: "center" }}
+              >
+                <Text style={styles.completedText}>Completed Tasks</Text>
+                <AntDesign
+                  style={showCompleted && { marginTop: 5 }}
+                  name={showCompleted ? "caretleft" : "caretdown"}
+                  size={24}
+                  color="gray"
+                />
               </TouchableOpacity>
             </View>
           )}
@@ -74,14 +91,13 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
             />
           )}
 
-
-          <CircleAddButton
-            title="+"
+          <CircleIconButton
+            name="add"
             onPress={() => {
               navigation.navigate("TaskModal", {});
             }}
             style={styles.button}
-          ></CircleAddButton>
+          />
         </>
       )}
       <WarningMessage message={error?.message} visible={!!error} />
@@ -103,14 +119,13 @@ const styles = StyleSheet.create({
     color: "#3B4552",
   },
   completedHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "stretch",
+    justifyContent: "flex-start",
     paddingLeft: 10,
     paddingRight: 30,
     paddingBottom: 30,
-
 
     marginVertical: 10,
   },
@@ -121,7 +136,7 @@ const styles = StyleSheet.create({
     textAlign: "left", // Align text to the left
     alignSelf: "stretch", // Ensure it takes full width
     paddingLeft: 25,
-
+    marginRight: 15,
   },
   noTasksText: {
     fontFamily: "InknutAntiqua_300Light",
@@ -130,12 +145,14 @@ const styles = StyleSheet.create({
     textAlign: "left", // Align text to the left
     alignSelf: "stretch", // Ensure it takes full width
     paddingLeft: 35,
-
   },
   button: {
     position: "absolute",
-    bottom: width * 0.01, // Distance from the bottom of the screen
-    right: height * 0.01, // Distance from the right side of the screen
+    width: width * 0.15, // Set width to a specific percentage of screen width
+    height: width * 0.15, // Set height to a specific percentage of screen width
+    borderRadius: width * 0.15, // Set border radius to half of width
+    bottom: width * 0.07, // Distance from the bottom of the screen
+    right: height * 0.06, // Distance from the right side of the screen
   },
 });
 

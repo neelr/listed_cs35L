@@ -17,8 +17,6 @@ import HomeButton from "../components/Button";
 import { Keyboard } from "react-native";
 import { useAddTask } from "../hooks/useAddTask";
 import { useEditTask } from "../hooks/useEditTask";
-import { useQueryClient } from "@tanstack/react-query";
-import { USER_TASKS_QUERY_KEY } from "../hooks/useUserTasks";
 
 type AddTaskModalProps = NativeStackScreenProps<
   RootStackParamList,
@@ -31,38 +29,25 @@ const image1 = require("../assets/circlescopy.png");
 const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
   const curTask = route.params?.task;
 
-  const [taskTitle, onChangeTaskTitle] = curTask
-    ? useState(curTask.name)
-    : useState("");
-  const [description, onChangeDescription] = curTask
-    ? useState(curTask.description)
-    : useState("");
-  const [date, setDate] = curTask
-    ? useState(new Date(curTask.completeBy))
-    : useState(new Date());
-  const [privateTask, setPrivateTask] = curTask
-    ? useState(curTask.private)
-    : useState(false);
-
-  const queryClient = useQueryClient();
-
+  const [taskTitle, onChangeTaskTitle] = useState(curTask?.name || "");
+  const [description, onChangeDescription] = useState(
+    curTask?.description || ""
+  );
+  const [date, setDate] = useState(
+    curTask ? new Date(curTask.completeBy) : new Date()
+  );
+  const [privateTask, setPrivateTask] = useState(curTask?.private || false);
   const { mutate: addTask } = useAddTask({
-    onSuccess: () => {
-      Alert.alert("Add Task", "Task added successfully!");
-      queryClient.invalidateQueries({
-        queryKey: [USER_TASKS_QUERY_KEY],
-      });
+    onSuccess: (data) => {
+      Alert.alert("Add Task", `${data.name} added successfully!`);
 
       navigation.goBack();
     },
   });
 
   const { mutate: editTask } = useEditTask({
-    onSuccess: () => {
-      Alert.alert("Edit Task", "Task edited successfully!");
-      queryClient.invalidateQueries({
-        queryKey: [USER_TASKS_QUERY_KEY],
-      });
+    onSuccess: (data) => {
+      Alert.alert("Edit Task", `${data.name} edited successfully!`);
 
       navigation.goBack();
     },
@@ -70,7 +55,6 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
 
   const [dateOpen, setDateOpen] = useState(false);
   const [timeOpen, setTimeOpen] = useState(false);
-  const [mode, setMode] = useState<"date" | "time">("date");
 
   const handleDismissKeyboard = () => {
     Keyboard.dismiss();
@@ -112,7 +96,7 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
               height: height * 0.07,
               backgroundColor: privateTask ? "#E63946" : "#3B4552",
             }}
-            icon={privateTask ? "lock-closed" : "lock-open"}
+            icon={{ name: privateTask ? "lock-closed" : "lock-open" }}
           />
           <TextInput
             editable
@@ -194,24 +178,30 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
           )}
 
           <HomeButton
+            bold
             title={curTask ? "Save" : "Add"}
+            icon={{
+              name: curTask ? "checkmark-circle-outline" : "add-circle-outline",
+              size: 30,
+            }}
             onPress={() => {
+              const task = {
+                name: taskTitle,
+                description,
+                completeBy: date.toISOString(),
+                private: privateTask,
+              };
               !curTask
-                ? addTask({
-                    name: taskTitle,
-                    description,
-                    completeBy: date.toISOString(),
-                  })
+                ? addTask(task)
                 : editTask({
+                    ...task,
                     taskId: curTask.taskId,
-                    name: taskTitle,
-                    description,
-                    completeBy: date.toISOString(),
                   });
             }}
             customStyles={{
               marginTop: height * 0.02,
               height: height * 0.07,
+              backgroundColor: "#0d7541",
             }}
           />
         </View>

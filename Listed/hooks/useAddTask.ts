@@ -14,15 +14,10 @@ export const useAddTask = (
   const queryClient = useQueryClient();
 
   return useMutation<Task, ApiError, AddTaskRequest>({
+    ...options,
     mutationFn: addTask,
     onSuccess: (returnedTask, variables, context) => {
-      const currentTasks = queryClient.getQueryData<Task[]>([
-        USER_TASKS_QUERY_KEY,
-      ]);
-      queryClient.setQueryData([USER_TASKS_QUERY_KEY], {
-        ...currentTasks,
-        returnedTask,
-      });
+      queryClient.invalidateQueries({ queryKey: [USER_TASKS_QUERY_KEY] });
       options?.onSuccess?.(returnedTask, variables, context);
     },
   });

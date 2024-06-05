@@ -12,7 +12,6 @@ import {
   UserPrivate,
 } from "../types/authTypes";
 import axios from "axios";
-import qs from "qs";
 import { AddTaskRequest, Task, TaskChanges } from "../types/taskTypes";
 import { User } from "../types/userTypes";
 import { authClient } from "./authClient";
