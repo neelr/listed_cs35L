@@ -5,7 +5,8 @@ export default async (req: Request, res: Response) => {
   try {
     const request = req.params.userId;
     const tasks = await getTasksByUserIds({ userIds: [request] });
-    res.send(tasks);
+    const publicTasks = tasks.filter((task) => !task.private);
+    res.send(publicTasks);
   } catch (error) {
     console.error("Error getting tasks by friend id: ", error);
     res

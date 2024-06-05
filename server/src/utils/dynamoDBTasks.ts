@@ -9,7 +9,7 @@ import {
 import {
   CreateTaskRequest,
   EditTaskRequest,
-  GetTasksByUserIdsRequest,
+  GetPublicTasksByUserIdsRequest,
   TaskFields,
 } from "../types";
 import { getHashFromCurrentDate } from "./utils";
@@ -21,6 +21,7 @@ export const createTask = async (task: CreateTaskRequest) => {
     taskId: getHashFromCurrentDate(),
     userId: task.userId,
     name: task.name,
+    private: task.private,
     description: task.description || null,
     completeBy: task.completeBy || null,
     created: new Date().toISOString(),
@@ -44,7 +45,7 @@ export const createTask = async (task: CreateTaskRequest) => {
 
 export const getTasksByUserIds = async ({
   userIds,
-}: GetTasksByUserIdsRequest) => {
+}: GetPublicTasksByUserIdsRequest) => {
   let filterExpressions: string[] = [];
   let expressionAttributeValues: { [key: string]: string } = {};
 
@@ -114,6 +115,7 @@ export const editTask = async (taskId: string, task: EditTaskRequest) => {
     "completed",
     "userId",
     "userIds",
+    "private",
   ];
 
   let updateExpression = "SET";

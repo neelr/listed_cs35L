@@ -23,7 +23,7 @@ import {
   USER_ROUTE,
 } from "./utils/constants";
 import ddGetFriendTasks from "./routes/ddGetFriendTasks";
-import ddGetTasksByUserIds from "./routes/ddGetTasksByUserIds";
+import ddGetPublicTasksByUserIds from "./routes/ddGetPublicTasksByUserIds";
 import ddGetFriendDetails from "./routes/ddGetFriendDetails";
 import ddGetFriendsDetails from "./routes/ddGetFriendsDetails";
 import ddRemoveFriend from "./routes/ddRemoveFriend";
@@ -60,7 +60,11 @@ app.get(`/${TASK_ROUTE}/:taskId`, authenticateJWT, ddGetTaskById);
 app.put(`/${TASK_ROUTE}/:taskId`, authenticateJWT, ddEditTask);
 app.delete(`/${TASK_ROUTE}/:taskId`, authenticateJWT, ddDeleteTask);
 app.get(`/${USER_ROUTE}/${TASK_ROUTE}`, authenticateJWT, ddGetUserTasks);
-app.post(`/${USER_ROUTE}/${TASK_ROUTE}`, authenticateJWT, ddGetTasksByUserIds);
+app.post(
+  `/${USER_ROUTE}/${TASK_ROUTE}`,
+  authenticateJWT,
+  ddGetPublicTasksByUserIds
+);
 app.get(`/${FRIEND_ROUTE}/:userId`, authenticateJWT, ddGetFriendDetails);
 app.get(
   `/${FRIEND_ROUTE}/${TASK_ROUTE}/:userId`,

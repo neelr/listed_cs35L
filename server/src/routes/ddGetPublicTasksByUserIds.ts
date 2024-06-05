@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
-import { GetTasksByUserIdsRequest } from "../types";
+import { GetPublicTasksByUserIdsRequest } from "../types";
 import { getTasksByUserIds } from "../utils/dynamoDBTasks";
 
 export default async (req: Request, res: Response) => {
   try {
-    const request: GetTasksByUserIdsRequest = req.body;
+    const request: GetPublicTasksByUserIdsRequest = req.body;
     const tasks = await getTasksByUserIds(request);
-    res.send(tasks);
+    const publicTasks = tasks.filter((task) => !task.private);
+    res.send(publicTasks);
   } catch (error) {
     console.error("Error getting tasks by user ids: ", error);
     res

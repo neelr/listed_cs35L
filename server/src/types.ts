@@ -6,6 +6,7 @@ export interface Task {
   completed: boolean;
   completeBy: string;
   userIds: string[];
+  private: boolean;
 }
 
 export interface User {
@@ -55,6 +56,7 @@ export interface DeleteUserRequest {
 export interface CreateTaskRequest {
   name: string;
   userId: string;
+  private: boolean;
   description?: string;
   completeBy?: string;
 }
@@ -63,7 +65,7 @@ export interface GetUserTasksRequest {
   userId: string;
 }
 
-export interface GetTasksByUserIdsRequest {
+export interface GetPublicTasksByUserIdsRequest {
   userIds: string[];
 }
 

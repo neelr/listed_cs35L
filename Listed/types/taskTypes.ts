@@ -7,6 +7,7 @@ export interface Task {
   userId: string;
   userIds: string[];
   name: string;
+  private: boolean;
 }
 
 export type TaskChanges = Partial<Omit<Task, "taskId">>;

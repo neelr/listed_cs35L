@@ -29,11 +29,20 @@ const { width, height } = Dimensions.get("window");
 const image1 = require("../assets/circlescopy.png");
 
 const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
-  const curTask = route.params?.task
+  const curTask = route.params?.task;
 
-  const [taskTitle, onChangeTaskTitle] = curTask ? useState(curTask.name) : useState("");
-  const [description, onChangeDescription] = curTask ? useState(curTask.description) : useState("");
-  const [date, setDate] = curTask ? useState(new Date(curTask.completeBy)) : useState(new Date());
+  const [taskTitle, onChangeTaskTitle] = curTask
+    ? useState(curTask.name)
+    : useState("");
+  const [description, onChangeDescription] = curTask
+    ? useState(curTask.description)
+    : useState("");
+  const [date, setDate] = curTask
+    ? useState(new Date(curTask.completeBy))
+    : useState(new Date());
+  const [privateTask, setPrivateTask] = curTask
+    ? useState(curTask.private)
+    : useState(false);
 
   const queryClient = useQueryClient();
 
@@ -41,7 +50,7 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
     onSuccess: () => {
       Alert.alert("Add Task", "Task added successfully!");
       queryClient.invalidateQueries({
-        queryKey: [USER_TASKS_QUERY_KEY]
+        queryKey: [USER_TASKS_QUERY_KEY],
       });
 
       navigation.goBack();
@@ -52,7 +61,7 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
     onSuccess: () => {
       Alert.alert("Edit Task", "Task edited successfully!");
       queryClient.invalidateQueries({
-        queryKey: [USER_TASKS_QUERY_KEY]
+        queryKey: [USER_TASKS_QUERY_KEY],
       });
 
       navigation.goBack();
@@ -92,8 +101,19 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
         keyboardShouldPersistTaps="handled" // Ensure taps outside of TextInput dismiss the keyboard
       >
         <View style={{ flex: 0.4, alignItems: "center", width: "100%" }}>
-          <Text style={styles.title}>
-            {curTask ? "Edit" : "Add"} Task</Text>
+          <Text style={styles.title}>{curTask ? "Edit" : "Add"} Task</Text>
+          <HomeButton
+            title={privateTask ? "Private" : "Public"}
+            onPress={() => {
+              setPrivateTask(!privateTask);
+            }}
+            customStyles={{
+              marginTop: height * 0.02,
+              height: height * 0.07,
+              backgroundColor: privateTask ? "#E63946" : "#3B4552",
+            }}
+            icon={privateTask ? "lock-closed" : "lock-open"}
+          />
           <TextInput
             editable
             value={taskTitle}
@@ -119,17 +139,25 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
             placeholder="Description"
             placeholderTextColor="#aaa"
           />
-          <Text style={{ marginTop: height * 0.02, fontFamily: "InknutAntiqua_400Regular", color: "#3B4552" }}>
+          <Text
+            style={{
+              marginTop: height * 0.02,
+              fontFamily: "InknutAntiqua_400Regular",
+              color: "#3B4552",
+            }}
+          >
             {formatDateString(date.toISOString())}
           </Text>
 
-          {!dateOpen ?
+          {!dateOpen ? (
             <HomeButton
               title="Select Date"
-              onPress={() => { setDateOpen(true); }}
+              onPress={() => {
+                setDateOpen(true);
+              }}
               customStyles={{ marginTop: height * 0.02, height: height * 0.07 }}
             />
-            :
+          ) : (
             <DateTimePicker
               mode="date"
               display="default"
@@ -141,15 +169,17 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
               }}
               style={{ marginTop: height * 0.02 }}
             />
-          }
+          )}
 
-          {!timeOpen ?
+          {!timeOpen ? (
             <HomeButton
               title="Select Time"
-              onPress={() => { setTimeOpen(true); }}
+              onPress={() => {
+                setTimeOpen(true);
+              }}
               customStyles={{ marginTop: height * 0.02, height: height * 0.07 }}
             />
-            :
+          ) : (
             <DateTimePicker
               mode="time"
               display="default"
@@ -161,28 +191,27 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
               }}
               style={{ marginTop: height * 0.02 }}
             />
-          }
+          )}
 
           <HomeButton
             title={curTask ? "Save" : "Add"}
             onPress={() => {
-              !curTask ?
-                addTask({
-                  name: taskTitle,
-                  description,
-                  completeBy: date.toISOString(),
-                }) :
-
-                editTask({
-                  taskId: curTask.taskId,
-                  name: taskTitle,
-                  description,
-                  completeBy: date.toISOString(),
-                });
+              !curTask
+                ? addTask({
+                    name: taskTitle,
+                    description,
+                    completeBy: date.toISOString(),
+                  })
+                : editTask({
+                    taskId: curTask.taskId,
+                    name: taskTitle,
+                    description,
+                    completeBy: date.toISOString(),
+                  });
             }}
             customStyles={{
               marginTop: height * 0.02,
-              height: height * 0.07
+              height: height * 0.07,
             }}
           />
         </View>
@@ -204,6 +233,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "InknutAntiqua_400Regular",
     fontSize: width / 12,
+    color: "#3B4552",
+  },
+  privateText: {
+    fontFamily: "InknutAntiqua_400Regular",
+    fontSize: width / 20,
     color: "#3B4552",
   },
   input: {

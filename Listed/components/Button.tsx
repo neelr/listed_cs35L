@@ -1,4 +1,5 @@
 import React from "react";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import {
   StyleSheet,
   GestureResponderEvent,
@@ -12,6 +13,7 @@ import {
 type ButtonProps = {
   title: string;
   onPress: (event: GestureResponderEvent) => void;
+  icon?: string;
   customStyles?: StyleProp<ViewStyle>;
 };
 
@@ -20,6 +22,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const HomeButton: React.FC<ButtonProps> = ({
   onPress,
   title,
+  icon,
   customStyles: customStyles,
 }) => {
   const buttonStyles = StyleSheet.flatten([
@@ -30,6 +33,7 @@ const HomeButton: React.FC<ButtonProps> = ({
   return (
     <TouchableOpacity onPress={onPress} style={buttonStyles}>
       <Text style={baseStyles.buttonText}>{title}</Text>
+      {icon && <Ionicons name={icon} size={24} style={{ marginLeft: 5 }} />}
     </TouchableOpacity>
   );
 };
