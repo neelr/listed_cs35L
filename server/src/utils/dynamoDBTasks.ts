@@ -71,6 +71,25 @@ export const getTasksByUserIds = async ({
   }
 };
 
+export const getTasksByCreatorId = async (userId: string) => {
+  const params = {
+    TableName: TASKS_TABLE_NAME,
+    FilterExpression: "userId = :userId",
+    ExpressionAttributeValues: {
+      ":userId": userId,
+    },
+  };
+
+  try {
+    const command = new ScanCommand(params);
+    const response = await documentClient.send(command);
+    return response.Items || [];
+  } catch (error) {
+    console.error("Error scanning table: ", error);
+    throw "Error scanning table";
+  }
+};
+
 export const getTaskById = async (taskId: string) => {
   const params = {
     TableName: TASKS_TABLE_NAME,

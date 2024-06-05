@@ -87,7 +87,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logoutContainer}>
-        <TouchableOpacity onPress={handleDeleteUser}>
+        <TouchableOpacity
+          onPress={handleDeleteUser}
+          style={{ marginRight: 20 }}
+        >
           <FontAwesome name="trash" size={24} color="#E63946" />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleLogout}>
@@ -190,11 +193,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logoutContainer: {
-    height: height * 0.07,
-    width: width,
-    justifyContent: "space-between",
+    height: 60,
+    alignSelf: "flex-end",
     flexDirection: "row",
-    paddingHorizontal: 20
   },
   profileContainer: {
     alignItems: "center",

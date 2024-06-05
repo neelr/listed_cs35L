@@ -4,6 +4,7 @@ import { deleteUser, getUserById, removeFriend } from "../utils/dynamoDBUsers";
 import {
   deleteTask,
   editTask,
+  getTasksByCreatorId,
   getTasksByUserIds,
 } from "../utils/dynamoDBTasks";
 
@@ -19,9 +20,9 @@ export default async (req: Request, res: Response) => {
     for (const friendId of user.friends) {
       await removeFriend({ userId: userInfo.userId, friendId });
     }
-    const tasks = await getTasksByUserIds({ userIds: [userInfo.userId] });
+    const tasks = await getTasksByCreatorId(userInfo.userId);
     for (const task of tasks) {
-      if (task.userId === userInfo.userId) {
+      if (task.userIds.length === 1) {
         await deleteTask(task.taskId);
       } else {
         const newUsers = task.userIds.filter(
