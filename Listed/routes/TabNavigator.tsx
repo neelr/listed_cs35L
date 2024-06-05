@@ -31,7 +31,12 @@ export const TabNavigator: React.FC = () => (
       headerShown: false,
       tabBarLabelStyle: {
         fontFamily: "InknutAntiqua_400Regular",
-        fontSize: 8
+        fontSize: 8,
+        marginTop: -10
+      },
+      tabBarStyle: {
+        height: 90,
+        marginTop: 5
       }
     })}
   >
