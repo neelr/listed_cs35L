@@ -22,10 +22,6 @@ export const login = async (payload: LoginPayload) => {
     payload
   );
 
-  if (response.status !== 200) {
-    throw new Error(response.data.error);
-  }
-
   return response.data;
 };
 
@@ -34,11 +30,6 @@ export const signup = async (payload: SignupPayload) => {
     `${HTTP_URL}/${AUTH_ROUTE}/sign-up`,
     payload
   );
-
-  if (response.status !== 200) {
-    throw new Error(response.data.error);
-  }
-
   return response.data;
 };
 

@@ -30,7 +30,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   };
 
   const onError = (error: ApiError) => {
-    setLoginError("Invalid email or password");
+    setLoginError(error.error);
   };
 
   const { mutate: login } = useLogin({
@@ -69,7 +69,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               value={values.email}
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
-              style={[styles.input, { marginTop: height * 0.05, paddingRight: width * 0.04 }]}
+              style={[
+                styles.input,
+                { marginTop: height * 0.05, paddingRight: width * 0.04 },
+              ]}
               placeholder="Email"
               placeholderTextColor="#aaa"
             />
@@ -94,8 +97,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 size={24}
                 color="#aaa"
                 style={[styles.icon, { marginTop: height * 0.03 }]}
-                onPress={() => setShowPassword(!showPassword)} />
-
+                onPress={() => setShowPassword(!showPassword)}
+              />
             </View>
             <WarningText message={errors.password} visible={touched.password} />
             <HomeButton

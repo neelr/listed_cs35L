@@ -60,9 +60,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
       },
       {
         text: "Logout",
-        onPress: () => {
-          deleteUserMutation();
-        },
+        onPress: onLogoutOrDelete,
       },
     ]);
   };
@@ -78,7 +76,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         },
         {
           text: "Delete",
-          onPress: onLogoutOrDelete,
+          onPress: () => {
+            deleteUserMutation();
+          },
         },
       ]
     );
