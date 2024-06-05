@@ -92,7 +92,7 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
       >
         <View style={{ flex: 0.4, alignItems: "center", width: "100%" }}>
           <Text style={styles.title}>
-          {curTask ? "Edit" : "Add"} Task</Text>
+            {curTask ? "Edit" : "Add"} Task</Text>
           <TextInput
             editable
             value={taskTitle}
@@ -118,18 +118,17 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
             placeholder="Description"
             placeholderTextColor="#aaa"
           />
-          <Text style={{ marginTop: height * 0.02, fontFamily: "InknutAntiqua_400Regular", color:"#3B4552" }}>
+          <Text style={{ marginTop: height * 0.02, fontFamily: "InknutAntiqua_400Regular", color: "#3B4552" }}>
             {formatDateString(date.toISOString())}
           </Text>
 
           {!dateOpen ?
-          <HomeButton
-            title="Select Date"
-            onPress={() => { setDateOpen(true);}}
-            customStyles={{ marginTop: height * 0.02, height: height * 0.07 }}
-          />
-          : 
-          dateOpen && (
+            <HomeButton
+              title="Select Date"
+              onPress={() => { setDateOpen(true); }}
+              customStyles={{ marginTop: height * 0.02, height: height * 0.07 }}
+            />
+            :
             <DateTimePicker
               mode="date"
               display="default"
@@ -141,16 +140,15 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
               }}
               style={{ marginTop: height * 0.02 }}
             />
-          )}
+          }
 
-          {!timeOpen ? 
-          <HomeButton
-            title="Select Time"
-            onPress={() => { setTimeOpen(true); }}
-            customStyles={{ marginTop: height * 0.02, height: height * 0.07 }}
-          />
-          :
-          timeOpen && (
+          {!timeOpen ?
+            <HomeButton
+              title="Select Time"
+              onPress={() => { setTimeOpen(true); }}
+              customStyles={{ marginTop: height * 0.02, height: height * 0.07 }}
+            />
+            :
             <DateTimePicker
               mode="time"
               display="default"
@@ -162,24 +160,24 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
               }}
               style={{ marginTop: height * 0.02 }}
             />
-          )}
+          }
 
           <HomeButton
-            title={ curTask ? "Save" : "Add" }
+            title={curTask ? "Save" : "Add"}
             onPress={() => {
-              !curTask ? 
-              addTask({
-                name: taskTitle,
-                description,
-                completeBy: date.toISOString(),
-              }) :
-              
-              editTask({
-                taskId: curTask.taskId,
-                name: taskTitle,
-                description,
-                completeBy: date.toISOString(),
-              });
+              !curTask ?
+                addTask({
+                  name: taskTitle,
+                  description,
+                  completeBy: date.toISOString(),
+                }) :
+
+                editTask({
+                  taskId: curTask.taskId,
+                  name: taskTitle,
+                  description,
+                  completeBy: date.toISOString(),
+                });
             }}
             customStyles={{
               marginTop: height * 0.02,
