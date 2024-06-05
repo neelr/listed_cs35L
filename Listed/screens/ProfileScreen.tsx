@@ -10,19 +10,17 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useQueryClient } from "@tanstack/react-query";
-import { Task } from "../types/taskTypes";
 import { useUserFriends } from "../hooks/useUserFriends";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import * as SecureStore from "expo-secure-store";
 import { FontAwesome } from "@expo/vector-icons";
 import { useFriendTasks } from "../hooks/useFriendTasks";
-import CircleIconButton from "../components/CircleAddButton";
 import { RootStackParamList } from "../routes/StackNavigator";
+import { useDeleteUser } from "../hooks/useDeleteUser";
 
 type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Profile">;
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
-  const [followingTasks, setFollowingTasks] = useState<Task[]>([]);
   const [activeTab, setActiveTab] = useState<"Tasks" | "Followers">("Tasks");
   const queryClient = useQueryClient();
 
@@ -33,6 +31,19 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
     isLoading,
     error,
   } = useUserFriends(userData?.friends || []);
+
+  const onLogoutOrDelete = async () => {
+    queryClient.removeQueries();
+    await SecureStore.deleteItemAsync("token");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Home" }],
+    });
+  };
+
+  const { mutate: deleteUserMutation } = useDeleteUser({
+    onSuccess: onLogoutOrDelete,
+  });
 
   const { data: friendTasks, isLoading: friendTasksLoading } = useFriendTasks(
     userData?.friends || []
@@ -46,21 +57,36 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
       },
       {
         text: "Logout",
-        onPress: async () => {
-          queryClient.removeQueries();
-          await SecureStore.deleteItemAsync("token");
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "Home" }],
-          });
+        onPress: () => {
+          deleteUserMutation();
         },
       },
     ]);
   };
 
+  const handleDeleteUser = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? (This will remove your tasks as well!)",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: onLogoutOrDelete,
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logoutContainer}>
+        <TouchableOpacity onPress={handleDeleteUser}>
+          <FontAwesome name="trash" size={24} color="#E63946" />
+        </TouchableOpacity>
         <TouchableOpacity onPress={handleLogout}>
           <FontAwesome name="sign-out" size={24} color="#3B4552" />
         </TouchableOpacity>

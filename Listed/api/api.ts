@@ -75,6 +75,11 @@ export const deleteTask = async (taskId: string) => {
   return response.data;
 };
 
+export const deleteUser = async () => {
+  const response = await authClient.delete(`${USER_ROUTE}`);
+  return response.data;
+};
+
 export const editTask = async (changes: TaskChanges, taskId: string) => {
   const response = await authClient.put(`${TASK_ROUTE}/${taskId}`, changes);
   return response.data;
