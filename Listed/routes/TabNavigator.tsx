@@ -5,6 +5,8 @@ import ProfileScreen from "../screens/ProfileScreen";
 import SearchScreen from "../screens/SearchScreen";
 import AddTaskModal from "../modals/TaskModal";
 import { RootStackParamList } from "./StackNavigator";
+import { Dimensions } from "react-native";
+import { useState } from "react";
 
 export type TabParamList = {
   Profile: undefined;
@@ -12,6 +14,7 @@ export type TabParamList = {
   Search: undefined;
 };
 
+const { width, height } = Dimensions.get("window");
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const icons = {
@@ -20,23 +23,21 @@ const icons = {
   Search: "search-outline",
 };
 
+let imageSize = 0
 export const TabNavigator: React.FC = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon: ({ color, size }) => {
+        imageSize = size
         return <Ionicons name={icons[route.name]} size={size} color={color} />;
       },
       tabBarActiveTintColor: "tomato",
       tabBarInactiveTintColor: "gray",
       headerShown: false,
-      tabBarLabelStyle: {
-        fontFamily: "InknutAntiqua_400Regular",
-        fontSize: 8,
-        marginTop: -10
-      },
+      tabBarShowLabel: false,
       tabBarStyle: {
-        height: 90,
-        marginTop: 5
+        height: height * 0.07,
+        marginTop: height * 0.001
       }
     })}
   >

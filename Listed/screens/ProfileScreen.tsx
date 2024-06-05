@@ -57,7 +57,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.logoutContainer}>
         <TouchableOpacity onPress={handleLogout}>
-          <FontAwesome name="sign-out" size={24} color="#000000" />
+          <FontAwesome name="sign-out" size={24} color="#3B4552" />
         </TouchableOpacity>
       </View>
       <View style={styles.profileContainer}>
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     fontFamily: "InknutAntiqua_300Light",
     fontSize: 24,
     fontWeight: "bold",
-    color: "#000",
+    color: "#3B4552",
     marginTop: -15,
     textAlign: "center",
   },
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     marginTop: -30,
-    color: "#000",
+    color: "#3B4552",
   },
   followersLabel: {
     fontFamily: "InknutAntiqua_300Light",
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   tabButtonText: {
     fontFamily: "InknutAntiqua_300Light",
     fontSize: 12,
-    color: "#000",
+    color: "#3B4552",
   },
   activeTabButtonText: {
     color: "#fff",
@@ -232,17 +232,17 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   taskUser: {
-    fontFamily: "InknutAntiqua_300Light",
+    fontFamily: "InknutAntiqua_400Regular",
     fontWeight: "bold",
     fontSize: 15,
     marginTop: -10,
-    color: "#000",
+    color: "#3B4552",
   },
   taskTitle: {
     fontFamily: "InknutAntiqua_300Light",
     fontSize: 13,
     fontWeight: "bold",
-    color: "#000",
+    color: "#3B4552",
     marginTop: -12,
   },
   taskDescription: {
@@ -266,6 +266,6 @@ const styles = StyleSheet.create({
     fontFamily: "InknutAntiqua_300Light",
     fontSize: 15,
     fontWeight: "bold",
-    color: "#000",
+    color: "#3B4552",
   },
 });

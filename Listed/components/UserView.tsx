@@ -130,13 +130,13 @@ const styles = StyleSheet.create({
   addFriend: {
     fontFamily: "InknutAntiqua_400Regular",
     color: "#2B78C2",
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "bold",
   },
   removeFriend: {
     fontFamily: "InknutAntiqua_400Regular",
     color: "#FF4444",
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "bold",
   },
 });

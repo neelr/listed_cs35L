@@ -75,11 +75,11 @@ const styles = StyleSheet.create({
     fontFamily: "InknutAntiqua_400Regular",
     fontSize: width / 10.0,
     color: "#3B4552",
-    // marginBottom: 20,
   },
   text: {
     fontFamily: "InknutAntiqua_400Regular",
-    marginTop: 10
+    marginTop: 10,
+    color: "#3B4552",
   },
   input: {
     height: height * 0.07,

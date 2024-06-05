@@ -11,6 +11,7 @@ import {
   Dimensions,
   TextInput,
   ScrollView,
+  Alert,
 } from "react-native";
 import HomeButton from "../components/Button";
 import { Keyboard } from "react-native";
@@ -38,7 +39,7 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
 
   const { mutate: addTask } = useAddTask({
     onSuccess: () => {
-      alert("Task added successfully!");
+      Alert.alert("Add Task", "Task added successfully!");
       queryClient.invalidateQueries({
         queryKey: [USER_TASKS_QUERY_KEY]
       });
@@ -49,7 +50,7 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
 
   const { mutate: editTask } = useEditTask({
     onSuccess: () => {
-      alert("Task edited successfully!");
+      Alert.alert("Edit Task", "Task edited successfully!");
       queryClient.invalidateQueries({
         queryKey: [USER_TASKS_QUERY_KEY]
       });

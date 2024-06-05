@@ -9,7 +9,6 @@ import { RootStackParamList } from "../routes/StackNavigator";
 type SigninScreenProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
 const { width, height } = Dimensions.get("window");
-//Huh
 
 const SigninScreen: React.FC<SigninScreenProps> = ({ navigation }) => {
   return (
