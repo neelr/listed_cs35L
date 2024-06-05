@@ -14,10 +14,7 @@ import { User } from "../types/userTypes";
 
 const RESULTS_COUNT = 10;
 
-type SearchScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  "Search"
->;
+type SearchScreenProps = NativeStackScreenProps<RootStackParamList, "Search">;
 
 const { width, height } = Dimensions.get("window");
 

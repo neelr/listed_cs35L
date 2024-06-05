@@ -1,3 +1,4 @@
+// routes/StackNavigator.ts
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TaskModal from "../modals/TaskModal";
 import ListItemScreen from "../screens/ListItemScreen";
@@ -9,7 +10,8 @@ import SearchScreen from "../screens/SearchScreen";
 import { TabNavigator } from "./TabNavigator";
 import { useAuthToken } from "../hooks/useAuthToken";
 import LoadingScreen from "../screens/LoadingScreen";
-import { Task } from "../types/taskTypes"
+import UserDetailScreen from "../screens/UserDetailScreen"; // Import UserDetailScreen
+import { Task } from "../types/taskTypes";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -20,7 +22,10 @@ export type RootStackParamList = {
   Search: undefined;
   Signup: undefined;
   TaskModal: {
-    task?: Task
+    task?: Task;
+  };
+  UserDetail: {
+    username: string;
   };
 };
 
@@ -58,6 +63,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="Login"
         component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="UserDetail"
+        component={UserDetailScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
