@@ -58,7 +58,8 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
     },
   });
 
-  const [open, setOpen] = useState(false);
+  const [dateOpen, setDateOpen] = useState(false);
+  const [timeOpen, setTimeOpen] = useState(false);
   const [mode, setMode] = useState<"date" | "time">("date");
 
   const handleDismissKeyboard = () => {
@@ -120,35 +121,49 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
           <Text style={{ marginTop: height * 0.02, fontFamily: "InknutAntiqua_400Regular", color:"#3B4552" }}>
             {formatDateString(date.toISOString())}
           </Text>
+
+          {!dateOpen ?
           <HomeButton
             title="Select Date"
-            onPress={() => {
-              setMode("date")
-              setOpen(true);
-            }}
+            onPress={() => { setDateOpen(true);}}
             customStyles={{ marginTop: height * 0.02, height: height * 0.07 }}
           />
-          <HomeButton
-            title="Select Time"
-            onPress={() => {
-              setMode("time")
-              setOpen(true);
-            }}
-            customStyles={{ marginTop: height * 0.02, height: height * 0.07 }}
-          />
-          {open && (
+          : 
+          dateOpen && (
             <DateTimePicker
-              mode={mode}
+              mode="date"
               display="default"
               value={date}
               onChange={(event, selectedDate?: Date) => {
                 const currentDate = selectedDate || date;
-                setOpen(false);
+                setDateOpen(false);
                 setDate(currentDate);
               }}
               style={{ marginTop: height * 0.02 }}
             />
           )}
+
+          {!timeOpen ? 
+          <HomeButton
+            title="Select Time"
+            onPress={() => { setTimeOpen(true); }}
+            customStyles={{ marginTop: height * 0.02, height: height * 0.07 }}
+          />
+          :
+          timeOpen && (
+            <DateTimePicker
+              mode="time"
+              display="default"
+              value={date}
+              onChange={(event, selectedDate?: Date) => {
+                const currentDate = selectedDate || date;
+                setTimeOpen(false);
+                setDate(currentDate);
+              }}
+              style={{ marginTop: height * 0.02 }}
+            />
+          )}
+
           <HomeButton
             title={ curTask ? "Save" : "Add" }
             onPress={() => {
