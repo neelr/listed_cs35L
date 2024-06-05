@@ -7,9 +7,11 @@ import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useQueryClient } from "@tanstack/react-query";
 import { CURRENT_USER_QUERY_KEY } from "../hooks/useCurrentUser";
 import { FRIEND_TASKS_QUERY_KEY } from "../hooks/useFriendTasks";
+import { useNavigation } from '@react-navigation/native'; 
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../routes/StackNavigator'; 
 
-
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 export interface UserProps {
   user: User;
@@ -17,21 +19,22 @@ export interface UserProps {
 }
 
 const truncateText = (text: string, maxLength: number): string => {
-
   if (text.length <= maxLength) {
     return text;
   }
   return text.substring(0, maxLength) + '...';
 };
 
+type UserViewNavigationProp = StackNavigationProp<RootStackParamList, 'UserDetail'>;
+
 export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
   const { data: userData } = useCurrentUser();
-
   const queryClient = useQueryClient();
+  const navigation = useNavigation<UserViewNavigationProp>(); 
 
   const handleAddFriend = async () => {
     if (userData?.friends.includes(user.userId)) {
-      let resp = await authClient.put("/friend", {
+      await authClient.put("/friend", {
         friendId: user.userId,
       });
     } else {
@@ -47,25 +50,29 @@ export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
     });
   };
 
+  const handlePressUser = () => {
+    navigation.navigate('UserDetail', { username: user.username });
+  };
+
   return (
     userData?.userId != user.userId ? (
-      <View style={userData?.friends.includes(user.userId) ? styles.removeFriendContainer : styles.addFriendContainer}>
+      <TouchableOpacity onPress={handlePressUser} style={userData?.friends.includes(user.userId) ? styles.removeFriendContainer : styles.addFriendContainer}>
         <View style={styles.header}>
           <View>
             <Text style={styles.boldText}>{truncateText(user.username, 20)}</Text>
             <Text style={styles.text}>{mutualCount} Mutual{mutualCount === 1 ? "" : "s"}</Text>
           </View>
-            {userData?.friends.includes(user.userId) ? (
-              <TouchableOpacity style={styles.buttonRemove} onPress={handleAddFriend}>
-                <Text style={styles.removeFriend}>Remove friend</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity style={styles.buttonAdd} onPress={handleAddFriend}>
-                <Text style={styles.addFriend}>Add friend</Text>
-              </TouchableOpacity>
-            )}
+          {userData?.friends.includes(user.userId) ? (
+            <TouchableOpacity style={styles.buttonRemove} onPress={handleAddFriend}>
+              <Text style={styles.removeFriend}>Remove friend</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.buttonAdd} onPress={handleAddFriend}>
+              <Text style={styles.addFriend}>Add friend</Text>
+            </TouchableOpacity>
+          )}
         </View>
-      </View>) : (
+      </TouchableOpacity>) : (
       <></>
     )
   );
@@ -131,12 +138,10 @@ const styles = StyleSheet.create({
     fontFamily: "InknutAntiqua_600SemiBold",
     color: "#2B78C2",
     fontSize: 13,
-    //fontWeight: "bold",
   },
   removeFriend: {
     fontFamily: "InknutAntiqua_600SemiBold",
     color: "#FF4444",
     fontSize: 13,
-    //fontWeight: "bold",
   },
 });
