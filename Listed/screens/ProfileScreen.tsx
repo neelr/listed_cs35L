@@ -146,7 +146,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             <Text>Loading...</Text>
           ) : (
             <>
-              {friendTasks?.length === 0 && <Text>No tasks yet!</Text>}
+              {!friendTasks && <Text
+                style={{ fontFamily: "InknutAntiqua_400Regular" }}>No tasks yet!</Text>}
               <FlatList
                 data={friendTasks}
                 keyExtractor={(item) => item.userId + item.taskId}
@@ -168,6 +169,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             </>
           )
         ) : (
+          <>
+          {!friends && <Text
+                style={{ fontFamily: "InknutAntiqua_400Regular" }}>No friends yet!</Text>}
           <FlatList
             data={friends}
             keyExtractor={(item) => item.userId}
@@ -177,6 +181,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               </View>
             )}
           />
+          </>
         )}
       </View>
     </SafeAreaView>
