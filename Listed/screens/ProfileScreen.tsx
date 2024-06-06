@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -11,13 +11,23 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useQueryClient } from "@tanstack/react-query";
-import { useUserFriends } from "../hooks/useUserFriends";
-import { useCurrentUser } from "../hooks/useCurrentUser";
+import {
+  useUserFriends,
+  USER_FRIENDS_QUERY_KEY,
+} from "../hooks/useUserFriends";
+import {
+  CURRENT_USER_QUERY_KEY,
+  useCurrentUser,
+} from "../hooks/useCurrentUser";
 import * as SecureStore from "expo-secure-store";
 import { FontAwesome } from "@expo/vector-icons";
-import { useFriendTasks } from "../hooks/useFriendTasks";
+import {
+  FRIEND_TASKS_QUERY_KEY,
+  useFriendTasks,
+} from "../hooks/useFriendTasks";
 import { RootStackParamList } from "../routes/StackNavigator";
 import { useDeleteUser } from "../hooks/useDeleteUser";
+import { useFocusEffect } from "@react-navigation/native";
 
 type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Profile">;
 
@@ -47,6 +57,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const { mutate: deleteUserMutation } = useDeleteUser({
     onSuccess: onLogoutOrDelete,
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      queryClient.invalidateQueries({ queryKey: [CURRENT_USER_QUERY_KEY] });
+      queryClient.invalidateQueries({ queryKey: [USER_FRIENDS_QUERY_KEY] });
+      queryClient.invalidateQueries({ queryKey: [FRIEND_TASKS_QUERY_KEY] });
+    }, [USER_FRIENDS_QUERY_KEY, FRIEND_TASKS_QUERY_KEY, CURRENT_USER_QUERY_KEY])
+  );
 
   const { data: friendTasks, isLoading: friendTasksLoading } = useFriendTasks(
     userData?.friends || []
@@ -150,8 +168,11 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             <Text>Loading...</Text>
           ) : (
             <>
-              {!friendTasks && <Text
-                style={{ fontFamily: "InknutAntiqua_400Regular" }}>No tasks yet!</Text>}
+              {!friendTasks && (
+                <Text style={{ fontFamily: "InknutAntiqua_400Regular" }}>
+                  No tasks yet!
+                </Text>
+              )}
               <FlatList
                 data={friendTasks}
                 keyExtractor={(item) => item.userId + item.taskId}
@@ -174,17 +195,20 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
           )
         ) : (
           <>
-          {!friends && <Text
-                style={{ fontFamily: "InknutAntiqua_400Regular" }}>No friends yet!</Text>}
-          <FlatList
-            data={friends}
-            keyExtractor={(item) => item.userId}
-            renderItem={({ item }) => (
-              <View style={styles.friendCard}>
-                <Text style={styles.friendName}>{item.username}</Text>
-              </View>
+            {!friends && (
+              <Text style={{ fontFamily: "InknutAntiqua_400Regular" }}>
+                No friends yet!
+              </Text>
             )}
-          />
+            <FlatList
+              data={friends}
+              keyExtractor={(item) => item.userId}
+              renderItem={({ item }) => (
+                <View style={styles.friendCard}>
+                  <Text style={styles.friendName}>{item.username}</Text>
+                </View>
+              )}
+            />
           </>
         )}
       </View>
