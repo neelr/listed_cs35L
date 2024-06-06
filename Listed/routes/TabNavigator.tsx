@@ -31,7 +31,7 @@ export const TabNavigator: React.FC = () => (
         imageSize = size
         return <Ionicons name={icons[route.name]} size={size} color={color} />;
       },
-      tabBarActiveTintColor: "tomato",
+      tabBarActiveTintColor: "#E63946",
       tabBarInactiveTintColor: "gray",
       headerShown: false,
       tabBarShowLabel: false,

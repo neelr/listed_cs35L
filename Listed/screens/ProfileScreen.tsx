@@ -91,7 +91,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
           onPress={handleDeleteUser}
           style={{ marginRight: 20 }}
         >
-          <FontAwesome name="trash" size={24} color="#E63946" />
+          <FontAwesome name="trash" size={24} color="#3B4552" />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleLogout}>
           <FontAwesome name="sign-out" size={24} color="#3B4552" />
@@ -193,9 +193,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logoutContainer: {
-    height: 60,
-    alignSelf: "flex-end",
+    height: height * 0.07,
+    width: width,
+    justifyContent: "space-between",
     flexDirection: "row",
+    paddingHorizontal: 20
   },
   profileContainer: {
     alignItems: "center",
