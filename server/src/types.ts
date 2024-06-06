@@ -66,15 +66,15 @@ export interface GetUserTasksRequest {
 }
 
 export interface GetPublicTasksByUserIdsRequest {
-  userIds: string[];
+  userIds?: string[];
 }
 
 export interface GetFriendsDetailsRequest {
-  userIds: string[];
+  userIds?: string[];
 }
 
 export interface GetFriendDetailsRequest {
-  userIds: string;
+  userIds?: string;
 }
 export interface AddFriendRequest {
   userId: string;

@@ -10,8 +10,8 @@ export const useUserDetails = (
   options?: UseQueryOptions<User, AxiosError>
 ) => {
   return useQuery<User, AxiosError>({
+    ...options,
     queryKey: [PUBLIC_USER_DETAILS_QUERY_KEY, userId],
     queryFn: async () => getPublicUser(userId),
-    ...options,
   });
 };

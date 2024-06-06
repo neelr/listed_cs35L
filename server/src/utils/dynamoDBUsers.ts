@@ -274,6 +274,8 @@ export const removeFriend = async ({ userId, friendId }: AddFriendRequest) => {
 export const getFriendsDetails = async ({
   userIds,
 }: GetFriendsDetailsRequest) => {
+  if (!userIds || userIds.length === 0) return [];
+
   const keys = userIds.map((userId) => ({ userId }));
 
   const params = {

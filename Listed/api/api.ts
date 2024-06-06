@@ -44,9 +44,6 @@ export const getUserTasks = async () => {
 };
 
 export const getUserFriends = async (friends: string[]) => {
-  if (friends.length === 0) {
-    return [];
-  }
   const response = await authClient.post<User[]>(`${FRIEND_ROUTE}/batch`, {
     userIds: friends,
   });
@@ -54,9 +51,6 @@ export const getUserFriends = async (friends: string[]) => {
 };
 
 export const getFriendTasks = async (friends: string[]) => {
-  if (friends.length === 0) {
-    return [];
-  }
   const response = await authClient.post<Task[]>(
     `${USER_ROUTE}/${TASK_ROUTE}`,
     {

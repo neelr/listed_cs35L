@@ -46,6 +46,8 @@ export const createTask = async (task: CreateTaskRequest) => {
 export const getTasksByUserIds = async ({
   userIds,
 }: GetPublicTasksByUserIdsRequest) => {
+  if (!userIds || userIds.length === 0) return [];
+
   let filterExpressions: string[] = [];
   let expressionAttributeValues: { [key: string]: string } = {};
 
