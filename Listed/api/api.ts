@@ -90,9 +90,6 @@ export const searchForUsers = async (username: string) => {
 
 export const getUsernames = async () => {
   const response = await authClient.get<string[]>(`${USER_ROUTE}/usernames`);
-  if (response.status !== 200) {
-    throw new Error("Failed to fetch usernames");
-  }
   return response.data;
 };
 
@@ -112,5 +109,15 @@ export const removeFriend = async (friendId: string) => {
   const response = await authClient.put<UserPrivate>(`${FRIEND_ROUTE}`, {
     friendId: friendId,
   });
+  return response.data;
+};
+
+export const getUserTasksById = async (userId: string) => {
+  const response = await authClient.get<Task[]>(`${FRIEND_ROUTE}/tasks`);
+  return response.data;
+};
+
+export const getUserFriendsById = async (userId: string) => {
+  const response = await authClient.get<User[]>(`${FRIEND_ROUTE}/${userId}/friends`);
   return response.data;
 };
