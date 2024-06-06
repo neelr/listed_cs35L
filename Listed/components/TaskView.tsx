@@ -202,7 +202,6 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     textAlign: "left",
     alignSelf: "stretch",
-    //paddingLeft: 10,
   },
   overDueText: {
     fontFamily: "InknutAntiqua_400Regular",

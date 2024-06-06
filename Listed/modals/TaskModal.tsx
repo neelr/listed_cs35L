@@ -40,7 +40,6 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
   const { mutate: addTask } = useAddTask({
     onSuccess: (data) => {
       Alert.alert("Add Task", `${data.name} added successfully!`);
-
       navigation.goBack();
     },
   });
@@ -48,7 +47,6 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
   const { mutate: editTask } = useEditTask({
     onSuccess: (data) => {
       Alert.alert("Edit Task", `${data.name} edited successfully!`);
-
       navigation.goBack();
     },
   });
@@ -194,9 +192,9 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
               !curTask
                 ? addTask(task)
                 : editTask({
-                    ...task,
-                    taskId: curTask.taskId,
-                  });
+                  ...task,
+                  taskId: curTask.taskId,
+                });
             }}
             customStyles={{
               marginTop: height * 0.02,

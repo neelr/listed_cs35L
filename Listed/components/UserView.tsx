@@ -64,7 +64,7 @@ export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
               {truncateText(user.username, 20)}
             </Text>
             <Text style={styles.text}>
-              {mutualCount} Mutual{mutualCount === 1 ? "" : "s"}
+              {mutualCount} mutual{mutualCount === 1 ? "" : "s"}
             </Text>
           </View>
           {isFriend ? (
@@ -75,7 +75,7 @@ export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
                 setIsFriend(false);
               }}
             >
-              <Text style={styles.removeFriend}>Remove friend</Text>
+              <Text style={styles.removeFriend}>Remove Friend</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
@@ -85,7 +85,7 @@ export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
                 setIsFriend(true);
               }}
             >
-              <Text style={styles.addFriend}>Add friend</Text>
+              <Text style={styles.addFriend}>Add Friend</Text>
             </TouchableOpacity>
           )}
         </View>
