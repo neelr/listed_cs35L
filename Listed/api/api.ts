@@ -87,3 +87,11 @@ export const searchForUsers = async (username: string) => {
   );
   return response.data;
 };
+
+export const getUsernames = async () => {
+  const response = await authClient.get<string[]>(`${USER_ROUTE}/usernames`);
+  if (response.status !== 200) {
+    throw new Error("Failed to fetch usernames");
+  }
+  return response.data;
+};
