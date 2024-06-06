@@ -2,16 +2,17 @@ import { createHash } from "crypto";
 import bcrypt from "bcryptjs";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { SECRET_KEY } from "../server";
+import { SECRET_KEY, PEPPER } from "../server";
 import { SENSITIVE_KEYS } from "./constants";
+import { CreateUserRequest } from "../types";
 
 export const getHashFromCurrentDate = () => {
   const currentDate = new Date();
   return createHash("sha256").update(currentDate.toISOString()).digest("hex");
 };
 
-export const encryptPassword = async (password: string) => {
-  return await bcrypt.hash(password, 10);
+export const encryptPassword = async (user: CreateUserRequest) => {
+  return await bcrypt.hash(user.password + user.email + PEPPER, 10);
 };
 
 export const omitKeys = (obj: any, keys: string[]) => {

@@ -24,7 +24,7 @@ import {
   omitSensitiveKeys,
 } from "./utils";
 import { documentClient, USERS_TABLE_NAME } from "./constants";
-import { SECRET_KEY } from "../server";
+import { PEPPER, SECRET_KEY } from "../server";
 import { AddFriendRequest } from "../types";
 import { ReturnValue } from "@aws-sdk/client-dynamodb";
 
@@ -41,7 +41,7 @@ export const signIn = async ({ email, password }: SignInRequest) => {
       return { error: SignInErrors.USER_NOT_FOUND };
     }
 
-    if (await bcrypt.compare(password, user.password)) {
+    if (await bcrypt.compare(password + email + PEPPER, user.password)) {
       const token = jwt.sign({ userId: user.userId }, SECRET_KEY, {
         expiresIn: "1h",
       });
@@ -77,7 +77,7 @@ export const getUserIdByEmail = async ({ email }: GetUserIdByEmailRequest) => {
 };
 
 export const createUser = async (user: CreateUserRequest) => {
-  const encryptedPassword = await encryptPassword(user.password);
+  const encryptedPassword = await encryptPassword(user);
 
   try {
     const users = await getUserIdByEmail({ email: user.email });
