@@ -27,5 +27,5 @@ export interface LoginResponse extends UserPrivate {
 
 export interface ApiError {
   error: string;
-  message: string;
+  message?: string;
 }

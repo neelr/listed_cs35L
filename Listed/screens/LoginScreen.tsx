@@ -13,6 +13,7 @@ import { PASSWORD_SCHEMA } from "../constants";
 import WarningText from "../components/WarningText";
 import { useLogin } from "../hooks/useLogin";
 import { ApiError, LoginResponse } from "../types/authTypes";
+import { AxiosError } from "axios";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
@@ -29,8 +30,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     });
   };
 
-  const onError = (error: ApiError) => {
-    setLoginError(error.error);
+  const onError = (error: AxiosError<ApiError>) => {
+    setLoginError(error.response?.data.error || "An error occurred");
   };
 
   const { mutate: login } = useLogin({

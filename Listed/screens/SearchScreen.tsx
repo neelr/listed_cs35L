@@ -22,7 +22,12 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   const [searchText, setSearchText] = useState("");
   const { data: currentUser } = useCurrentUser();
   const { data: friends, isLoading, error } = useSearchUsers("");
-  const results: [User[], number]  = rankUsers(friends, searchText, RESULTS_COUNT, currentUser);
+  const results: [User[], number] = rankUsers(
+    friends,
+    searchText,
+    RESULTS_COUNT,
+    currentUser
+  );
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Search Friends</Text>
@@ -45,16 +50,22 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           <FlatList
             data={results[0]} // Passed tasks state to FlatList
             keyExtractor={(inUser) => inUser.userId} // Set key extractor
-            renderItem={(inUser) => <UserView user={inUser.item} mutualCount={getMutualCount(currentUser, inUser.item)} />}
+            renderItem={(inUser) => (
+              <UserView
+                user={inUser.item}
+                mutualCount={getMutualCount(currentUser, inUser.item)}
+              />
+            )}
           />
         </>
       )}
-      {results[1] === 0 ? (<></>) : (
-      results[1] > RESULTS_COUNT ? (
-        <Text style={styles.text}>{RESULTS_COUNT} of {results[1]} results shown</Text>
-      ) : (
-        <Text style={styles.text}>{results[1]} result{results[1] === 1 ? "" : "s"}</Text>
-      ))}
+      {results[1] !== 0 && (
+        <Text style={styles.text}>
+          {results[1] <= RESULTS_COUNT
+            ? `${results[1]} result${results[1] === 1 ? "" : "s"}`
+            : `${RESULTS_COUNT} of ${results[1]} results shown`}
+        </Text>
+      )}
       <WarningMessage message={error?.message} visible={!!error} />
     </SafeAreaView>
   );
