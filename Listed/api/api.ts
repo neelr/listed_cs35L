@@ -103,14 +103,14 @@ export const getPublicUser = async (userId: string) => {
 
 export const addFriend = async (friendId: string) => {
   const response = await authClient.post<UserPrivate>(`${FRIEND_ROUTE}`, {
-    friendId,
+    friendId: friendId,
   });
   return response.data;
 };
 
 export const removeFriend = async (friendId: string) => {
   const response = await authClient.put<UserPrivate>(`${FRIEND_ROUTE}`, {
-    friendId,
+    friendId: friendId,
   });
   return response.data;
 };
