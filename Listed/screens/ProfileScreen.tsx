@@ -100,8 +100,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
       <View style={styles.profileContainer}>
         <Text style={styles.name}>{userData?.username}</Text>
         <View style={styles.followersContainer}>
-          <Text style={styles.followersCount}>{friends?.length}</Text>
-          <Text style={styles.followersLabel}>Friends</Text>
+          <Text style={styles.followersCount}>{friends ? friends.length : 0}</Text>
+          <Text style={styles.followersLabel}>Friend{friends?.length != 1 ? "s" : ""}</Text>
         </View>
       </View>
       <View style={styles.separator} />
