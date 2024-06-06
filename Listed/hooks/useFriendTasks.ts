@@ -1,8 +1,6 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { getFriendTasks } from "../api/api";
-import { User } from "../types/userTypes";
 import { Task } from "../types/taskTypes";
-import { USER_FRIENDS_QUERY_KEY } from "./useUserFriends";
 
 export const FRIEND_TASKS_QUERY_KEY = "friendTasks";
 

@@ -1,15 +1,18 @@
 import React from "react";
-import { Dimensions, View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Dimensions,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { User } from "../types/userTypes";
-import { withSafeAreaInsets } from "react-native-safe-area-context";
-import { authClient } from "../api/authClient";
 import { useCurrentUser } from "../hooks/useCurrentUser";
-import { useQueryClient } from "@tanstack/react-query";
-import { CURRENT_USER_QUERY_KEY } from "../hooks/useCurrentUser";
-import { FRIEND_TASKS_QUERY_KEY } from "../hooks/useFriendTasks";
-import { useNavigation } from '@react-navigation/native'; 
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../routes/StackNavigator'; 
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../routes/StackNavigator";
+import { useAddFriend } from "../hooks/useAddFriend";
+import { useRemoveFriend } from "../hooks/useRemoveFriend";
 
 const { width } = Dimensions.get("window");
 
@@ -22,59 +25,65 @@ const truncateText = (text: string, maxLength: number): string => {
   if (text.length <= maxLength) {
     return text;
   }
-  return text.substring(0, maxLength) + '...';
+  return text.substring(0, maxLength) + "...";
 };
 
-type UserViewNavigationProp = StackNavigationProp<RootStackParamList, 'UserDetail'>;
+type UserViewNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "UserDetail"
+>;
 
 export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
   const { data: userData } = useCurrentUser();
-  const queryClient = useQueryClient();
-  const navigation = useNavigation<UserViewNavigationProp>(); 
 
-  const handleAddFriend = async () => {
-    if (userData?.friends.includes(user.userId)) {
-      await authClient.put("/friend", {
-        friendId: user.userId,
-      });
-    } else {
-      await authClient.post("/friend", {
-        friendId: user.userId,
-      });
-    }
-    queryClient.invalidateQueries({
-      queryKey: [CURRENT_USER_QUERY_KEY],
-    });
-    queryClient.invalidateQueries({
-      queryKey: [FRIEND_TASKS_QUERY_KEY],
-    });
-  };
+  const { mutate: addFriend } = useAddFriend();
+  const { mutate: removeFriend } = useRemoveFriend();
+
+  const navigation = useNavigation<UserViewNavigationProp>();
+
+  const isFriend = userData?.friends.includes(user.userId);
 
   const handlePressUser = () => {
-    navigation.navigate('UserDetail', { username: user.username });
+    navigation.navigate("UserDetail", { username: user.username });
   };
 
-  return (
-    userData?.userId != user.userId ? (
-      <TouchableOpacity onPress={handlePressUser} style={userData?.friends.includes(user.userId) ? styles.removeFriendContainer : styles.addFriendContainer}>
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.boldText}>{truncateText(user.username, 20)}</Text>
-            <Text style={styles.text}>{mutualCount} Mutual{mutualCount === 1 ? "" : "s"}</Text>
-          </View>
-          {userData?.friends.includes(user.userId) ? (
-            <TouchableOpacity style={styles.buttonRemove} onPress={handleAddFriend}>
-              <Text style={styles.removeFriend}>Remove friend</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity style={styles.buttonAdd} onPress={handleAddFriend}>
-              <Text style={styles.addFriend}>Add friend</Text>
-            </TouchableOpacity>
-          )}
+  return userData?.userId != user.userId ? (
+    <TouchableOpacity
+      onPress={handlePressUser}
+      style={
+        isFriend ? styles.removeFriendContainer : styles.addFriendContainer
+      }
+    >
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.boldText}>{truncateText(user.username, 20)}</Text>
+          <Text style={styles.text}>
+            {mutualCount} Mutual{mutualCount === 1 ? "" : "s"}
+          </Text>
         </View>
-      </TouchableOpacity>) : (
-      <></>
-    )
+        {isFriend ? (
+          <TouchableOpacity
+            style={styles.buttonRemove}
+            onPress={() => {
+              removeFriend(user.userId);
+            }}
+          >
+            <Text style={styles.removeFriend}>Remove friend</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.buttonAdd}
+            onPress={() => {
+              addFriend(user.userId);
+            }}
+          >
+            <Text style={styles.addFriend}>Add friend</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </TouchableOpacity>
+  ) : (
+    <></>
   );
 };
 
@@ -126,13 +135,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#CDE8FA",
     borderRadius: 10,
     padding: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   buttonRemove: {
     backgroundColor: "#CDE8FA",
     borderRadius: 10,
     padding: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   addFriend: {
     fontFamily: "InknutAntiqua_600SemiBold",

@@ -95,3 +95,22 @@ export const getUsernames = async () => {
   }
   return response.data;
 };
+
+export const getPublicUser = async (userId: string) => {
+  const response = await authClient.get<User>(`${FRIEND_ROUTE}/${userId}`);
+  return response.data;
+};
+
+export const addFriend = async (friendId: string) => {
+  const response = await authClient.post<UserPrivate>(`${FRIEND_ROUTE}`, {
+    friendId,
+  });
+  return response.data;
+};
+
+export const removeFriend = async (friendId: string) => {
+  const response = await authClient.put<UserPrivate>(`${FRIEND_ROUTE}`, {
+    friendId,
+  });
+  return response.data;
+};

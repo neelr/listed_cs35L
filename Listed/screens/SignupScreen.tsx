@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import { PASSWORD_SCHEMA } from "../constants";
 import { useSignup } from "../hooks/useSignUp";
 import { ApiError, LoginResponse } from "../types/authTypes";
+import { AxiosError } from "axios";
 
 type SignupScreenProps = NativeStackScreenProps<RootStackParamList, "Signup">;
 
@@ -32,10 +33,11 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
     });
   };
 
-  const onError = (error: ApiError) => {
-
+  const onError = (error: AxiosError<ApiError> & ApiError) => {
     // clear password fields
-    setSignupError("Email already exists!");
+    setSignupError(
+      error.response?.data.error || error.error || "An error occurred"
+    );
   };
 
   const { mutate: signup } = useSignup({
@@ -119,7 +121,8 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 size={24}
                 color="#aaa"
                 style={[styles.icon, { marginTop: height * 0.04 }]}
-                onPress={() => setShowPassword(!showPassword)} />
+                onPress={() => setShowPassword(!showPassword)}
+              />
             </View>
             <WarningText message={errors.password} visible={touched.password} />
 
@@ -142,7 +145,8 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 size={24}
                 color="#aaa"
                 style={[styles.icon, { marginTop: height * 0.04 }]}
-                onPress={() => setShowConfirmPassword(!showConfirmPassword)} />
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              />
             </View>
 
             <WarningText
