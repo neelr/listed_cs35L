@@ -68,7 +68,7 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="UserDetail"
         component={UserDetailScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, presentation: "modal"}}
       />
     </Stack.Navigator>
   );
