@@ -77,7 +77,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         style: "cancel",
       },
       {
-        text: "Logout",
+        text: "Log Out",
         onPress: onLogoutOrDelete,
       },
     ]);
@@ -168,8 +168,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             <Text>Loading...</Text>
           ) : (
             <>
-              {!friendTasks && (
-                <Text style={{ fontFamily: "InknutAntiqua_400Regular" }}>
+              {friendTasks?.length === 0 && (
+                <Text style={{ fontFamily: "InknutAntiqua_500Medium", color: "#3B4552" }}>
                   No tasks yet!
                 </Text>
               )}
@@ -195,8 +195,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
           )
         ) : (
           <>
-            {!friends && (
-              <Text style={{ fontFamily: "InknutAntiqua_400Regular" }}>
+            {friends?.length === 0 && (
+              <Text style={{ fontFamily: "InknutAntiqua_500Medium", color: "#3B4552"}}>
                 No friends yet!
               </Text>
             )}
