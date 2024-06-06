@@ -33,6 +33,7 @@ const truncateText = (text: string, maxLength: number): string => {
 
 const formatDateString = (dateString: string): string => {
   const date = new Date(dateString);
+  
   const formattedDate = date.toLocaleDateString("en-US", {
     weekday: "short",
     month: "short",
@@ -42,7 +43,51 @@ const formatDateString = (dateString: string): string => {
     hour: "2-digit",
     minute: "2-digit",
   });
+
+  const today = new Date();
+  const tomorrow = new Date(today);
+  const yesterday = new Date(today);
+
+  tomorrow.setDate(today.getDate() + 1);
+  yesterday.setDate(today.getDate() - 1);
+
+
+  if (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  ) {
+    return `Today at ${formattedTime}`;
+  }
+
+  if (
+    date.getDate() === tomorrow.getDate()&&
+    date.getMonth() === tomorrow.getMonth() &&
+    date.getFullYear() === tomorrow.getFullYear()
+  ) {
+    return `Tomorrow at ${formattedTime}`;
+  }
+  
+  if (
+    date.getDate() === yesterday.getDate()&&
+    date.getMonth() === yesterday.getMonth() &&
+    date.getFullYear() === yesterday.getFullYear()
+  ) {
+    return `Yesterday at ${formattedTime}`;
+  }
+
   return `${formattedDate} at ${formattedTime}`;
+};
+
+const isTaskOverdue = (dueDateString: string): boolean => {
+  const dueDate = new Date(dueDateString);
+  const currentDate = new Date();
+
+  // Strip the time portion for a pure date comparison
+  currentDate.setHours(0, 0, 0, 0);
+  dueDate.setHours(0, 0, 0, 0);
+
+  return dueDate < currentDate;
 };
 
 export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
@@ -108,10 +153,14 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
             ></TouchableOpacity>
           </View>
 
-          <Text style={[styles.text, { fontSize: 12 }]}>
-            {" "}
-            Do by: {formatDateString(task.completeBy)}
-          </Text>
+          <View>
+            <Text style={styles.text}>
+              Do by:
+            </Text>
+            <Text style={[isTaskOverdue(task.completeBy) ? styles.overDueText : styles.text, { fontSize: 12 }]}>
+              {` ${formatDateString(task.completeBy)}`}
+            </Text>
+          </View>
 
           {task.description && (
             <Text style={[styles.text, { fontSize: 16 }]}>
@@ -143,6 +192,14 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "InknutAntiqua_400Regular",
     color: "#F8F9FA",
+    marginBottom: 0,
+    textAlign: "left",
+    alignSelf: "stretch",
+    paddingLeft: 10,
+  },
+  overDueText: {
+    fontFamily: "InknutAntiqua_400Regular",
+    color: "#FF8877",
     marginBottom: 0,
     textAlign: "left",
     alignSelf: "stretch",
