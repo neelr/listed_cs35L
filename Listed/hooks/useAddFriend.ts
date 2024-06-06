@@ -19,13 +19,13 @@ export const useAddFriend = (
     mutationFn: addFriend,
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
+        queryKey: [CURRENT_USER_QUERY_KEY],
+      });
+      queryClient.invalidateQueries({
         queryKey: [USER_FRIENDS_QUERY_KEY],
       });
       queryClient.invalidateQueries({
         queryKey: [FRIEND_TASKS_QUERY_KEY],
-      });
-      queryClient.invalidateQueries({
-        queryKey: [CURRENT_USER_QUERY_KEY],
       });
       options?.onSuccess?.(data, variables, context);
     },

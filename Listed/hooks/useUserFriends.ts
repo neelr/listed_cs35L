@@ -14,6 +14,5 @@ export const useUserFriends = (
     queryFn: async () => {
       return await getUserFriends(friends);
     },
-    enabled: !!friends.length,
   });
 };

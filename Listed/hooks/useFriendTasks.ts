@@ -14,6 +14,5 @@ export const useFriendTasks = (
     queryFn: async () => {
       return await getFriendTasks(friends);
     },
-    enabled: !!friends.length,
   });
 };

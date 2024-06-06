@@ -13,6 +13,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../routes/StackNavigator";
 import { useAddFriend } from "../hooks/useAddFriend";
 import { useRemoveFriend } from "../hooks/useRemoveFriend";
+import { useUserFriends } from "../hooks/useUserFriends";
 
 const { width } = Dimensions.get("window");
 
@@ -41,49 +42,55 @@ export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
 
   const navigation = useNavigation<UserViewNavigationProp>();
 
-  const isFriend = userData?.friends.includes(user.userId);
+  const [isFriend, setIsFriend] = React.useState(
+    userData?.friends.includes(user.userId)
+  );
 
   const handlePressUser = () => {
     navigation.navigate("UserDetail", { username: user.username });
   };
 
-  return userData?.userId != user.userId ? (
-    <TouchableOpacity
-      onPress={handlePressUser}
-      style={
-        isFriend ? styles.removeFriendContainer : styles.addFriendContainer
-      }
-    >
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.boldText}>{truncateText(user.username, 20)}</Text>
-          <Text style={styles.text}>
-            {mutualCount} Mutual{mutualCount === 1 ? "" : "s"}
-          </Text>
+  return (
+    userData?.userId != user.userId && (
+      <TouchableOpacity
+        onPress={handlePressUser}
+        style={
+          isFriend ? styles.removeFriendContainer : styles.addFriendContainer
+        }
+      >
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.boldText}>
+              {truncateText(user.username, 20)}
+            </Text>
+            <Text style={styles.text}>
+              {mutualCount} Mutual{mutualCount === 1 ? "" : "s"}
+            </Text>
+          </View>
+          {isFriend ? (
+            <TouchableOpacity
+              style={styles.buttonRemove}
+              onPress={() => {
+                removeFriend(user.userId);
+                setIsFriend(false);
+              }}
+            >
+              <Text style={styles.removeFriend}>Remove friend</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.buttonAdd}
+              onPress={() => {
+                addFriend(user.userId);
+                setIsFriend(true);
+              }}
+            >
+              <Text style={styles.addFriend}>Add friend</Text>
+            </TouchableOpacity>
+          )}
         </View>
-        {isFriend ? (
-          <TouchableOpacity
-            style={styles.buttonRemove}
-            onPress={() => {
-              removeFriend(user.userId);
-            }}
-          >
-            <Text style={styles.removeFriend}>Remove friend</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={styles.buttonAdd}
-            onPress={() => {
-              addFriend(user.userId);
-            }}
-          >
-            <Text style={styles.addFriend}>Add friend</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </TouchableOpacity>
-  ) : (
-    <></>
+      </TouchableOpacity>
+    )
   );
 };
 

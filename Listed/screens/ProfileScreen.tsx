@@ -29,7 +29,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
   const { data: userData } = useCurrentUser();
 
-  const {
+  let {
     data: friends,
     isLoading,
     error,
@@ -100,8 +100,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
       <View style={styles.profileContainer}>
         <Text style={styles.name}>{userData?.username}</Text>
         <View style={styles.followersContainer}>
-          <Text style={styles.followersCount}>{friends ? friends.length : 0}</Text>
-          <Text style={styles.followersLabel}>Friend{friends?.length != 1 ? "s" : ""}</Text>
+          <Text style={styles.followersCount}>
+            {friends ? friends.length : 0}
+          </Text>
+          <Text style={styles.followersLabel}>
+            Friend{friends?.length != 1 ? "s" : ""}
+          </Text>
         </View>
       </View>
       <View style={styles.separator} />
@@ -202,7 +206,7 @@ const styles = StyleSheet.create({
     width: width,
     justifyContent: "space-between",
     flexDirection: "row",
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   profileContainer: {
     alignItems: "center",
