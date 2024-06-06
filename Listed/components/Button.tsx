@@ -70,7 +70,7 @@ const baseStyles = StyleSheet.create({
 
   buttonText: {
     fontFamily: "InknutAntiqua_400Regular",
-    color: "#FFFFFF",
+    color: "#F8F9FA",
     //fontWeight : "bold",
     fontSize: screenWidth * 0.045,
   },

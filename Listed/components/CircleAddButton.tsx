@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
 
   buttonText: {
     fontFamily: "InknutAntiqua_600Semibold",
-    color: "#FFFFFF",
+    color: "#F8F9FA",
     fontSize: screenWidth * 0.045,
     textAlign: "center", // Ensure text is centered
   },

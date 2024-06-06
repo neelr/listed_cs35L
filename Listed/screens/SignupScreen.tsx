@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, StyleSheet, View, Image, Text } from "react-native";
+import { Dimensions, StyleSheet, View, Image, Text, ScrollView } from "react-native";
 import { TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -64,111 +64,118 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
-
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={signup}
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        keyboardShouldPersistTaps="handled" // Ensure taps outside of TextInput dismiss the keyboard
       >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          setFieldTouched,
-          values,
-          errors,
-          touched,
-        }) => (
-          <View style={{ alignItems: "center" }}>
-            <TextInput
-              editable
-              value={values.username}
-              onChangeText={handleChange("username")}
-              onBlur={handleBlur("username")}
-              style={[styles.input, { marginTop: height * 0.04 }]}
-              placeholder="Username"
-            />
-            <WarningText message={errors.username} visible={touched.username} />
+        <Text style={styles.title}>Sign Up</Text>
 
-            <TextInput
-              editable
-              value={values.email}
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              style={[styles.input, { marginTop: height * 0.04 }]}
-              placeholder="Email"
-            />
-            <WarningText message={errors.email} visible={touched.email} />
-
-            <View style={styles.passwordContainer}>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={signup}
+        >
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            setFieldTouched,
+            values,
+            errors,
+            touched,
+          }) => (
+            <View style={{ alignItems: "center" }}>
               <TextInput
                 editable
-                value={values.password}
-                onChangeText={handleChange("password")}
-                onBlur={handleBlur("password")}
-                onFocus={() => setFieldTouched("password")}
-                style={[
-                  styles.input,
-                  { paddingRight: width * 0.06, marginTop: height * 0.04 },
-                ]}
-                secureTextEntry={!showPassword}
-                placeholder="Password"
-                placeholderTextColor="#aaa"
+                value={values.username}
+                onChangeText={handleChange("username")}
+                onBlur={handleBlur("username")}
+                style={[styles.input, { marginTop: height * 0.04 }]}
+                placeholder="Username"
               />
-              <Ionicons
-                name={showPassword ? "eye-outline" : "eye-off-outline"}
-                size={width * 0.06}
-                color="#aaa"
-                style={{marginLeft: width * -0.06, marginTop: height * 0.04 }}
-                onPress={() => setShowPassword(!showPassword)}
-              />
-            </View>
-            <WarningText message={errors.password} visible={touched.password} />
+              <WarningText message={errors.username} visible={touched.username} />
 
-            <View style={styles.passwordContainer}>
               <TextInput
                 editable
-                value={values.confirmPassword}
-                onChangeText={handleChange("confirmPassword")}
-                onBlur={handleBlur("confirmPassword")}
-                style={[
-                  styles.input,
-                  { paddingRight: width * 0.06, marginTop: height * 0.04 },
-                ]}
-                secureTextEntry={!showConfirmPassword}
-                placeholder="Confirm Password"
-                placeholderTextColor="#aaa"
+                value={values.email}
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                style={[styles.input, { marginTop: height * 0.04 }]}
+                placeholder="Email"
               />
-              <Ionicons
-                name={showConfirmPassword ? "eye-outline" : "eye-off-outline"}
-                size={width * 0.06}
-                color="#aaa"
-                style={{ marginLeft: -width * 0.06, marginTop: height * 0.04 }}
-                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              <WarningText message={errors.email} visible={touched.email} />
+
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  editable
+                  value={values.password}
+                  onChangeText={handleChange("password")}
+                  onBlur={handleBlur("password")}
+                  onFocus={() => setFieldTouched("password")}
+                  style={[
+                    styles.input,
+                    { paddingRight: width * 0.06, marginTop: height * 0.04 },
+                  ]}
+                  secureTextEntry={!showPassword}
+                  placeholder="Password"
+                  placeholderTextColor="#aaa"
+                />
+                <Ionicons
+                  name={showPassword ? "eye-outline" : "eye-off-outline"}
+                  size={width * 0.06}
+                  color="#aaa"
+                  style={{ marginLeft: width * -0.06, marginTop: height * 0.04 }}
+                  onPress={() => setShowPassword(!showPassword)}
+                />
+              </View>
+              <WarningText message={errors.password} visible={touched.password} />
+
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  editable
+                  value={values.confirmPassword}
+                  onChangeText={handleChange("confirmPassword")}
+                  onBlur={handleBlur("confirmPassword")}
+                  style={[
+                    styles.input,
+                    { paddingRight: width * 0.06, marginTop: height * 0.04 },
+                  ]}
+                  secureTextEntry={!showConfirmPassword}
+                  placeholder="Confirm Password"
+                  placeholderTextColor="#aaa"
+                />
+                <Ionicons
+                  name={showConfirmPassword ? "eye-outline" : "eye-off-outline"}
+                  size={width * 0.06}
+                  color="#aaa"
+                  style={{ marginLeft: -width * 0.06, marginTop: height * 0.04 }}
+                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                />
+              </View>
+
+              <WarningText
+                message={errors.confirmPassword}
+                visible={touched.confirmPassword}
               />
+
+              <HomeButton
+                title="Sign up"
+                onPress={() => {
+                  handleSubmit();
+                }}
+                customStyles={{ marginTop: height * 0.04 }}
+              />
+
+              <WarningText message={signupError} visible={!!signupError} />
             </View>
-
-            <WarningText
-              message={errors.confirmPassword}
-              visible={touched.confirmPassword}
-            />
-
-            <HomeButton
-              title="Sign up"
-              onPress={() => {
-                handleSubmit();
-              }}
-              customStyles={{ marginTop: height * 0.04 }}
-            />
-
-            <WarningText message={signupError} visible={!!signupError} />
-          </View>
-        )}
-      </Formik>
-
-      <Spacer height={height * 0.2} />
-
+          )}
+        </Formik>
+        <Spacer height={height * 0.2} />
+      </ScrollView>
       <Image source={image1} style={styles.image} />
     </SafeAreaView>
   );
@@ -176,25 +183,19 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#F8F9FA",
-    alignItems: "center",
     justifyContent: "center",
   },
-
   image: {
     position: "absolute",
-    bottom: -0.1 * height,
+    bottom: -0.24 * height,
     zIndex: -1,
     width: width * 1,
   },
-
   title: {
     fontFamily: "InknutAntiqua_400Regular",
     fontSize: width / 10.0,
     color: "#3B4552",
   },
-
   input: {
     height: height * 0.05,
     width: width * 0.6,
@@ -206,13 +207,11 @@ const styles = StyleSheet.create({
     color: "#3B4552",
     textAlignVertical: "center",
   },
-
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
-
   icon: {
     marginLeft: -width * 0.07,
   },

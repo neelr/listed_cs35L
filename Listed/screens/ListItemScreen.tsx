@@ -108,7 +108,6 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8F9FA",
     alignItems: "center",
     justifyContent: "center",
     paddingTop: 20,

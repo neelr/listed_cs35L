@@ -103,7 +103,7 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
             onSubmitEditing={handleDismissKeyboard}
             style={[
               styles.input,
-              { marginTop: height * 0.02, height: height * 0.05 },
+              { fontSize: height * 0.021, marginTop: height * 0.02, height: height * 0.05 },
             ]}
             placeholder="Task Name"
             placeholderTextColor="#aaa"
@@ -115,8 +115,8 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
             onChangeText={(description) => onChangeDescription(description)}
             onSubmitEditing={handleDismissKeyboard}
             style={[
-              styles.descriptionInput,
-              { marginTop: height * 0.02, height: height * 0.15 },
+              styles.input,
+              { fontSize: height * 0.016, marginTop: height * 0.02, height: height * 0.15 },
             ]}
             placeholder="Description"
             placeholderTextColor="#aaa"
@@ -232,18 +232,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#DDDDDD",
     borderWidth: 0,
     borderRadius: 10,
-    fontSize: height * 0.021,
-    fontFamily: "InknutAntiqua_400Regular",
-    paddingLeft: width * 0.04,
-    paddingRight: width * 0.04,
-    color: "#3B4552",
-  },
-  descriptionInput: {
-    width: width * 0.6,
-    backgroundColor: "#DDDDDD",
-    borderWidth: 0,
-    borderRadius: 10,
-    fontSize: height * 0.016,
     fontFamily: "InknutAntiqua_400Regular",
     paddingLeft: width * 0.04,
     paddingRight: width * 0.04,

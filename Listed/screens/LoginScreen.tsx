@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, StyleSheet, View, Image, Text } from "react-native";
+import { Dimensions, StyleSheet, View, Image, Text, ScrollView } from "react-native";
 import { TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -14,6 +14,7 @@ import WarningText from "../components/WarningText";
 import { useLogin } from "../hooks/useLogin";
 import { ApiError, LoginResponse } from "../types/authTypes";
 import { AxiosError } from "axios";
+import Spacer from "../components/Spacer";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
@@ -46,91 +47,101 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Log In</Text>
-
-      <Formik
-        initialValues={{
-          email: "crazyguy+5@gmail.com",
-          password: "CrazyWacky123$",
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          alignItems: "center",
+          justifyContent: "center",
         }}
-        validationSchema={validationSchema}
-        onSubmit={login}
+        keyboardShouldPersistTaps="handled" // Ensure taps outside of TextInput dismiss the keyboard
       >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-        }) => (
-          <View style={{ alignItems: "center" }}>
-            <TextInput
-              editable
-              value={values.email}
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              style={[
-                styles.input,
-                { marginTop: height * 0.05, paddingRight: width * 0.04 },
-              ]}
-              placeholder="Email"
-              placeholderTextColor="#aaa"
-            />
-            <WarningText message={errors.email} visible={touched.email} />
-            <View style={styles.passwordContainer}>
+        <Text style={styles.title}>Log In</Text>
+
+        <Formik
+          initialValues={{
+            email: "crazyguy+5@gmail.com",
+            password: "CrazyWacky123$",
+          }}
+          validationSchema={validationSchema}
+          onSubmit={login}
+        >
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => (
+            <View style={{ alignItems: "center" }}>
               <TextInput
                 editable
-                value={values.password}
-                onChangeText={handleChange("password")}
-                onBlur={handleBlur("password")}
+                value={values.email}
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
                 style={[
                   styles.input,
-                  { paddingRight: width * 0.11, marginTop: height * 0.03 },
+                  { marginTop: height * 0.05, paddingRight: width * 0.04 },
                 ]}
-                secureTextEntry={!showPassword}
-                placeholder="Password"
+                placeholder="Email"
                 placeholderTextColor="#aaa"
               />
+              <WarningText message={errors.email} visible={touched.email} />
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  editable
+                  value={values.password}
+                  onChangeText={handleChange("password")}
+                  onBlur={handleBlur("password")}
+                  style={[
+                    styles.input,
+                    { paddingRight: width * 0.11, marginTop: height * 0.03 },
+                  ]}
+                  secureTextEntry={!showPassword}
+                  placeholder="Password"
+                  placeholderTextColor="#aaa"
+                />
 
-              <Ionicons
-                name={showPassword ? "eye-outline" : "eye-off-outline"}
-                size={width * 0.06}
-                color="#aaa"
-                style={{ marginLeft: -width * 0.06, marginTop: height * 0.03 }}
-                onPress={() => setShowPassword(!showPassword)}
+                <Ionicons
+                  name={showPassword ? "eye-outline" : "eye-off-outline"}
+                  size={width * 0.06}
+                  color="#aaa"
+                  style={{ marginLeft: -width * 0.06, marginTop: height * 0.03 }}
+                  onPress={() => setShowPassword(!showPassword)}
+                />
+              </View>
+              <WarningText message={errors.password} visible={touched.password} />
+              <HomeButton
+                title="Log in"
+                onPress={() => {
+                  handleSubmit();
+                }}
+                customStyles={{ marginTop: height * 0.03 }}
               />
+              <WarningText message={loginError} visible={!!loginError} />
             </View>
-            <WarningText message={errors.password} visible={touched.password} />
-            <HomeButton
-              title="Log in"
-              onPress={() => {
-                handleSubmit();
-              }}
-              customStyles={{ marginTop: height * 0.03 }}
-            />
-            <WarningText message={loginError} visible={!!loginError} />
-          </View>
-        )}
-      </Formik>
-
+          )}
+        </Formik>
+        <Spacer height={height * 0.2} />
+      </ScrollView>
       <Image
         source={require("../assets/circles lol.png")}
         style={styles.image}
       />
+
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#F8F9FA",
-    alignItems: "center",
+    //backgroundColor: "#F8F9FA",
     justifyContent: "center",
   },
   image: {
-    bottom: -0.1 * height,
+    position: "absolute",
+    bottom: -0.37*height,
+    zIndex: -1,
     width: width * 1,
   },
   title: {

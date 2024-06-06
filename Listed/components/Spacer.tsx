@@ -7,7 +7,7 @@ interface SpacerProps {
 }
 
 const Spacer: React.FC<SpacerProps> = ({ height, width }) => {
-  return <View style={{ height, width }} />;
+  return <View style={{ height, width}} />;
 };
 
 export default Spacer;
