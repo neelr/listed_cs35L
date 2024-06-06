@@ -110,7 +110,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 onFocus={() => setFieldTouched("password")}
                 style={[
                   styles.input,
-                  { paddingRight: width * 0.07, marginTop: height * 0.04 },
+                  { paddingRight: width * 0.06, marginTop: height * 0.04 },
                 ]}
                 secureTextEntry={!showPassword}
                 placeholder="Password"
@@ -118,9 +118,9 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
               />
               <Ionicons
                 name={showPassword ? "eye-outline" : "eye-off-outline"}
-                size={24}
+                size={width * 0.06}
                 color="#aaa"
-                style={[styles.icon, { marginTop: height * 0.04 }]}
+                style={{marginLeft: width * -0.06, marginTop: height * 0.04 }}
                 onPress={() => setShowPassword(!showPassword)}
               />
             </View>
@@ -134,7 +134,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 onBlur={handleBlur("confirmPassword")}
                 style={[
                   styles.input,
-                  { paddingRight: width * 0.07, marginTop: height * 0.04 },
+                  { paddingRight: width * 0.06, marginTop: height * 0.04 },
                 ]}
                 secureTextEntry={!showConfirmPassword}
                 placeholder="Confirm Password"
@@ -142,9 +142,9 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
               />
               <Ionicons
                 name={showConfirmPassword ? "eye-outline" : "eye-off-outline"}
-                size={24}
+                size={width * 0.06}
                 color="#aaa"
-                style={[styles.icon, { marginTop: height * 0.04 }]}
+                style={{ marginLeft: -width * 0.06, marginTop: height * 0.04 }}
                 onPress={() => setShowConfirmPassword(!showConfirmPassword)}
               />
             </View>
@@ -193,7 +193,6 @@ const styles = StyleSheet.create({
     fontFamily: "InknutAntiqua_400Regular",
     fontSize: width / 10.0,
     color: "#3B4552",
-    //fontWeight : "bold",
   },
 
   input: {
@@ -212,7 +211,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: '#f3f3f3',
   },
 
   icon: {

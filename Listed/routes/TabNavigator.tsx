@@ -37,7 +37,8 @@ export const TabNavigator: React.FC = () => (
       tabBarShowLabel: false,
       tabBarStyle: {
         height: height * 0.085,
-        marginTop: height * 0.001
+        marginTop: height * 0.001,
+        backgroundColor: "#F8F9FA"
       }
     })}
   >

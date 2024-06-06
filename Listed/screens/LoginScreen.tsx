@@ -95,9 +95,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
               <Ionicons
                 name={showPassword ? "eye-outline" : "eye-off-outline"}
-                size={24}
+                size={width * 0.06}
                 color="#aaa"
-                style={[styles.icon, { marginTop: height * 0.03 }]}
+                style={{ marginLeft: -width * 0.06, marginTop: height * 0.03 }}
                 onPress={() => setShowPassword(!showPassword)}
               />
             </View>
@@ -128,10 +128,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8F9FA",
     alignItems: "center",
     justifyContent: "center",
-  },
-  mainView: {
-    alignItems: "center",
-    //justifyContent: "center",
   },
   image: {
     bottom: -0.1 * height,
