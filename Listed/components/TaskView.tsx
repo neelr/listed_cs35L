@@ -158,7 +158,7 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
               Do by:
             </Text>
             <Text style={[isTaskOverdue(task.completeBy)
-              ? styles.overDueText : styles.text, { paddingLeft: 6 }]}>
+              ? [styles.text, {color: "#FF0000", paddingLeft: 6}] : [styles.text, { paddingLeft: 6 }]]}>
               {formatDateString(task.completeBy)}
             </Text>
           </View>
@@ -202,14 +202,6 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     textAlign: "left",
     alignSelf: "stretch",
-  },
-  overDueText: {
-    fontFamily: "InknutAntiqua_400Regular",
-    color: "#FF0000",
-    marginBottom: 0,
-    textAlign: "left",
-    alignSelf: "stretch",
-    paddingLeft: 10,
   },
   boldText: {
     fontFamily: "InknutAntiqua_700Bold",
