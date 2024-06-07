@@ -33,6 +33,7 @@ import { TaskView } from "../components/TaskView";
 import { UserView } from "../components/UserView";
 import {
   getTasksWithFriendInfo,
+  getUserIdsFromTasks,
   sortByDateAndCompleted,
 } from "../utils/sortTasks";
 import { TaskWithFriendInfo } from "../types/taskTypes";
@@ -50,11 +51,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
   const { data: currentUser } = useCurrentUser();
 
-  const { data: friends, isLoading } = useUserFriends(
-    currentUser?.friends || []
-  );
-
   const { data: friendTasksData } = useFriendTasks(currentUser?.friends || []);
+  const otherUserIds = getUserIdsFromTasks(friendTasksData || []);
+
+  const { data: friends, isLoading } = useUserFriends(otherUserIds);
 
   const friendTasks = sortByDateAndCompleted(
     getTasksWithFriendInfo(currentUser, friends, friendTasksData, true)

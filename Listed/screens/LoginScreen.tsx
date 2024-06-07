@@ -49,11 +49,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().required("Password is required"), // ADDED 
-    // password: PASSWORD_SCHEMA,
+    password: Yup.string().required("Password is required"), // ADDED
   });
 
-  const handleFormSubmit = (values: { email: string; password: string }) => {       // Added to pass all emails as lower
+  const handleFormSubmit = (values: { email: string; password: string }) => {
+    // Added to pass all emails as lower
     const transformedValues = {
       ...values,
       email: values.email.toLowerCase(),
@@ -79,7 +79,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             password: "",
           }}
           validationSchema={validationSchema}
-          onSubmit={handleFormSubmit}     // updated from "login" to "handleFormSubmit"
+          onSubmit={handleFormSubmit} // updated from "login" to "handleFormSubmit"
         >
           {({
             handleChange,

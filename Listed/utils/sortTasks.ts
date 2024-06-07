@@ -24,6 +24,19 @@ export const getTasksWithFriendInfo = (
 
   return friendTasks;
 };
+export const getUserIdsFromTasks = (
+  tasksData: Task[] | undefined
+): string[] => {
+  let friendsData: string[] = [];
+  for (const task of tasksData || []) {
+    for (const userId of task.userIds) {
+      if (!friendsData.includes(userId)) {
+        friendsData.push(userId);
+      }
+    }
+  }
+  return friendsData;
+};
 
 export const sortByDate = (
   tasks: TaskWithFriendInfo[]

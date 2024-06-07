@@ -19,7 +19,11 @@ import { TabParamList } from "../routes/TabNavigator";
 import { RootStackParamList } from "../routes/StackNavigator";
 import { useUserFriends } from "../hooks/useUserFriends";
 import { useCurrentUser } from "../hooks/useCurrentUser";
-import { getTasksWithFriendInfo, sortByDate } from "../utils/sortTasks";
+import {
+  getTasksWithFriendInfo,
+  getUserIdsFromTasks,
+  sortByDate,
+} from "../utils/sortTasks";
 
 type ListItemScreenProps = NativeStackScreenProps<
   TabParamList & RootStackParamList,
@@ -32,7 +36,10 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
   const { data: currentUser } = useCurrentUser();
 
   const { data: tasksData, isLoading, error } = useUserTasks();
-  const { data: friends } = useUserFriends(currentUser?.friends || []);
+
+  const otherUserIds = getUserIdsFromTasks(tasksData || []);
+
+  const { data: friends } = useUserFriends(otherUserIds || []);
 
   let tasksRaw: TaskWithFriendInfo[] = getTasksWithFriendInfo(
     currentUser,

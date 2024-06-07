@@ -20,6 +20,7 @@ import { TaskView } from "../components/TaskView";
 import { Task } from "../types/taskTypes";
 import {
   getTasksWithFriendInfo,
+  getUserIdsFromTasks,
   sortByDateAndCompleted,
 } from "../utils/sortTasks";
 
@@ -39,9 +40,11 @@ const UserDetailScreen: React.FC<UserDetailScreenProps> = ({
   const { data: tasksData, isLoading: isLoadingTasks } = useFriendTasks([
     user.userId,
   ]);
-  const { data: friends, isLoading: isLoadingFriends } = useUserFriends(
-    user.friends
-  );
+
+  const otherUserIds = getUserIdsFromTasks(tasksData || []);
+
+  const { data: friends, isLoading: isLoadingFriends } =
+    useUserFriends(otherUserIds);
 
   const tasks = sortByDateAndCompleted(
     getTasksWithFriendInfo(user, friends, tasksData, true)
