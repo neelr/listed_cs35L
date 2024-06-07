@@ -1,5 +1,12 @@
 import React from "react";
-import { Dimensions, StyleSheet, View, Image, Text, ScrollView } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  ScrollView,
+} from "react-native";
 import { TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -27,7 +34,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const onSuccessfulLogin = (data: LoginResponse) => {
     navigation.reset({
       index: 0,
-      routes: [{ name: "LandingPage" }],
+      routes: [{ name: "LandingPage", params: { currentUser: data } }],
     });
   };
 
@@ -106,11 +113,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   name={showPassword ? "eye-outline" : "eye-off-outline"}
                   size={width * 0.06}
                   color="#aaa"
-                  style={{ marginLeft: -width * 0.06, marginTop: height * 0.03 }}
+                  style={{
+                    marginLeft: -width * 0.06,
+                    marginTop: height * 0.03,
+                  }}
                   onPress={() => setShowPassword(!showPassword)}
                 />
               </View>
-              <WarningText message={errors.password} visible={touched.password} />
+              <WarningText
+                message={errors.password}
+                visible={touched.password}
+              />
               <HomeButton
                 title="Log in"
                 onPress={() => {
@@ -128,7 +141,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         source={require("../assets/circles lol.png")}
         style={styles.image}
       />
-
     </SafeAreaView>
   );
 };
@@ -140,7 +152,7 @@ const styles = StyleSheet.create({
   },
   image: {
     position: "absolute",
-    bottom: -0.37*height,
+    bottom: -0.37 * height,
     zIndex: -1,
     width: width * 1,
   },

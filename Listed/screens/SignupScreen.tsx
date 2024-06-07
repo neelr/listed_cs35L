@@ -1,5 +1,12 @@
 import React from "react";
-import { Dimensions, StyleSheet, View, Image, Text, ScrollView } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  ScrollView,
+} from "react-native";
 import { TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -29,7 +36,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
   const onSuccessfulSignup = (data: LoginResponse) => {
     navigation.reset({
       index: 0,
-      routes: [{ name: "LandingPage" }],
+      routes: [{ name: "LandingPage", params: { currentUser: data } }],
     });
   };
 
@@ -97,7 +104,10 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 style={[styles.input, { marginTop: height * 0.04 }]}
                 placeholder="Username"
               />
-              <WarningText message={errors.username} visible={touched.username} />
+              <WarningText
+                message={errors.username}
+                visible={touched.username}
+              />
 
               <TextInput
                 editable
@@ -128,11 +138,17 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                   name={showPassword ? "eye-outline" : "eye-off-outline"}
                   size={width * 0.06}
                   color="#aaa"
-                  style={{ marginLeft: width * -0.06, marginTop: height * 0.04 }}
+                  style={{
+                    marginLeft: width * -0.06,
+                    marginTop: height * 0.04,
+                  }}
                   onPress={() => setShowPassword(!showPassword)}
                 />
               </View>
-              <WarningText message={errors.password} visible={touched.password} />
+              <WarningText
+                message={errors.password}
+                visible={touched.password}
+              />
 
               <View style={styles.passwordContainer}>
                 <TextInput
@@ -152,7 +168,10 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                   name={showConfirmPassword ? "eye-outline" : "eye-off-outline"}
                   size={width * 0.06}
                   color="#aaa"
-                  style={{ marginLeft: -width * 0.06, marginTop: height * 0.04 }}
+                  style={{
+                    marginLeft: -width * 0.06,
+                    marginTop: height * 0.04,
+                  }}
                   onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                 />
               </View>

@@ -9,16 +9,19 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../routes/StackNavigator";
 import { TaskView } from "../components/TaskView";
 import CircleIconButton from "../components/CircleAddButton";
 import { useUserTasks } from "../hooks/useUserTasks";
 import WarningMessage from "../components/WarningText";
 import { AntDesign } from "@expo/vector-icons";
 import { Task } from "../types/taskTypes";
-import { USER_TASKS_QUERY_KEY } from "../hooks/useUserTasks";
+import { TabParamList } from "../routes/TabNavigator";
+import { RootStackParamList } from "../routes/StackNavigator";
 
-type ListItemScreenProps = NativeStackScreenProps<RootStackParamList, "Tasks">;
+type ListItemScreenProps = NativeStackScreenProps<
+  TabParamList & RootStackParamList,
+  "Tasks"
+>;
 
 const { width, height } = Dimensions.get("window");
 

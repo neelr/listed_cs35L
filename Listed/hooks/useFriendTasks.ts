@@ -6,11 +6,11 @@ export const FRIEND_TASKS_QUERY_KEY = "friendTasks";
 
 export const useFriendTasks = (
   friends: string[],
-  options?: UseQueryOptions<Task[]>
+  options?: Partial<UseQueryOptions<Task[]>>
 ) => {
   return useQuery<Task[]>({
     ...options,
-    queryKey: [FRIEND_TASKS_QUERY_KEY],
+    queryKey: [FRIEND_TASKS_QUERY_KEY, ...friends],
     queryFn: async () => {
       return await getFriendTasks(friends);
     },

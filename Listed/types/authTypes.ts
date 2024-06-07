@@ -29,3 +29,7 @@ export interface ApiError {
   error: string;
   message?: string;
 }
+
+export interface AuthenticatedPageProps {
+  currentUser: UserPrivate;
+}

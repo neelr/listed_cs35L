@@ -11,13 +11,15 @@ import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../routes/StackNavigator";
-import { useAddFriend } from "../hooks/useAddFriend";
+import { useAddOrRemoveFriend } from "../hooks/useAddOrRemoveFriend";
 import { useRemoveFriend } from "../hooks/useRemoveFriend";
 import { useUserFriends } from "../hooks/useUserFriends";
+import { UserPrivate } from "../types/authTypes";
 
 const { width } = Dimensions.get("window");
 
 export interface UserProps {
+  userData: UserPrivate;
   user: User;
   mutualCount: number;
 }
@@ -34,20 +36,19 @@ type UserViewNavigationProp = StackNavigationProp<
   "UserDetail"
 >;
 
-export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
-  const { data: userData } = useCurrentUser();
+export const UserView: React.FC<UserProps> = ({
+  userData,
+  user,
+  mutualCount,
+}) => {
+  const isFriend = userData?.friends.includes(user.userId);
 
-  const { mutate: addFriend } = useAddFriend();
-  const { mutate: removeFriend } = useRemoveFriend();
+  const { mutate: addOrRemoveFriend } = useAddOrRemoveFriend(isFriend);
 
   const navigation = useNavigation<UserViewNavigationProp>();
 
-  const [isFriend, setIsFriend] = React.useState(
-    userData?.friends.includes(user.userId)
-  );
-
   const handlePressUser = () => {
-    navigation.navigate("UserDetail", { username: user.username });
+    navigation.navigate("UserDetail", { user });
   };
 
   return (
@@ -71,8 +72,7 @@ export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
             <TouchableOpacity
               style={styles.buttonRemove}
               onPress={() => {
-                removeFriend(user.userId);
-                setIsFriend(false);
+                addOrRemoveFriend(user.userId);
               }}
             >
               <Text style={styles.removeFriend}>Remove Friend</Text>
@@ -81,8 +81,7 @@ export const UserView: React.FC<UserProps> = ({ user, mutualCount }) => {
             <TouchableOpacity
               style={styles.buttonAdd}
               onPress={() => {
-                addFriend(user.userId);
-                setIsFriend(true);
+                addOrRemoveFriend(user.userId);
               }}
             >
               <Text style={styles.addFriend}>Add Friend</Text>

@@ -12,20 +12,19 @@ import { useAuthToken } from "../hooks/useAuthToken";
 import LoadingScreen from "../screens/LoadingScreen";
 import UserDetailScreen from "../screens/UserDetailScreen"; // Import UserDetailScreen
 import { Task } from "../types/taskTypes";
+import { User } from "../types/userTypes";
+import { AuthenticatedPageProps } from "../types/authTypes";
 
 export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
-  LandingPage: undefined;
-  Profile: undefined;
-  Tasks: undefined;
-  Search: undefined;
+  LandingPage: AuthenticatedPageProps;
   Signup: undefined;
   TaskModal: {
     task?: Task;
   };
   UserDetail: {
-    username: string;
+    user: User;
   };
 };
 
@@ -68,7 +67,7 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="UserDetail"
         component={UserDetailScreen}
-        options={{ headerShown: false, presentation: "modal"}}
+        options={{ headerShown: false, presentation: "modal" }}
       />
     </Stack.Navigator>
   );

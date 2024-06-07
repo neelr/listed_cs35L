@@ -6,11 +6,11 @@ export const USER_FRIENDS_QUERY_KEY = "userFriends";
 
 export const useUserFriends = (
   friends: string[],
-  options?: UseQueryOptions<User[]>
+  options?: Partial<UseQueryOptions<User[]>>
 ) => {
   return useQuery<User[]>({
     ...options,
-    queryKey: [USER_FRIENDS_QUERY_KEY],
+    queryKey: [USER_FRIENDS_QUERY_KEY, ...friends],
     queryFn: async () => {
       return await getUserFriends(friends);
     },

@@ -25,25 +25,31 @@ import {
   FRIEND_TASKS_QUERY_KEY,
   useFriendTasks,
 } from "../hooks/useFriendTasks";
-import { RootStackParamList } from "../routes/StackNavigator";
 import { useDeleteUser } from "../hooks/useDeleteUser";
 import { useFocusEffect } from "@react-navigation/native";
+import { TabParamList } from "../routes/TabNavigator";
+import { RootStackParamList } from "../routes/StackNavigator";
 
-type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Profile">;
+type ProfileScreenProps = NativeStackScreenProps<
+  TabParamList & RootStackParamList,
+  "Profile"
+>;
 
 const { width, height } = Dimensions.get("window");
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
+const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation, route }) => {
   const [activeTab, setActiveTab] = useState<"Tasks" | "Followers">("Tasks");
   const queryClient = useQueryClient();
 
-  const { data: userData } = useCurrentUser();
+  const { data: currentUser } = useCurrentUser();
 
-  let {
-    data: friends,
-    isLoading,
-    error,
-  } = useUserFriends(userData?.friends || []);
+  const { data: friends, isLoading } = useUserFriends(
+    currentUser?.friends || []
+  );
+
+  const { data: friendTasks, isLoading: friendTasksLoading } = useFriendTasks(
+    currentUser?.friends || []
+  );
 
   const onLogoutOrDelete = async () => {
     queryClient.removeQueries();
@@ -64,10 +70,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
       queryClient.invalidateQueries({ queryKey: [USER_FRIENDS_QUERY_KEY] });
       queryClient.invalidateQueries({ queryKey: [FRIEND_TASKS_QUERY_KEY] });
     }, [USER_FRIENDS_QUERY_KEY, FRIEND_TASKS_QUERY_KEY, CURRENT_USER_QUERY_KEY])
-  );
-
-  const { data: friendTasks, isLoading: friendTasksLoading } = useFriendTasks(
-    userData?.friends || []
   );
 
   const handleLogout = () => {
@@ -116,7 +118,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.profileContainer}>
-        <Text style={styles.name}>{userData?.username}</Text>
+        <Text style={styles.name}>{currentUser?.username}</Text>
         <View style={styles.followersContainer}>
           <Text style={styles.followersCount}>
             {friends ? friends.length : 0}
@@ -169,7 +171,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
           ) : (
             <>
               {friendTasks?.length === 0 && (
-                <Text style={{ fontFamily: "InknutAntiqua_500Medium", color: "#3B4552" }}>
+                <Text
+                  style={{
+                    fontFamily: "InknutAntiqua_500Medium",
+                    color: "#3B4552",
+                  }}
+                >
                   No tasks yet!
                 </Text>
               )}
@@ -196,7 +203,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         ) : (
           <>
             {friends?.length === 0 && (
-              <Text style={{ fontFamily: "InknutAntiqua_500Medium", color: "#3B4552"}}>
+              <Text
+                style={{
+                  fontFamily: "InknutAntiqua_500Medium",
+                  color: "#3B4552",
+                }}
+              >
                 No friends yet!
               </Text>
             )}
