@@ -130,7 +130,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         <Text style={styles.name}>{currentUser?.username}</Text>
         <View style={styles.followersContainer}>
           <Text style={styles.followersCount}>
-            {friends ? friends.length : 0}
+            {currentUser?.friends ? currentUser.friends.length : 0}
           </Text>
           <Text style={styles.followersLabel}>
             Friend{friends?.length != 1 ? "s" : ""}
