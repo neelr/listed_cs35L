@@ -28,7 +28,7 @@ export const getUserIdsFromTasksAndFriends = (
   tasksData: Task[] | undefined,
   friendIds?: string[]
 ): string[] => {
-  let friendsData: string[] = friendIds || [];
+  let friendsData: string[] = [...(friendIds || [])] || [];
   for (const task of tasksData || []) {
     for (const userId of task.userIds) {
       if (!friendsData.includes(userId)) {
