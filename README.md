@@ -1,15 +1,15 @@
-# Listed
-A _**; DROP TABLE Group Names**_ production.
+# <image src="Listed/assets/appicon.png" width=300 height=300>
+# A _**; DROP TABLE Group Names**_ production.
 
 ## Installation Instructions
 ### Through Git Repository
 #### NOTE: Installing this app is **FAR** simpler using the Expo Go app than with a simulator.
-The repo will visibly contain a directory called _**Listed**_, a directory called _**server**_, a .gitignore file, and this README file.
+The repo will contain a directory called _**Listed**_, a directory called _**server**_, a .gitignore file, and this README file, as well as the expected .git directory.
 
 After cloning the repository, and assuming your current working directory is the repository folder:  
 1. Put the provided *.env* file (given in the submission) in the server directory.
 2. Run the following commands in sequence, assuming your current working directory is the repository folder:
-```bash
+```
 cd server
 npm install
 cd ../Listed
