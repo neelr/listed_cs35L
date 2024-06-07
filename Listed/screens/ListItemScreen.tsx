@@ -14,9 +14,11 @@ import CircleIconButton from "../components/CircleAddButton";
 import { useUserTasks } from "../hooks/useUserTasks";
 import WarningMessage from "../components/WarningText";
 import { AntDesign } from "@expo/vector-icons";
-import { Task } from "../types/taskTypes";
+import { Task, TaskWithFriendInfo } from "../types/taskTypes";
 import { TabParamList } from "../routes/TabNavigator";
 import { RootStackParamList } from "../routes/StackNavigator";
+import { useUserFriends } from "../hooks/useUserFriends";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 type ListItemScreenProps = NativeStackScreenProps<
   TabParamList & RootStackParamList,
@@ -26,13 +28,17 @@ type ListItemScreenProps = NativeStackScreenProps<
 const { width, height } = Dimensions.get("window");
 
 const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
-  const { data: tasksRaw, isLoading, error } = useUserTasks();
+  const { data: currentUser } = useCurrentUser();
+
+  const { data: tasksData, isLoading, error } = useUserTasks();
+  const { data: friends } = useUserFriends(currentUser?.friends || []);
+
   const [showCompleted, setShowCompleted] = useState(true); // Local boolean state
 
-  const sortByDate = (tasks: Task[]): Task[] => {
+  const sortByDate = (tasks: TaskWithFriendInfo[]): TaskWithFriendInfo[] => {
     return tasks.slice().sort((a, b) => {
-      const dateA = new Date(a.completeBy).getTime();
-      const dateB = new Date(b.completeBy).getTime();
+      const dateA = new Date(a.task.completeBy).getTime();
+      const dateB = new Date(b.task.completeBy).getTime();
       if (isNaN(dateA) || isNaN(dateB)) {
         return 0;
       }
@@ -40,11 +46,20 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
     });
   };
 
+  let tasksRaw: TaskWithFriendInfo[] = [];
+  for (const task of tasksData || []) {
+    const friendNames = task.userIds.map((userId) => {
+      if (currentUser?.userId == userId) return currentUser?.username || "";
+      return friends?.find((x) => x.userId == userId)?.username || "";
+    });
+    tasksRaw.push({ task, friendNames });
+  }
+
   const tasks = sortByDate(
-    tasksRaw?.filter?.((tasksRaw) => !tasksRaw.completed) || []
+    tasksRaw.filter?.((tasksRaw) => !tasksRaw.task.completed) || []
   );
   const tasksComplete = sortByDate(
-    tasksRaw?.filter?.((tasksRaw) => tasksRaw.completed) || []
+    tasksRaw?.filter?.((tasksRaw) => tasksRaw.task.completed) || []
   );
 
   return (
@@ -59,15 +74,31 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
           )}
           <FlatList
             data={tasks} // Passed tasks state to FlatList
-            keyExtractor={(item) => item.taskId} // Set key extractor
-            renderItem={(item) => (
-              <TaskView task={item.item} navigation={navigation} />
+            keyExtractor={(item) => item.task.taskId} // Set key extractor
+            renderItem={({ item }) => (
+              <TaskView
+                task={item.task}
+                navigation={navigation}
+                friendNames={
+                  item.friendNames.length > 1
+                    ? item.friendNames.filter(
+                        (name) => name !== currentUser?.username
+                      )
+                    : undefined
+                }
+              />
             )} // Render each task using Task component
-            ItemSeparatorComponent={() => <View style={{ height: 20 }} />} // Adjust the height for desired padding
+            ItemSeparatorComponent={() => <View style={{ height: 12 }} />} // Adjust the height for desired padding
           />
 
           {tasksComplete?.length != 0 && (
-            <View style={styles.completedHeader}>
+            <View
+              style={{
+                ...styles.completedHeader,
+                marginVertical: !showCompleted ? 3 : 10,
+                paddingBottom: !showCompleted ? 5 : 20,
+              }}
+            >
               <TouchableOpacity
                 onPress={() => setShowCompleted(!showCompleted)}
                 style={{ flexDirection: "row", alignItems: "center" }}
@@ -85,22 +116,33 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
 
           {!showCompleted && (
             <FlatList
-              data={tasksComplete}
-              keyExtractor={(item) => item.taskId}
-              renderItem={(item) => (
-                <TaskView task={item.item} navigation={navigation} />
-              )}
-              ItemSeparatorComponent={() => <View style={{ height: 20 }} />} // Adjust the height for desired padding
+              data={tasksComplete} // Passed tasks state to FlatList
+              keyExtractor={(item) => item.task.taskId} // Set key extractor
+              renderItem={({ item }) => (
+                <TaskView
+                  task={item.task}
+                  navigation={navigation}
+                  friendNames={
+                    item.friendNames.length > 1
+                      ? item.friendNames.filter(
+                          (name) => name !== currentUser?.username
+                        )
+                      : undefined
+                  }
+                />
+              )} // Render each task using Task component
+              ItemSeparatorComponent={() => <View style={{ height: 12 }} />} // Adjust the height for desired padding
             />
           )}
-
-          <CircleIconButton
-            name="add"
-            onPress={() => {
-              navigation.navigate("TaskModal", {});
-            }}
-            style={styles.button}
-          />
+          {currentUser && (
+            <CircleIconButton
+              name="add"
+              onPress={() => {
+                navigation.navigate("TaskModal", {});
+              }}
+              style={styles.button}
+            />
+          )}
         </>
       )}
       <WarningMessage message={error?.message} visible={!!error} />
@@ -127,9 +169,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingLeft: 10,
     paddingRight: 30,
-    paddingBottom: 30,
-
-    marginVertical: 10,
   },
   completedText: {
     fontFamily: "InknutAntiqua_300Light",

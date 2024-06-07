@@ -12,12 +12,16 @@ import { useDeleteTask } from "../hooks/useDeleteTask";
 import { Fontisto } from "@expo/vector-icons";
 import { useEditTask } from "../hooks/useEditTask";
 import { Feather } from "@expo/vector-icons";
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useQueryClient } from "@tanstack/react-query";
+import { FRIEND_TASKS_QUERY_KEY } from "../hooks/useFriendTasks";
 
 const { width, height } = Dimensions.get("window");
 
 export interface TaskProps {
   task: Task;
   navigation: any;
+  friendNames?: string[];
 }
 
 const truncateText = (text: string, maxLength: number): string => {
@@ -89,14 +93,43 @@ const isTaskOverdue = (dueDateString: string): boolean => {
   return dueDate < currentDate;
 };
 
-export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
-  const { mutate: deleteTask, isSuccess } = useDeleteTask();
-  const { mutate: editTask } = useEditTask();
+export const TaskView: React.FC<TaskProps> = ({
+  task,
+  navigation,
+  friendNames,
+}) => {
+  const queryClient = useQueryClient();
+
+  const { data: currentUser } = useCurrentUser();
+
+  const isSharedTask =
+    task.userIds.length > 1 &&
+    task.userIds.find((id) => id === currentUser?.userId);
+
+  const { mutate: deleteTask } = useDeleteTask();
+  const { mutate: editTask } = useEditTask({
+    onSuccess: (returnedTask) => {
+      if (
+        returnedTask.userIds.length > 1 &&
+        returnedTask.userIds.find((id) => id === currentUser?.userId)
+      )
+        queryClient.invalidateQueries({ queryKey: [FRIEND_TASKS_QUERY_KEY] });
+    },
+  });
 
   const handleSwipe = (direction: string) => {
-    direction === "right"
-      ? deleteTask(task.taskId)
-      : editTask({ taskId: task.taskId, completed: !task.completed });
+    if (direction === "right") {
+      if (isSharedTask) {
+        editTask({
+          taskId: task.taskId,
+          userIds: task.userIds.filter((id) => id !== currentUser?.userId),
+        });
+      } else {
+        deleteTask(task.taskId);
+      }
+    } else {
+      editTask({ taskId: task.taskId, completed: !task.completed });
+    }
   };
 
   const renderLeftActions = () => (
@@ -122,57 +155,99 @@ export const TaskView: React.FC<TaskProps> = ({ task, navigation }) => {
         },
       ]}
     >
-      <Feather name="trash-2" size={24} color="#3B4552" />
+      <Feather
+        name={isSharedTask ? "minus-circle" : "trash-2"}
+        size={24}
+        color="#3B4552"
+      />
     </View>
   );
 
-  return (
+  const component = (
+    <View
+      style={[
+        styles.taskContainer,
+        {
+          backgroundColor: isSharedTask
+            ? "#1e5487"
+            : !task.completed
+            ? "#2B78C2"
+            : "#14a2eb",
+        },
+      ]}
+    >
+      <View style={styles.header}>
+        {friendNames ? (
+          <>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <Text style={styles.userText}>
+                {truncateText(friendNames.join(", "), 20)}
+              </Text>
+              {currentUser && !task.userIds.includes(currentUser.userId) && (
+                <TouchableOpacity
+                  style={{ marginRight: 10 }}
+                  onPress={() => {
+                    editTask({
+                      taskId: task.taskId,
+                      userIds: [...task.userIds, currentUser?.userId],
+                    });
+                  }}
+                >
+                  <Feather name="plus-circle" size={24} color="#FFFFFF" />
+                </TouchableOpacity>
+              )}
+            </View>
+            <View style={styles.separator} />
+          </>
+        ) : null}
+        <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
+      </View>
+
+      <View style={styles.textView}>
+        <Text style={[styles.text]}>Do by:</Text>
+        <Text
+          style={[
+            isTaskOverdue(task.completeBy) ? styles.overDueText : styles.text,
+            { paddingLeft: 6 },
+          ]}
+        >
+          {formatDateString(task.completeBy)}
+        </Text>
+      </View>
+
+      {task.description && (
+        <Text style={[styles.text, { fontSize: 16, paddingLeft: 10 }]}>
+          {" "}
+          {task.description}
+        </Text>
+      )}
+    </View>
+  );
+
+  return !isSharedTask && friendNames ? (
+    component
+  ) : (
     <Swipeable
       renderLeftActions={renderLeftActions}
       renderRightActions={renderRightActions}
       onSwipeableWillOpen={(direction) => handleSwipe(direction)}
     >
       <TouchableOpacity
-        onPress={() => navigation.navigate("TaskModal", { task })}
+        onPress={() =>
+          navigation.navigate("TaskModal", {
+            task,
+            friendNames,
+          })
+        }
       >
-        <View
-          style={[
-            styles.taskContainer,
-            { backgroundColor: !task.completed ? "#2B78C2" : "#14a2eb" },
-          ]}
-        >
-          <View style={styles.header}>
-            <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
-
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                editTask({ taskId: task.taskId, completed: !task.completed });
-              }}
-            ></TouchableOpacity>
-          </View>
-
-          <View style={styles.textView}>
-            <Text style={[styles.text]}>Do by:</Text>
-            <Text
-              style={[
-                isTaskOverdue(task.completeBy)
-                  ? styles.overDueText
-                  : styles.text,
-                { paddingLeft: 6 },
-              ]}
-            >
-              {formatDateString(task.completeBy)}
-            </Text>
-          </View>
-
-          {task.description && (
-            <Text style={[styles.text, { fontSize: 16, paddingLeft: 10 }]}>
-              {" "}
-              {task.description}
-            </Text>
-          )}
-        </View>
+        {component}
       </TouchableOpacity>
     </Swipeable>
   );
@@ -187,10 +262,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#DDDDDD",
   },
+  separator: {
+    width: "100%",
+    height: 2,
+    borderRadius: 5,
+    backgroundColor: "#DDDDDD",
+    marginVertical: 6,
+  },
   header: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
     alignSelf: "stretch",
   },
   textView: {
@@ -209,7 +291,7 @@ const styles = StyleSheet.create({
   },
   overDueText: {
     fontFamily: "InknutAntiqua_400Regular",
-    color: "#FF0000",
+    color: "#ffc107",
     marginBottom: 0,
     textAlign: "left",
     alignSelf: "stretch",
@@ -220,6 +302,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingLeft: 15,
     color: "#F8F9FA",
+    marginBottom: 0,
+  },
+  userText: {
+    fontFamily: "InknutAntiqua_700Bold",
+    fontSize: 16,
+    paddingLeft: 15,
+    color: "#F0F0F0",
     marginBottom: 0,
   },
   button: {

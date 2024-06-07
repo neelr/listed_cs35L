@@ -7,33 +7,47 @@ import {
   Dimensions,
   TouchableOpacity,
   FlatList,
-  Alert,
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../routes/StackNavigator";
-import { useUserTasksById, useUserFriendsById } from "../hooks/useUserData"; // FIX THIS TRASH!!!!!!!
 import { useFriendTasks } from "../hooks/useFriendTasks";
 import { useUserFriends } from "../hooks/useUserFriends";
 import { useAddOrRemoveFriend } from "../hooks/useAddOrRemoveFriend";
 import { useCurrentUser } from "../hooks/useCurrentUser";
+import { UserView } from "../components/UserView";
+import { TaskView } from "../components/TaskView";
+import { Task } from "../types/taskTypes";
 
 const { width, height } = Dimensions.get("window");
 
 type UserDetailScreenProps = StackScreenProps<RootStackParamList, "UserDetail">;
 
-const UserDetailScreen: React.FC<UserDetailScreenProps> = ({ route }) => {
+const UserDetailScreen: React.FC<UserDetailScreenProps> = ({
+  navigation,
+  route,
+}) => {
   const { user } = route.params;
   const [activeTab, setActiveTab] = useState<"Tasks" | "Friends">("Tasks");
 
   const { data: currentUser } = useCurrentUser();
 
-  const { data: tasks, isLoading: isLoadingTasks } = useFriendTasks([
+  const { data: tasksData, isLoading: isLoadingTasks } = useFriendTasks([
     user.userId,
   ]);
   const { data: friends, isLoading: isLoadingFriends } = useUserFriends(
     user.friends
   );
+
+  let tasks: { task: Task; friendNames: string[] }[] = [];
+  for (const task of tasksData || []) {
+    if (task.completed) continue;
+    const friendNames = task.userIds.map((userId) => {
+      if (user?.userId == userId) return user?.username || "";
+      return friends?.find((x) => x.userId == userId)?.username || "";
+    });
+    tasks.push({ task, friendNames });
+  }
 
   const isFriend = currentUser?.friends?.includes(user.userId);
 
@@ -106,13 +120,15 @@ const UserDetailScreen: React.FC<UserDetailScreenProps> = ({ route }) => {
           ) : (
             <FlatList
               data={tasks}
-              keyExtractor={(item) => item.taskId}
+              keyExtractor={({ task }) => task.userId + task.taskId}
               renderItem={({ item }) => (
-                <View style={styles.taskCard}>
-                  <Text style={styles.taskTitle}>{item.name}</Text>
-                  <Text style={styles.taskDescription}>{item.description}</Text>
-                </View>
+                <TaskView
+                  task={item.task}
+                  navigation={navigation}
+                  friendNames={item.friendNames}
+                />
               )}
+              ItemSeparatorComponent={() => <View style={{ height: 12 }} />} // Adjust the height for desired padding
             />
           )
         ) : isLoadingFriends ? (
@@ -120,15 +136,15 @@ const UserDetailScreen: React.FC<UserDetailScreenProps> = ({ route }) => {
         ) : friends?.length === 0 ? (
           <Text style={styles.noContentText}>No friends yet!</Text>
         ) : (
-          <FlatList
-            data={friends}
-            keyExtractor={(item) => item.userId}
-            renderItem={({ item }) => (
-              <View style={styles.friendCard}>
-                <Text style={styles.friendName}>{item.username}</Text>
-              </View>
-            )}
-          />
+          currentUser && (
+            <FlatList
+              data={friends}
+              keyExtractor={(item) => item.userId}
+              renderItem={({ item }) => (
+                <UserView userData={currentUser} user={item} />
+              )}
+            />
+          )
         )}
       </View>
     </SafeAreaView>

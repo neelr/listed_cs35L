@@ -17,6 +17,7 @@ import HomeButton from "../components/Button";
 import { Keyboard } from "react-native";
 import { useAddTask } from "../hooks/useAddTask";
 import { useEditTask } from "../hooks/useEditTask";
+import { useUserFriends } from "../hooks/useUserFriends";
 
 type AddTaskModalProps = NativeStackScreenProps<
   RootStackParamList,
@@ -27,7 +28,7 @@ const { width, height } = Dimensions.get("window");
 const image1 = require("../assets/circlescopy.png");
 
 const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
-  const curTask = route.params?.task;
+  const { task: curTask, friendNames } = route.params;
 
   const [taskTitle, onChangeTaskTitle] = useState(curTask?.name || "");
   const [description, onChangeDescription] = useState(
@@ -84,18 +85,24 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
       >
         <View style={{ flex: 0.4, alignItems: "center", width: "100%" }}>
           <Text style={styles.title}>{curTask ? "Edit" : "Add"} Task</Text>
-          <HomeButton
-            title={privateTask ? "Private" : "Public"}
-            onPress={() => {
-              setPrivateTask(!privateTask);
-            }}
-            customStyles={{
-              marginTop: height * 0.02,
-              height: height * 0.07,
-              backgroundColor: privateTask ? "#E63946" : "#3B4552",
-            }}
-            icon={{ name: privateTask ? "lock-closed" : "lock-open" }}
-          />
+          {friendNames && friendNames.length > 0 ? (
+            <Text style={styles.sharedBy}>
+              Shared by: {friendNames.join(", ")}
+            </Text>
+          ) : (
+            <HomeButton
+              title={privateTask ? "Private" : "Public"}
+              onPress={() => {
+                setPrivateTask(!privateTask);
+              }}
+              customStyles={{
+                marginTop: height * 0.02,
+                height: height * 0.07,
+                backgroundColor: privateTask ? "#E63946" : "#3B4552",
+              }}
+              icon={{ name: privateTask ? "lock-closed" : "lock-open" }}
+            />
+          )}
           <TextInput
             editable
             value={taskTitle}
@@ -103,7 +110,11 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
             onSubmitEditing={handleDismissKeyboard}
             style={[
               styles.input,
-              { fontSize: height * 0.021, marginTop: height * 0.02, height: height * 0.05 },
+              {
+                fontSize: height * 0.021,
+                marginTop: height * 0.02,
+                height: height * 0.05,
+              },
             ]}
             placeholder="Task Name"
             placeholderTextColor="#aaa"
@@ -116,7 +127,11 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
             onSubmitEditing={handleDismissKeyboard}
             style={[
               styles.input,
-              { fontSize: height * 0.016, marginTop: height * 0.02, height: height * 0.15 },
+              {
+                fontSize: height * 0.016,
+                marginTop: height * 0.02,
+                height: height * 0.15,
+              },
             ]}
             placeholder="Description"
             placeholderTextColor="#aaa"
@@ -192,9 +207,9 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
               !curTask
                 ? addTask(task)
                 : editTask({
-                  ...task,
-                  taskId: curTask.taskId,
-                });
+                    ...task,
+                    taskId: curTask.taskId,
+                  });
             }}
             customStyles={{
               marginTop: height * 0.02,
@@ -220,6 +235,11 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "InknutAntiqua_600SemiBold",
     fontSize: width / 12,
+    color: "#3B4552",
+  },
+  sharedBy: {
+    fontFamily: "InknutAntiqua_600SemiBold",
+    fontSize: width / 20,
     color: "#3B4552",
   },
   privateText: {

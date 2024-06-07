@@ -29,6 +29,9 @@ import { useDeleteUser } from "../hooks/useDeleteUser";
 import { useFocusEffect } from "@react-navigation/native";
 import { TabParamList } from "../routes/TabNavigator";
 import { RootStackParamList } from "../routes/StackNavigator";
+import { TaskView } from "../components/TaskView";
+import { Task } from "../types/taskTypes";
+import { UserView } from "../components/UserView";
 
 type ProfileScreenProps = NativeStackScreenProps<
   TabParamList & RootStackParamList,
@@ -37,7 +40,7 @@ type ProfileScreenProps = NativeStackScreenProps<
 
 const { width, height } = Dimensions.get("window");
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation, route }) => {
+const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState<"Tasks" | "Followers">("Tasks");
   const queryClient = useQueryClient();
 
@@ -47,9 +50,17 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation, route }) => {
     currentUser?.friends || []
   );
 
-  const { data: friendTasks, isLoading: friendTasksLoading } = useFriendTasks(
-    currentUser?.friends || []
-  );
+  const { data: friendTasksData } = useFriendTasks(currentUser?.friends || []);
+
+  let friendTasks: { task: Task; friendNames: string[] }[] = [];
+  for (const task of friendTasksData || []) {
+    if (task.completed) continue;
+    const friendNames = task.userIds.map((userId) => {
+      if (currentUser?.userId == userId) return currentUser?.username || "";
+      return friends?.find((x) => x.userId == userId)?.username || "";
+    });
+    friendTasks.push({ task, friendNames });
+  }
 
   const onLogoutOrDelete = async () => {
     queryClient.removeQueries();
@@ -182,21 +193,15 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation, route }) => {
               )}
               <FlatList
                 data={friendTasks}
-                keyExtractor={(item) => item.userId + item.taskId}
-                renderItem={(item) => (
-                  <View style={styles.taskCard}>
-                    <Text style={styles.taskUser}>
-                      {
-                        friends?.find((x) => x.userId == item.item.userId)
-                          ?.username
-                      }
-                    </Text>
-                    <Text style={styles.taskTitle}>{item.item.name}</Text>
-                    <Text style={styles.taskDescription}>
-                      {item.item.description}
-                    </Text>
-                  </View>
+                keyExtractor={({ task }) => task.userId + task.taskId}
+                renderItem={({ item }) => (
+                  <TaskView
+                    task={item.task}
+                    navigation={navigation}
+                    friendNames={item.friendNames}
+                  />
                 )}
+                ItemSeparatorComponent={() => <View style={{ height: 12 }} />} // Adjust the height for desired padding
               />
             </>
           )
@@ -212,15 +217,15 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation, route }) => {
                 No friends yet!
               </Text>
             )}
-            <FlatList
-              data={friends}
-              keyExtractor={(item) => item.userId}
-              renderItem={({ item }) => (
-                <View style={styles.friendCard}>
-                  <Text style={styles.friendName}>{item.username}</Text>
-                </View>
-              )}
-            />
+            {currentUser && (
+              <FlatList
+                data={friends}
+                keyExtractor={(item) => item.userId}
+                renderItem={({ item }) => (
+                  <UserView userData={currentUser} user={item} />
+                )}
+              />
+            )}
           </>
         )}
       </View>

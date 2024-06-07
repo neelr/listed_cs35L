@@ -22,6 +22,7 @@ export type RootStackParamList = {
   Signup: undefined;
   TaskModal: {
     task?: Task;
+    friendNames?: string[];
   };
   UserDetail: {
     user: User;

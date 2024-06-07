@@ -4,11 +4,8 @@ import ListItemScreen from "../screens/ListItemScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import SearchScreen from "../screens/SearchScreen";
 import { Dimensions } from "react-native";
-import { AuthenticatedPageProps } from "../types/authTypes";
 import { RootStackParamList } from "./StackNavigator";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useCurrentUser } from "../hooks/useCurrentUser";
-import LoadingScreen from "../screens/LoadingScreen";
 
 export type TabParamList = {
   Profile: undefined;

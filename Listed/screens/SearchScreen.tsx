@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { Dimensions, StyleSheet, Text, FlatList } from "react-native";
 import { TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,17 +7,10 @@ import { UserView } from "../components/UserView";
 import { useSearchUsers } from "../hooks/useSearchUsers";
 import WarningMessage from "../components/WarningText";
 import Spacer from "../components/Spacer";
-import {
-  CURRENT_USER_QUERY_KEY,
-  useCurrentUser,
-} from "../hooks/useCurrentUser";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 import { getMutualCount, rankUsers } from "../utils/rankUsers";
 import { User } from "../types/userTypes";
 import { TabParamList } from "../routes/TabNavigator";
-import { useFocusEffect } from "@react-navigation/native";
-import { useQueryClient } from "@tanstack/react-query";
-import { FRIEND_TASKS_QUERY_KEY } from "../hooks/useFriendTasks";
-import { USER_FRIENDS_QUERY_KEY } from "../hooks/useUserFriends";
 
 const RESULTS_COUNT = 10;
 
@@ -27,8 +20,6 @@ const { width, height } = Dimensions.get("window");
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ route }) => {
   const [searchText, setSearchText] = useState("");
-
-  const queryClient = useQueryClient();
 
   const { data: currentUser } = useCurrentUser();
 

@@ -19,6 +19,11 @@ export interface GetUserTasksRequest {
   userId: string;
 }
 
+export interface TaskWithFriendInfo {
+  task: Task;
+  friendNames: string[];
+}
+
 export interface AddTaskRequest {
   name: string;
   private: boolean;

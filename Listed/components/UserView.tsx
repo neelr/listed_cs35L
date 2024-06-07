@@ -7,21 +7,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { User } from "../types/userTypes";
-import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../routes/StackNavigator";
 import { useAddOrRemoveFriend } from "../hooks/useAddOrRemoveFriend";
-import { useRemoveFriend } from "../hooks/useRemoveFriend";
-import { useUserFriends } from "../hooks/useUserFriends";
-import { UserPrivate } from "../types/authTypes";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const { width } = Dimensions.get("window");
 
 export interface UserProps {
-  userData: UserPrivate;
+  userData: User;
   user: User;
-  mutualCount: number;
+  mutualCount?: number;
 }
 
 const truncateText = (text: string, maxLength: number): string => {
@@ -55,38 +52,38 @@ export const UserView: React.FC<UserProps> = ({
     userData?.userId != user.userId && (
       <TouchableOpacity
         onPress={handlePressUser}
-        style={
-          isFriend ? styles.removeFriendContainer : styles.addFriendContainer
-        }
+        style={{
+          ...styles.container,
+          backgroundColor: isFriend ? "#99cae4" : "#2B78C2",
+        }}
       >
         <View style={styles.header}>
           <View>
             <Text style={styles.boldText}>
               {truncateText(user.username, 20)}
             </Text>
-            <Text style={styles.text}>
-              {mutualCount} mutual{mutualCount === 1 ? "" : "s"}
-            </Text>
+            {/* for some reason this is necessary? */}
+            {mutualCount ? (
+              <Text style={styles.text}>
+                {mutualCount} mutual{mutualCount === 1 ? "" : "s"}
+              </Text>
+            ) : (
+              <Text> </Text>
+            )}
           </View>
-          {isFriend ? (
-            <TouchableOpacity
-              style={styles.buttonRemove}
-              onPress={() => {
-                addOrRemoveFriend(user.userId);
-              }}
-            >
-              <Text style={styles.removeFriend}>Remove Friend</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={styles.buttonAdd}
-              onPress={() => {
-                addOrRemoveFriend(user.userId);
-              }}
-            >
-              <Text style={styles.addFriend}>Add Friend</Text>
-            </TouchableOpacity>
-          )}
+
+          <TouchableOpacity
+            style={{ position: "relative", right: 10, bottom: 10 }}
+            onPress={() => {
+              addOrRemoveFriend(user.userId);
+            }}
+          >
+            <Ionicons
+              name={isFriend ? "person-remove" : "person-add"}
+              size={24}
+              color={isFriend ? "#FF4444" : "#CDE8FA"}
+            />
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     )
@@ -94,25 +91,20 @@ export const UserView: React.FC<UserProps> = ({
 };
 
 const styles = StyleSheet.create({
-  addFriendContainer: {
+  container: {
     width: width * (5 / 6),
     marginBottom: 20, // Adjust spacing between tasks
     alignItems: "center",
-    backgroundColor: "#2B78C2",
     borderRadius: 10, // Adjust border radius for curved edges
     padding: 3, // Adjust padding as needed
     borderWidth: 1,
     borderColor: "#DDDDDD",
   },
+  addFriendContainer: {
+    backgroundColor: "#2B78C2",
+  },
   removeFriendContainer: {
-    width: width * (5 / 6),
-    marginBottom: 20, // Adjust spacing between tasks
-    alignItems: "center",
     backgroundColor: "#7BC8F2",
-    borderRadius: 10, // Adjust border radius for curved edges
-    padding: 3, // Adjust padding as needed
-    borderWidth: 1,
-    borderColor: "#DDDDDD",
   },
   header: {
     flexDirection: "row",
