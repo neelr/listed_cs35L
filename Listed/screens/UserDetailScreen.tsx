@@ -55,8 +55,8 @@ const UserDetailScreen: React.FC<UserDetailScreenProps> = ({
   const { mutate: addOrRemoveFriend } = useAddOrRemoveFriend(!!isFriend);
 
   const truncateUsername = (username: string) => {
-    if (username.length > 10) {
-      return username.slice(0, 7) + "...";
+    if (username.length > 8) {
+      return username.slice(0, 5) + "...";
     }
     return username;
   }
