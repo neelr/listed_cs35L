@@ -132,7 +132,7 @@ export const TaskView: React.FC<TaskProps> = ({
 
   const renderLeftActions = () => (
     <View
-      style={[styles.swipeButton, { backgroundColor: "#aaa", paddingLeft: 15 }]}
+      style={[styles.swipeButton, { backgroundColor: "#16d054", paddingLeft: 15 }]}
     >
       <Fontisto
         name={task.completed ? "undo" : "check"}
