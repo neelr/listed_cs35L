@@ -66,8 +66,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
         <Formik
           initialValues={{
-            email: "crazyguy+5@gmail.com",
-            password: "CrazyWacky123$",
+            email: "",
+            password: "",
           }}
           validationSchema={validationSchema}
           onSubmit={login}
