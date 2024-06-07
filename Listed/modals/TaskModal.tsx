@@ -73,6 +73,25 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
     return `Do by: ${formattedDate} at ${formattedTime}`;
   };
 
+  const handleSaveTask = () => {
+    if (!taskTitle.trim()) {
+      Alert.alert("Oopsies!", "All tasks must have a name");
+      return;
+    }
+    const task = {
+      name: taskTitle,
+      description,
+      completeBy: date.toISOString(),
+      private: privateTask,
+    };
+    !curTask
+      ? addTask(task)
+      : editTask({
+          ...task,
+          taskId: curTask.taskId,
+        });
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
@@ -197,20 +216,7 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
               name: curTask ? "checkmark-circle-outline" : "add-circle-outline",
               size: 30,
             }}
-            onPress={() => {
-              const task = {
-                name: taskTitle,
-                description,
-                completeBy: date.toISOString(),
-                private: privateTask,
-              };
-              !curTask
-                ? addTask(task)
-                : editTask({
-                    ...task,
-                    taskId: curTask.taskId,
-                  });
-            }}
+            onPress={handleSaveTask}
             customStyles={{
               marginTop: height * 0.02,
               height: height * 0.07,
