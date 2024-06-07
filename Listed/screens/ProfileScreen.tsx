@@ -320,6 +320,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     backgroundColor: "#f1f1f1",
+    alignItems: "center",
     borderRadius: 10,
     padding: 15,
     shadowColor: "#000",

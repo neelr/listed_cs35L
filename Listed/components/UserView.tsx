@@ -54,7 +54,7 @@ export const UserView: React.FC<UserProps> = ({
         onPress={handlePressUser}
         style={{
           ...styles.container,
-          backgroundColor: isFriend ? "#99cae4" : "#2B78C2",
+          backgroundColor: isFriend ? "#1e5487" : "#2B78C2",
         }}
       >
         <View style={styles.header}>

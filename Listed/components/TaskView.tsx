@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   Dimensions,
   View,
@@ -100,6 +100,8 @@ export const TaskView: React.FC<TaskProps> = ({
 }) => {
   const queryClient = useQueryClient();
 
+  const swipeableRef = useRef<Swipeable>(null);
+
   const { data: currentUser } = useCurrentUser();
 
   const isSharedTask =
@@ -108,12 +110,8 @@ export const TaskView: React.FC<TaskProps> = ({
 
   const { mutate: deleteTask } = useDeleteTask();
   const { mutate: editTask } = useEditTask({
-    onSuccess: (returnedTask) => {
-      if (
-        returnedTask.userIds.length > 1 &&
-        returnedTask.userIds.find((id) => id === currentUser?.userId)
-      )
-        queryClient.invalidateQueries({ queryKey: [FRIEND_TASKS_QUERY_KEY] });
+    onSuccess: () => {
+      swipeableRef.current?.close();
     },
   });
 
@@ -169,8 +167,10 @@ export const TaskView: React.FC<TaskProps> = ({
         styles.taskContainer,
         {
           backgroundColor: isSharedTask
-            ? "#1e5487"
-            : !task.completed
+            ? task.completed
+              ? "#2B78C2"
+              : "#1e5487"
+            : !task.completed || isSharedTask
             ? "#2B78C2"
             : "#14a2eb",
         },
@@ -238,6 +238,7 @@ export const TaskView: React.FC<TaskProps> = ({
       renderLeftActions={renderLeftActions}
       renderRightActions={renderRightActions}
       onSwipeableWillOpen={(direction) => handleSwipe(direction)}
+      ref={swipeableRef}
     >
       <TouchableOpacity
         onPress={() =>

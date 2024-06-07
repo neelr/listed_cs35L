@@ -41,7 +41,6 @@ const UserDetailScreen: React.FC<UserDetailScreenProps> = ({
 
   let tasks: { task: Task; friendNames: string[] }[] = [];
   for (const task of tasksData || []) {
-    if (task.completed) continue;
     const friendNames = task.userIds.map((userId) => {
       if (user?.userId == userId) return user?.username || "";
       return friends?.find((x) => x.userId == userId)?.username || "";
@@ -168,7 +167,6 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 3 },
     elevation: 3,
-    marginTop: -20,
     marginBottom: 10,
   },
   followersContainer: {
@@ -250,6 +248,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f1f1f1",
     borderRadius: 10,
     padding: 15,
+    alignItems: "center",
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
