@@ -132,7 +132,10 @@ export const TaskView: React.FC<TaskProps> = ({
 
   const renderLeftActions = () => (
     <View
-      style={[styles.swipeButton, { backgroundColor: "#16d054", paddingLeft: 15 }]}
+      style={[
+        styles.swipeButton,
+        { backgroundColor: "#16d054", paddingLeft: 15 },
+      ]}
     >
       <Fontisto
         name={task.completed ? "undo" : "check"}
@@ -190,7 +193,12 @@ export const TaskView: React.FC<TaskProps> = ({
               <View style={styles.userTextContainer}>
                 <Ionicons name="people" size={24} color="#FFFFFF" />
                 <Text style={styles.userText}>
-                  {truncateText(friendNames.join(", "), 20)}
+                  {truncateText(
+                    friendNames.join(", "),
+                    currentUser && !task.userIds.includes(currentUser.userId)
+                      ? 15
+                      : 20
+                  )}
                 </Text>
               </View>
               {currentUser && !task.userIds.includes(currentUser.userId) && (
