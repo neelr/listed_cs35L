@@ -54,6 +54,13 @@ const UserDetailScreen: React.FC<UserDetailScreenProps> = ({
 
   const { mutate: addOrRemoveFriend } = useAddOrRemoveFriend(!!isFriend);
 
+  const truncateUsername = (username: string) => {
+    if (username.length > 10) {
+      return username.slice(0, 7) + "...";
+    }
+    return username;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
@@ -91,7 +98,7 @@ const UserDetailScreen: React.FC<UserDetailScreenProps> = ({
               activeTab === "Tasks" && styles.activeTabButtonText,
             ]}
           >
-            {user.username}'s Tasks
+            {truncateUsername(user.username)}'s Tasks
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -107,7 +114,7 @@ const UserDetailScreen: React.FC<UserDetailScreenProps> = ({
               activeTab === "Friends" && styles.activeTabButtonText,
             ]}
           >
-            {user.username}'s Friends
+            {truncateUsername(user.username)}'s Friends
           </Text>
         </TouchableOpacity>
       </View>
