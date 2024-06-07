@@ -13,13 +13,16 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.baskingbrain.Listed"
+      "bundleIdentifier": "com.baskingbrain.Listed",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yourcompany.yourappname",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
