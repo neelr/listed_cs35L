@@ -18,6 +18,10 @@ import { useCurrentUser } from "../hooks/useCurrentUser";
 import { UserView } from "../components/UserView";
 import { TaskView } from "../components/TaskView";
 import { Task } from "../types/taskTypes";
+import {
+  getTasksWithFriendInfo,
+  sortByDateAndCompleted,
+} from "../utils/sortTasks";
 
 const { width, height } = Dimensions.get("window");
 
@@ -39,14 +43,9 @@ const UserDetailScreen: React.FC<UserDetailScreenProps> = ({
     user.friends
   );
 
-  let tasks: { task: Task; friendNames: string[] }[] = [];
-  for (const task of tasksData || []) {
-    const friendNames = task.userIds.map((userId) => {
-      if (user?.userId == userId) return user?.username || "";
-      return friends?.find((x) => x.userId == userId)?.username || "";
-    });
-    tasks.push({ task, friendNames });
-  }
+  const tasks = sortByDateAndCompleted(
+    getTasksWithFriendInfo(user, friends, tasksData, true)
+  );
 
   const isFriend = currentUser?.friends?.includes(user.userId);
 

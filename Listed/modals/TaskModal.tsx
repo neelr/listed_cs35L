@@ -11,13 +11,11 @@ import {
   Dimensions,
   TextInput,
   ScrollView,
-  Alert,
 } from "react-native";
 import HomeButton from "../components/Button";
 import { Keyboard } from "react-native";
 import { useAddTask } from "../hooks/useAddTask";
 import { useEditTask } from "../hooks/useEditTask";
-import { useUserFriends } from "../hooks/useUserFriends";
 
 type AddTaskModalProps = NativeStackScreenProps<
   RootStackParamList,
@@ -39,15 +37,13 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
   );
   const [privateTask, setPrivateTask] = useState(curTask?.private || false);
   const { mutate: addTask } = useAddTask({
-    onSuccess: (data) => {
-      Alert.alert("Add Task", `${data.name} added successfully!`);
+    onSuccess: () => {
       navigation.goBack();
     },
   });
 
   const { mutate: editTask } = useEditTask({
-    onSuccess: (data) => {
-      Alert.alert("Edit Task", `${data.name} edited successfully!`);
+    onSuccess: () => {
       navigation.goBack();
     },
   });
@@ -105,9 +101,15 @@ const TaskModal: React.FC<AddTaskModalProps> = ({ navigation, route }) => {
         <View style={{ flex: 0.4, alignItems: "center", width: "100%" }}>
           <Text style={styles.title}>{curTask ? "Edit" : "Add"} Task</Text>
           {friendNames && friendNames.length > 0 ? (
-            <Text style={styles.sharedBy}>
-              Shared by: {friendNames.join(", ")}
-            </Text>
+            <View
+              style={{
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.sharedByHeading}>Shared by:</Text>
+              <Text style={styles.sharedBy}>{friendNames.join(", ")}</Text>
+            </View>
           ) : (
             <HomeButton
               title={privateTask ? "Private" : "Public"}
@@ -243,9 +245,14 @@ const styles = StyleSheet.create({
     fontSize: width / 12,
     color: "#3B4552",
   },
-  sharedBy: {
+  sharedByHeading: {
     fontFamily: "InknutAntiqua_600SemiBold",
     fontSize: width / 20,
+    color: "#3B4552",
+  },
+  sharedBy: {
+    fontFamily: "InknutAntiqua_600SemiBold",
+    fontSize: width / 24,
     color: "#3B4552",
   },
   privateText: {

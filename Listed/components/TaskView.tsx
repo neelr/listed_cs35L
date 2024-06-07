@@ -13,8 +13,7 @@ import { Fontisto } from "@expo/vector-icons";
 import { useEditTask } from "../hooks/useEditTask";
 import { Feather } from "@expo/vector-icons";
 import { useCurrentUser } from "../hooks/useCurrentUser";
-import { useQueryClient } from "@tanstack/react-query";
-import { FRIEND_TASKS_QUERY_KEY } from "../hooks/useFriendTasks";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,6 +21,7 @@ export interface TaskProps {
   task: Task;
   navigation: any;
   friendNames?: string[];
+  onSuccess?: () => void;
 }
 
 const truncateText = (text: string, maxLength: number): string => {
@@ -97,9 +97,8 @@ export const TaskView: React.FC<TaskProps> = ({
   task,
   navigation,
   friendNames,
+  onSuccess,
 }) => {
-  const queryClient = useQueryClient();
-
   const swipeableRef = useRef<Swipeable>(null);
 
   const { data: currentUser } = useCurrentUser();
@@ -108,10 +107,11 @@ export const TaskView: React.FC<TaskProps> = ({
     task.userIds.length > 1 &&
     task.userIds.find((id) => id === currentUser?.userId);
 
-  const { mutate: deleteTask } = useDeleteTask();
+  const { mutate: deleteTask } = useDeleteTask({ onSuccess });
   const { mutate: editTask } = useEditTask({
     onSuccess: () => {
       swipeableRef.current?.close();
+      onSuccess?.();
     },
   });
 
@@ -187,9 +187,12 @@ export const TaskView: React.FC<TaskProps> = ({
                 width: "100%",
               }}
             >
-              <Text style={styles.userText}>
-                {truncateText(friendNames.join(", "), 20)}
-              </Text>
+              <View style={styles.userTextContainer}>
+                <Ionicons name="people" size={24} color="#FFFFFF" />
+                <Text style={styles.userText}>
+                  {truncateText(friendNames.join(", "), 20)}
+                </Text>
+              </View>
               {currentUser && !task.userIds.includes(currentUser.userId) && (
                 <TouchableOpacity
                   style={{ marginRight: 10 }}
@@ -207,7 +210,7 @@ export const TaskView: React.FC<TaskProps> = ({
             <View style={styles.separator} />
           </>
         ) : null}
-        <Text style={styles.boldText}>{truncateText(task.name, 20)}</Text>
+        <Text style={styles.boldText}>{truncateText(task.name, 28)}</Text>
       </View>
 
       <View style={styles.textView}>
@@ -223,8 +226,7 @@ export const TaskView: React.FC<TaskProps> = ({
       </View>
 
       {task.description && (
-        <Text style={[styles.text, { fontSize: 16, paddingLeft: 10 }]}>
-          {" "}
+        <Text style={[styles.text, { fontSize: 16, paddingLeft: 15 }]}>
           {task.description}
         </Text>
       )}
@@ -288,7 +290,6 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     textAlign: "left",
     alignSelf: "stretch",
-    //paddingLeft: 10,
   },
   overDueText: {
     fontFamily: "InknutAntiqua_400Regular",
@@ -305,12 +306,19 @@ const styles = StyleSheet.create({
     color: "#F8F9FA",
     marginBottom: 0,
   },
+  userTextContainer: {
+    paddingLeft: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   userText: {
     fontFamily: "InknutAntiqua_700Bold",
     fontSize: 16,
-    paddingLeft: 15,
     color: "#F0F0F0",
     marginBottom: 0,
+
+    paddingLeft: 15,
   },
   button: {
     backgroundColor: "transparent", // Adjust as needed for visibility

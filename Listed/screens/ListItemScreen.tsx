@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   StyleSheet,
@@ -19,6 +19,7 @@ import { TabParamList } from "../routes/TabNavigator";
 import { RootStackParamList } from "../routes/StackNavigator";
 import { useUserFriends } from "../hooks/useUserFriends";
 import { useCurrentUser } from "../hooks/useCurrentUser";
+import { getTasksWithFriendInfo, sortByDate } from "../utils/sortTasks";
 
 type ListItemScreenProps = NativeStackScreenProps<
   TabParamList & RootStackParamList,
@@ -33,27 +34,12 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
   const { data: tasksData, isLoading, error } = useUserTasks();
   const { data: friends } = useUserFriends(currentUser?.friends || []);
 
-  const [showCompleted, setShowCompleted] = useState(true); // Local boolean state
-
-  const sortByDate = (tasks: TaskWithFriendInfo[]): TaskWithFriendInfo[] => {
-    return tasks.slice().sort((a, b) => {
-      const dateA = new Date(a.task.completeBy).getTime();
-      const dateB = new Date(b.task.completeBy).getTime();
-      if (isNaN(dateA) || isNaN(dateB)) {
-        return 0;
-      }
-      return dateA - dateB;
-    });
-  };
-
-  let tasksRaw: TaskWithFriendInfo[] = [];
-  for (const task of tasksData || []) {
-    const friendNames = task.userIds.map((userId) => {
-      if (currentUser?.userId == userId) return currentUser?.username || "";
-      return friends?.find((x) => x.userId == userId)?.username || "";
-    });
-    tasksRaw.push({ task, friendNames });
-  }
+  let tasksRaw: TaskWithFriendInfo[] = getTasksWithFriendInfo(
+    currentUser,
+    friends,
+    tasksData,
+    true
+  );
 
   const tasks = sortByDate(
     tasksRaw.filter?.((tasksRaw) => !tasksRaw.task.completed) || []
@@ -61,6 +47,8 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
   const tasksComplete = sortByDate(
     tasksRaw?.filter?.((tasksRaw) => tasksRaw.task.completed) || []
   );
+
+  const [showCompleted, setShowCompleted] = useState(tasksComplete.length > 0); // Local boolean state
 
   return (
     <SafeAreaView style={styles.container}>
@@ -70,7 +58,11 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
       ) : (
         <>
           {tasks?.length === 0 && (
-            <Text style={styles.noTasksText}>No Tasks Yet</Text>
+            <Text style={styles.noTasksText}>
+              {tasksRaw.length === 0
+                ? "Get started by making a new task or adding a friend's task!"
+                : "All done!"}
+            </Text>
           )}
           <FlatList
             data={tasks} // Passed tasks state to FlatList
@@ -95,8 +87,8 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
             <View
               style={{
                 ...styles.completedHeader,
-                marginVertical: !showCompleted ? 3 : 10,
-                paddingBottom: !showCompleted ? 5 : 20,
+                marginVertical: showCompleted ? 3 : 10,
+                paddingBottom: showCompleted ? 5 : 10,
               }}
             >
               <TouchableOpacity
@@ -114,7 +106,7 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
             </View>
           )}
 
-          {!showCompleted && (
+          {showCompleted && tasksComplete.length > 0 && (
             <FlatList
               data={tasksComplete} // Passed tasks state to FlatList
               keyExtractor={(item) => item.task.taskId} // Set key extractor
@@ -183,9 +175,9 @@ const styles = StyleSheet.create({
     fontFamily: "InknutAntiqua_300Light",
     fontSize: width / 20.0,
     color: "#3B4552",
-    textAlign: "left", // Align text to the left
+    textAlign: "center", // Align text to the left
     alignSelf: "stretch", // Ensure it takes full width
-    paddingLeft: 35,
+    paddingHorizontal: 20,
   },
   button: {
     position: "absolute",
