@@ -11,6 +11,7 @@ import {
   Dimensions,
   TextInput,
   ScrollView,
+  Alert,
 } from "react-native";
 import HomeButton from "../components/Button";
 import { Keyboard } from "react-native";
