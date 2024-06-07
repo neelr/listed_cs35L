@@ -69,6 +69,14 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
     ),
   });
 
+  const handleFormSubmit = (values: typeof initialValues) => {    //Added this to lower all emails auto
+    const transformedValues = {
+      ...values,
+      email: values.email.toLowerCase(),
+    };
+    signup(transformedValues);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -84,7 +92,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={signup}
+          onSubmit={handleFormSubmit} // Changed to handleFormSubmit from signup
         >
           {({
             handleChange,

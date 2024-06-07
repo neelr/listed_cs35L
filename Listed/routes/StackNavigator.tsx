@@ -10,7 +10,7 @@ import SearchScreen from "../screens/SearchScreen";
 import { TabNavigator } from "./TabNavigator";
 import { useAuthToken } from "../hooks/useAuthToken";
 import LoadingScreen from "../screens/LoadingScreen";
-import UserDetailScreen from "../screens/UserDetailScreen"; // Import UserDetailScreen
+import UserDetailScreen from "../screens/UserDetailScreen";
 import { Task } from "../types/taskTypes";
 import { User } from "../types/userTypes";
 import { AuthenticatedPageProps } from "../types/authTypes";
