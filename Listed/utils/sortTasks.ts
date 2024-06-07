@@ -24,10 +24,11 @@ export const getTasksWithFriendInfo = (
 
   return friendTasks;
 };
-export const getUserIdsFromTasks = (
-  tasksData: Task[] | undefined
+export const getUserIdsFromTasksAndFriends = (
+  tasksData: Task[] | undefined,
+  friendIds?: string[]
 ): string[] => {
-  let friendsData: string[] = [];
+  let friendsData: string[] = friendIds || [];
   for (const task of tasksData || []) {
     for (const userId of task.userIds) {
       if (!friendsData.includes(userId)) {

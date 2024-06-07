@@ -33,7 +33,7 @@ import { TaskView } from "../components/TaskView";
 import { UserView } from "../components/UserView";
 import {
   getTasksWithFriendInfo,
-  getUserIdsFromTasks,
+  getUserIdsFromTasksAndFriends,
   sortByDateAndCompleted,
 } from "../utils/sortTasks";
 import { TaskWithFriendInfo } from "../types/taskTypes";
@@ -52,7 +52,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const { data: currentUser } = useCurrentUser();
 
   const { data: friendTasksData } = useFriendTasks(currentUser?.friends || []);
-  const otherUserIds = getUserIdsFromTasks(friendTasksData || []);
+  const otherUserIds = getUserIdsFromTasksAndFriends(
+    friendTasksData,
+    currentUser?.friends
+  );
 
   const { data: friends, isLoading } = useUserFriends(otherUserIds);
 
@@ -218,7 +221,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             )}
             {currentUser && (
               <FlatList
-                data={friends}
+                data={friends?.filter((friend) =>
+                  currentUser?.friends?.includes(friend.userId)
+                )}
                 keyExtractor={(item) => item.userId}
                 renderItem={({ item }) => (
                   <UserView userData={currentUser} user={item} />

@@ -21,7 +21,7 @@ import { useUserFriends } from "../hooks/useUserFriends";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import {
   getTasksWithFriendInfo,
-  getUserIdsFromTasks,
+  getUserIdsFromTasksAndFriends,
   sortByDate,
 } from "../utils/sortTasks";
 
@@ -37,7 +37,7 @@ const ListItemScreen: React.FC<ListItemScreenProps> = ({ navigation }) => {
 
   const { data: tasksData, isLoading, error } = useUserTasks();
 
-  const otherUserIds = getUserIdsFromTasks(tasksData || []);
+  const otherUserIds = getUserIdsFromTasksAndFriends(tasksData);
 
   const { data: friends } = useUserFriends(otherUserIds || []);
 
