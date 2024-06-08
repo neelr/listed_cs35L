@@ -50,3 +50,6 @@ npm install
 - Profile screen with display 
 - Seeing users' friends and public tasks
 - Log out and delete account
+
+## Presentation slides
+Here is a [link](https://docs.google.com/presentation/d/1yVTBHzsAtWciIU9t7IyM_MQqD-Vy9c2MRiL-X71vRy8/edit?usp=sharing) to our presentation slideshow on Google Slides.
