@@ -25,10 +25,12 @@ export default async (req: Request, res: Response) => {
     const allUsers = await getAllUsers();
 
     for (const user of allUsers) {
-      await removeFriend({
-        userId: user.userId,
-        friendId: userInfo.userId,
-      });
+      if (user.friends.includes(userInfo.userId)) {
+        await removeFriend({
+          userId: user.userId,
+          friendId: userInfo.userId,
+        });
+      }
     }
     const tasks = await getTasksByCreatorId(userInfo.userId);
     for (const task of tasks) {
