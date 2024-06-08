@@ -27,15 +27,17 @@ npm install
 ## Tech Stack
 ### Frontend
 - React Native  
-- TypeScript  
+- TSX  
 - Formik/Yup  
 - Expo
+- Axios  
+- TanStack Query
 
 ### Backend
 - AWS DynamoDB  
-- Express.js  
-- Axios  
-- TanStack Query
+- Express.js
+- TypeScript   
+- JWT Library
 
 ## Features
 - Authentication  
