@@ -18,7 +18,7 @@ export default async (req: Request, res: Response) => {
       return;
     }
     for (const friendId of user.friends) {
-      await removeFriend({ userId: userInfo.userId, friendId });
+      await removeFriend({ userId: friendId, friendId: userInfo.userId });
     }
     const tasks = await getTasksByCreatorId(userInfo.userId);
     for (const task of tasks) {
