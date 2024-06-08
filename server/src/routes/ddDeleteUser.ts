@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
 import { DeleteUserRequest } from "../types";
-import { deleteUser, getUserById, removeFriend } from "../utils/dynamoDBUsers";
+import {
+  deleteUser,
+  getAllUsers,
+  getUserById,
+  removeFriend,
+} from "../utils/dynamoDBUsers";
 import {
   deleteTask,
   editTask,
@@ -17,8 +22,13 @@ export default async (req: Request, res: Response) => {
       res.status(404).send({ message: "User not found" });
       return;
     }
-    for (const friendId of user.friends) {
-      await removeFriend({ userId: friendId, friendId: userInfo.userId });
+    const allUsers = await getAllUsers();
+
+    for (const user of allUsers) {
+      await removeFriend({
+        userId: user.userId,
+        friendId: userInfo.userId,
+      });
     }
     const tasks = await getTasksByCreatorId(userInfo.userId);
     for (const task of tasks) {
