@@ -205,6 +205,10 @@ export const addFriend = async ({ userId, friendId }: AddFriendRequest) => {
   if (!user) {
     throw "User not found";
   }
+  const friend = await getUserById({ userId: friendId });
+  if (!friend) {
+    throw "Friend not found";
+  }
 
   if (user.friends.includes(friendId)) {
     throw "Friend already added";
